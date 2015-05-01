@@ -230,7 +230,7 @@ class Listing_Model_Search
                 //append the zip code injector to the query string
                 $listingsSql .= $zipCodesInjector;
             } else {
-                $zipCodesInjector = 'AND li.ZipCode IN(' . $zipCode . ') ';
+                $zipCodesInjector = 'AND li.ZipCode IN( ? ) ';
                 $listingsSql .= $zipCodesInjector;
                 $variableArray[] = $zipCode;
             }
