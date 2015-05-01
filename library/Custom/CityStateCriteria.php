@@ -33,8 +33,8 @@ class Custom_CityStateCriteria extends Custom_AbstractCriteria
                 $this->_validationErrors[] = 'not a valid city/state value';
             } else {
                 $regExArray = preg_match( $cityStateRegEx, $this->_criteriaValue );
-                $this->_city = $regExArray[1];
-                $this->_state = $regExArray[2];
+                $this->_city = trim( $regExArray[1] );
+                $this->_state = trim( $regExArray[2] );
             }
         }
     }
