@@ -84,8 +84,6 @@ class Listing_Model_Search
         if ( isset( $this->_zipCodeCriteria ) ) {
             if ( !$this->_zipCodeCriteria->isValid() ) {
                 $this->_validationErrors = array_merge( $this->_validationErrors, $this->_zipCodeCriteria->getValidationErrors() );
-            } else {
-                //$this->results['zipCode'] = $this->_zipCodeCriteria->getCriteria();
             }
         } else {
             $this->_useZipCode = false;
@@ -94,8 +92,6 @@ class Listing_Model_Search
         if ( isset( $this->_cityStateCriteria ) ) {
             if ( !$this->_cityStateCriteria->isValid() ) {
                 $this->_validationErrors = array_merge( $this->_validationErrors, $this->_cityStateCriteria->getValidationErrors() );
-            } else {
-                $this->results['cityState'] = $this->_cityStateCriteria->getCriteria();
             }
         } else {
             $this->_useCityState = false;
@@ -110,8 +106,6 @@ class Listing_Model_Search
         if ( isset( $this->_radiusCriteria ) ) {
             if ( !$this->_radiusCriteria->isValid() ) {
                 $this->_validationErrors = array_merge( $this->_validationErrors, $this->_radiusCriteria->getValidationErrors() );
-            } else {
-                $this->results['radius'] = $this->_radiusCriteria->getCriteria();
             }
         } else {
             $this->_useRadius = false;
@@ -120,8 +114,6 @@ class Listing_Model_Search
         if ( isset( $this->_numberOfBedroomsCriteria ) ) {
             if ( !$this->_numberOfBedroomsCriteria->isValid() ) {
                 $this->_validationErrors = array_merge( $this->_validationErrors, $this->_numberOfBedroomsCriteria->getValidationErrors() );
-            } else {
-                $this->results['numberOfBedrooms'] = $this->_numberOfBedroomsCriteria->getCriteria();
             }
         } else {
             $this->_useNumberOfBedrooms = false;
@@ -153,23 +145,44 @@ class Listing_Model_Search
             AND (0 IS NULL OR li.Deleted = 0)
             AND (1 = 0 OR (1 = 1 AND l.Active = 1 AND l.Deleted = 0 AND DATE(l.ExpirationDate) >= DATE(now())))';
 
+        //initialize an array for variables passed into the query
+        $variableArray = array();
+
         $db = Zend_Db_Table::getDefaultAdapter();
         try {
+
+            //if we use a city/state get find the corresponding zip code
+            //otherwise simply use the zip code provided
             if ( $this->_useCityState ) {
-                //TODO: translate the city/state to a zip code
-                return array( 'specialMessage' => 'Not Yet Implemented');
+
+                //translate city/state to zip code
+                $cityStateToZipSql = 'CALL ZipCodes_GetZipCodeByCityState(:city, :state)';
+                $cityStateToZipStmt = $db->prepare($cityStateToZipSql);
+                $cityStateToZipStmt->execute( array(
+                    'city' => $this->_cityStateCriteria->getCity(),
+                    'state' => $this->_cityStateCriteria->getState()
+                ));
+
+                //if no zip code is returned the return an empty set
+                if ( $cityStateToZipStmt->rowCount() == 0 ) {
+                    return array();
+                }
+
+                $cityStateToZipResult = $cityStateToZipStmt->fetchAll();
+                $cityStateToZipStmt->closeCursor();
+                $zipCode = $cityStateToZipResult[0]['zip_code'];
+            } else {
+                $zipCode = $this->_zipCodeCriteria->getCriteria();
             }
 
-            if ( $this->_useNumberOfBedrooms ) {
-                $numberOfBedRoomsInjector = 'AND li.Bedrooms = ? ';
-            }
-
+            //if a radius is provided then get all zip codes within the given
+            //radius and add them to a sql IN statement
             if ( $this->_useRadius ) {
 
                 //fetch the coordinates of the provided zipCode
                 $zipCoordsSql = 'CALL ZipCodes_GetCoordsByZipCode(:zipCode)';
                 $zipCoordsStmt = $db->prepare($zipCoordsSql);
-                $zipCoordsStmt->execute( array('zipCode' => $this->_zipCodeCriteria->getCriteria()) );
+                $zipCoordsStmt->execute( array('zipCode' => $zipCode) );
 
                 //if no coordinates are returned return an empty set
                 if ( $zipCoordsStmt->rowCount() == 0 ) {
@@ -192,7 +205,6 @@ class Listing_Model_Search
                 $zipCodesInRadiusStmt->closeCursor();
 
                 //extract the zip codes into a variable array
-                $variableArray = array();
                 foreach ( $zipCodesInRadius as $row ) {
                     if ( !in_array($row['zip_code'], $variableArray ) ) {
                         $variableArray[] = $row['zip_code'];
@@ -204,26 +216,28 @@ class Listing_Model_Search
                 for ( $index = 0; $index < count($variableArray); $index++ ) {
                     $zipCodesInjector .= ( $index === ( count($variableArray) - 1 ) ) ? '?' : '?,';
                 }
-                $zipCodesInjector .= ')';
+                $zipCodesInjector .= ') ';
 
                 //append the zip code injector to the query string
                 $listingsSql .= $zipCodesInjector;
-
-                //if used, add the bedroom variable to the variable array
-                if ( isset( $numberOfBedRoomsInjector ) ) {
-                    $variableArray[] = $this->_numberOfBedroomsCriteria->getCriteria();
-                    $listingsSql .= $numberOfBedRoomsInjector;
-                }
-
-                //prepare the statement and execute the search query
-                $listingStmt = $db->prepare($listingsSql);
-                $listingStmt->execute($variableArray);
-                $listings = $listingStmt->fetchAll();
-                $listingStmt->closeCursor();
-                return $listings;
             } else {
-
+                $zipCodesInjector = 'AND li.ZipCode IN(' . $zipCode . ') ';
+                $listingsSql .= $zipCodesInjector;
+                $variableArray[] = $zipCode;
             }
+
+            if ( $this->_useNumberOfBedrooms ) {
+                $numberOfBedRoomsInjector = 'AND li.Bedrooms = ? ';
+                $variableArray[] = $this->_numberOfBedroomsCriteria->getCriteria();
+                $listingsSql .= $numberOfBedRoomsInjector;
+            }
+
+            //prepare the statement and execute the search query
+            $listingStmt = $db->prepare($listingsSql);
+            $listingStmt->execute($variableArray);
+            $listings = $listingStmt->fetchAll();
+            $listingStmt->closeCursor();
+            return $listings;
         } catch ( Exception $e ) {
             echo($e->getMessage());
         }
