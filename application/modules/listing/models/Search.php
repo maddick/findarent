@@ -173,7 +173,7 @@ class Listing_Model_Search
                 ));
 
                 //if no zip code is returned the return an empty set
-                if ( $cityStateToZipStmt->rowCount() == 0 ) {
+                if ( $cityStateToZipStmt->rowCount() === 0 ) {
                     return array();
                 }
 
@@ -194,7 +194,7 @@ class Listing_Model_Search
                 $zipCoordsStmt->execute( array('zipCode' => $zipCode) );
 
                 //if no coordinates are returned return an empty set
-                if ( $zipCoordsStmt->rowCount() == 0 ) {
+                if ( $zipCoordsStmt->rowCount() === 0 ) {
                     return array();
                 }
 
