@@ -67,9 +67,14 @@ class Listing_Model_Search
             $this->results['reasons'] = $this->_validationErrors;
             return $this->results;
         } else {
-            $listings = $this->_searchListings();
-            $this->results['result'] = 'success';
-            $this->results['listings'] = $listings;
+            try{
+                $listings = $this->_searchListings();
+                $this->results['result'] = 'success';
+                $this->results['listings'] = $listings;
+            } catch (Exception $e) {
+                $this->results['result'] = 'error';
+                $this->results['message'] = $e->getMessage();
+            }
             return $this->results;
         }
     }
@@ -120,6 +125,10 @@ class Listing_Model_Search
         }
     }
 
+    /**
+     * @return array containing the results of the search
+     * @throws Exception when there is a database error
+     */
     protected function _searchListings()
     {
         //setup the initial query string
@@ -239,7 +248,7 @@ class Listing_Model_Search
             $listingStmt->closeCursor();
             return $listings;
         } catch ( Exception $e ) {
-            echo($e->getMessage());
+            throw $e;
         }
     }
 
