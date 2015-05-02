@@ -17,16 +17,5 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $autoloader = Zend_Loader_Autoloader::getInstance();
         $autoloader->registerNamespace('Custom_');
     }
-
-    protected function _initListingResources()
-    {
-        $resourceLoader = new Zend_Loader_Autoloader_Resource(array(
-            'basePath' => APPLICATION_PATH . 'modules/listing/',
-            'namespace' => 'Listing_'
-        ));
-
-        $resourceLoader->addResourceType( 'model', 'models/', 'Model');
-        return $resourceLoader;
-    }
 }
 
