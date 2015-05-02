@@ -1,6 +1,6 @@
 <?php
 
-class Listing_IndexController extends Zend_Rest_Controller
+class Listing_RestController extends Zend_Rest_Controller
 {
 
     public function init()
