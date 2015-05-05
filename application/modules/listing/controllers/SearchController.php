@@ -58,6 +58,8 @@ class Listing_SearchController extends Zend_Rest_Controller
         //process and send the response
         if ( $searchResults['result'] === 'error' ) {
             $this->getResponse()->setHttpResponseCode(400);
+        } elseif ( $searchResults['result'] === 'server error' ) {
+            $this->getResponse()->setHttpResponseCode(500);
         } else {
             $this->getResponse()->setHttpResponseCode(200);
         }

@@ -72,7 +72,7 @@ class Listing_Model_Search
                 $this->results['result'] = 'success';
                 $this->results['listings'] = $listings;
             } catch (Exception $e) {
-                $this->results['result'] = 'error';
+                $this->results['result'] = 'server error';
                 $this->results['message'] = $e->getMessage();
             }
             return $this->results;

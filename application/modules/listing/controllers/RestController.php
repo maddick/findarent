@@ -10,7 +10,8 @@ class Listing_RestController extends Zend_Rest_Controller
 
     public function indexAction()
     {
-        // action body
+        $this->getResponse()->setHttpResponseCode(501);
+        $this->_helper->json->sendJson( array( 'result' => 'error' ), false, true );
     }
 
 
