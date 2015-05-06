@@ -32,13 +32,13 @@ class Listing_SearchController extends Zend_Rest_Controller
         $searchCriteria = $this->getRequest()->getParams();
 
         //set each existing criteria in the params
-        if( array_key_exists('zipCode', $searchCriteria) ) {
-            $zipCodeCriteria = new Custom_ZipCodeCriteria( $searchCriteria['zipCode'] );
+        if( array_key_exists('zip-code', $searchCriteria) ) {
+            $zipCodeCriteria = new Custom_ZipCodeCriteria( $searchCriteria['zip-code'] );
             $search->setZipCriteria($zipCodeCriteria);
         }
 
-        if ( array_key_exists('cityState', $searchCriteria ) ) {
-            $cityStateCriteria = new Custom_CityStateCriteria( $searchCriteria['cityState'] );
+        if ( array_key_exists('city-state', $searchCriteria ) ) {
+            $cityStateCriteria = new Custom_CityStateCriteria( $searchCriteria['city-state'] );
             $search->setCityStateCriteria($cityStateCriteria);
         }
 
@@ -47,8 +47,8 @@ class Listing_SearchController extends Zend_Rest_Controller
             $search->setRadiusCriteria($radiusCriteria);
         }
 
-        if( array_key_exists('numberOfBedrooms', $searchCriteria)) {
-            $numberOfBedroomsCriteria = new Custom_NumberOfBedroomsCriteria( floatval($searchCriteria['numberOfBedrooms']));
+        if( array_key_exists('number-of-bedrooms', $searchCriteria)) {
+            $numberOfBedroomsCriteria = new Custom_NumberOfBedroomsCriteria( floatval($searchCriteria['number-of-bedrooms']));
             $search->setNumberOfBedroomsCriteria($numberOfBedroomsCriteria);
         }
 
