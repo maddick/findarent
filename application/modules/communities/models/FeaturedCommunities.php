@@ -1,6 +1,6 @@
 <?php
 
-class Communities_Models_FeaturedCommunities
+class Communities_Model_FeaturedCommunities
 {
     protected $_stateCriteria;
 
