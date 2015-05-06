@@ -7,8 +7,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $front = Zend_Controller_Front::getInstance();
         $router = $front->getRouter();
-        $restRoute = new Zend_Rest_Route($front);
-        $router->addRoute('default', $restRoute);
+        $restRoute = new Zend_Rest_Route($front, array(), array(
+            'listing' => array( 'rest', 'search'),
+            'communities' => array( 'rest' )
+        ));
+        $router->addRoute('rest', $restRoute);
     }
 
     protected function _initCustomLibraries()
