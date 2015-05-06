@@ -34,13 +34,13 @@ class Communities_Model_Community
      */
     public function getCommunity()
     {
+        //validate the id criteria
         if ( !$this->_communityIdCriteria->isValid() ) {
             $this->_result['result'] = 'error';
             $this->_result['reasons'] = $this->_communityIdCriteria->getValidationErrors();
         } else {
             $id = $this->_communityIdCriteria->getCriteria();
             $db = Zend_Db_Table::getDefaultAdapter();
-
             try {
                 $sql = 'CALL FAR_Accounts_GetCommunityByID( :id, 1, 0, 1 )';
                 $resultObj = $db->prepare($sql);
@@ -48,7 +48,7 @@ class Communities_Model_Community
                 $this->_result['result'] = 'success';
                 $this->_result['communities'] = $resultObj->fetchAll();
             } catch ( Exception $e ) {
-                $this->_result['result'] = 'error';
+                $this->_result['result'] = 'server error';
                 $this->_result['reasons'] = $e->getMessage();
             }
         }
