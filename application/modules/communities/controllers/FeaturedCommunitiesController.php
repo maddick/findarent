@@ -7,16 +7,16 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
-    public function GetCommunityCitiesByStateAction()
+    public function getCommunityCitiesByStateAction()
     {
         $state = $this->getRequest()->getParam('state');
         $stateCriteria = new Custom_StateCriteria( $state );
-        $featuredCommunitiesModel = new Communities_Models_FeaturedCommunities();
+        $featuredCommunitiesModel = new Communities_Model_FeaturedCommunities();
         $featuredCommunitiesModel->setStateCriteria($stateCriteria);
         $citiesByState = $featuredCommunitiesModel->getCommunityCitiesByState();
 
         if ( $citiesByState['result'] === 'success' ) {
-            if ( empty( $citiesByState['communities'] ) ) {
+            if ( empty( $citiesByState['cities'] ) ) {
                 $this->getResponse()->setHttpResponseCode(404);
             } else {
                 $this->getResponse()->setHttpResponseCode(200);
