@@ -31,4 +31,33 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
 
         return $this->_helper->json->sendJson( $citiesByState, false, true );
     }
+
+    public function searchAction()
+    {
+        //initialize a search model
+        $searchModel = new Communities_Model_FeaturedCommunitySearch();
+
+        //get our parameters
+        $searchCriteria = $this->getRequest()->getParams();
+
+        //if we have a city-state then set the dependency for the search
+        if ( array_key_exists( 'city-state', $searchCriteria ) ) {
+            $cityStateCriteria = new Custom_CityStateCriteria( $searchCriteria['city-state'] );
+            $searchModel->setCityStateCriteria( $cityStateCriteria );
+        }
+
+        //search the communities
+        $searchResults = $searchModel->searchFeaturedCommunities();
+
+        //process and send our results
+        if ( $searchResults['result'] === 'error' ) {
+            $this->getResponse()->setHttpResponseCode(400);
+        } elseif ( $searchResults['result'] === 'server error' ) {
+            $this->getResponse()->setHttpResponseCode(500);
+        } else {
+            $this->getResponse()->setHttpResponseCode(200);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        $this->_helper->json->sendJson( $searchResults, false, true );
+    }
 }
