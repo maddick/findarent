@@ -42,6 +42,7 @@ class Listing_RestController extends Zend_Rest_Controller
         } else {
             $this->getResponse()->setHttpResponseCode(500);
         }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
         return $this->_helper->json->sendJson( $listing, false, true );
     }
 

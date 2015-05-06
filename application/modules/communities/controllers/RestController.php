@@ -43,6 +43,7 @@ class Communities_RestController extends Zend_Rest_Controller
             }
         }
 
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
         return $this->_helper->json->sendJson( $community, false, true );
     }
 

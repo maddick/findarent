@@ -29,6 +29,7 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
             }
         }
 
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
         return $this->_helper->json->sendJson( $citiesByState, false, true );
     }
 
