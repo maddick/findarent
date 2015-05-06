@@ -19,7 +19,27 @@ class Communities_RestController extends Zend_Rest_Controller
      */
     public function getAction()
     {
-        // TODO: Implement getAction() method.
+        $id = $this->getRequest()->getParam("id");
+        $communityIdCriteria = new Custom_IdCriteria( intval( $id ) );
+
+        $communityModel = new Communities_Model_Community( $communityIdCriteria );
+        $community = $communityModel->getCommunity();
+
+        if ( $community['result'] === 'success' ) {
+            if ( empty( $community['community'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
+        } else {
+            if ( $community['result'] === 'server error' ) {
+                $this->getResponse()->setHttpResponseCode(500);
+            } else {
+                $this->getResponse()->setHttpResponseCode(400);
+            }
+        }
+
+        return $this->_helper->json->sendJson( $community, false, true );
     }
 
     /**
