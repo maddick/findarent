@@ -2,6 +2,10 @@
 
 class Communities_RestController extends Zend_Rest_Controller
 {
+    public function init()
+    {
+        $this->_helper->viewRenderer->setNoRender(true);
+    }
 
     /**
      * The index action handles index/list requests; it should respond with a
