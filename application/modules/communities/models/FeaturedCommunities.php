@@ -23,7 +23,7 @@ class Communities_Model_FeaturedCommunities
                 $stmt->execute( array( 'state' => $this->_stateCriteria->getCriteria() ) );
                 $communityCitiesByState = $stmt->fetchAll();
                 $this->_results['result'] = 'success';
-                $this->_results['communities'] = $communityCitiesByState;
+                $this->_results['cities'] = $communityCitiesByState;
             } catch ( Exception $e ) {
                 $this->_results['result'] = 'server error';
                 $this->_results['reasons'] = $e->getMessage();
