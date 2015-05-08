@@ -9,8 +9,13 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
 
     public function getCommunityCitiesByStateAction()
     {
+        //get parameters
         $state = $this->getRequest()->getParam('state');
+
+        //create a state criteria
         $stateCriteria = new Custom_StateCriteria( $state );
+
+        //initialize a featured communities model and get a list of cities by state
         $featuredCommunitiesModel = new Communities_Model_FeaturedCommunities();
         $citiesByState = $featuredCommunitiesModel->setStateCriteria($stateCriteria)->getCommunityCitiesByState();
 

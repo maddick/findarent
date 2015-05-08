@@ -196,6 +196,13 @@ class Communities_Model_FeaturedCommunities
         }
     }
 
+    /**
+     * Sets the dependency for state criteria
+     *
+     * @param $stateCriteria
+     * @return $this
+     * @throws Exception when $stateCriteria is not an instance of Custom_StateCriteria
+     */
     public function setStateCriteria( $stateCriteria )
     {
         if ( $stateCriteria instanceof Custom_StateCriteria ) {
@@ -211,8 +218,8 @@ class Communities_Model_FeaturedCommunities
      * Sets the dependency for city/state criteria
      *
      * @param $cityStateCriteria
-     * @throws Exception when $cityStateCriteria is not an instance of Custom_CityStateCriteria
      * @return $this
+     * @throws Exception when $cityStateCriteria is not an instance of Custom_CityStateCriteria
      */
     public function setCityStateCriteria($cityStateCriteria)
     {
