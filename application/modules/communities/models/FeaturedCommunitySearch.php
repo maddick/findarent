@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class Communities_Model_FeaturedCommunitySearch
+ * @deprecated
+ */
 class Communities_Model_FeaturedCommunitySearch
 {
     /**
