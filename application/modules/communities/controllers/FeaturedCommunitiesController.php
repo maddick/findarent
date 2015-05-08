@@ -12,8 +12,7 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
         $state = $this->getRequest()->getParam('state');
         $stateCriteria = new Custom_StateCriteria( $state );
         $featuredCommunitiesModel = new Communities_Model_FeaturedCommunities();
-        $featuredCommunitiesModel->setStateCriteria($stateCriteria);
-        $citiesByState = $featuredCommunitiesModel->getCommunityCitiesByState();
+        $citiesByState = $featuredCommunitiesModel->setStateCriteria($stateCriteria)->getCommunityCitiesByState();
 
         if ( $citiesByState['result'] === 'success' ) {
             if ( empty( $citiesByState['cities'] ) ) {
@@ -35,8 +34,8 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
 
     public function searchAction()
     {
-        //initialize a search model
-        $searchModel = new Communities_Model_FeaturedCommunitySearch();
+        //initialize a community model
+        $featuredCommunityModel = new Communities_Model_FeaturedCommunities();
 
         //get our parameters
         $searchCriteria = $this->getRequest()->getParams();
@@ -44,11 +43,11 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
         //if we have a city-state then set the dependency for the search
         if ( array_key_exists( 'city-state', $searchCriteria ) ) {
             $cityStateCriteria = new Custom_CityStateCriteria( $searchCriteria['city-state'] );
-            $searchModel->setCityStateCriteria( $cityStateCriteria );
+            $featuredCommunityModel->setCityStateCriteria( $cityStateCriteria );
         }
 
         //search the communities
-        $searchResults = $searchModel->searchFeaturedCommunities();
+        $searchResults = $featuredCommunityModel->searchFeaturedCommunities();
 
         //process and send our results
         if ( $searchResults['result'] === 'error' ) {
