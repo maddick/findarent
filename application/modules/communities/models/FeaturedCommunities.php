@@ -86,7 +86,8 @@ class Communities_Model_FeaturedCommunities
     }
 
     /**
-     * performs validation on the search criteria. Validations for each criteria is handled at the criteria level.
+     * performs validation on the search criteria. Currently, the only valid search criteria is a city / state criteria.
+     * State alone is not accounted for as of yet. Validations for each criteria is handled at the criteria level.
      */
     protected function _validateSearch()
     {
