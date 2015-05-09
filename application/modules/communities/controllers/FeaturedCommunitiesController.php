@@ -7,6 +7,9 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
+    /**
+     * @return mixed
+     */
     public function getCommunityCitiesByStateAction()
     {
         //get parameters
@@ -34,9 +37,13 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
         }
 
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        return $this->_helper->json->sendJson( $citiesByState, false, true );
+        $this->_helper->json->sendJson( $citiesByState, false, true );
     }
 
+    /**
+     * The search action handles searches against featured communities and receives a 'city-state' criteria. It returns
+     * a json string containing the results of the search.
+     */
     public function searchAction()
     {
         //initialize a community model
