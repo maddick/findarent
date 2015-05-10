@@ -1,9 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="app/components/jquery-1.11.3.js"></script>
+    <link href="app/components/bootstrap.css" rel="stylesheet">
+    <script src="app/components/bootstrap.js"></script>
+    <script src="app/components/angular.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/controllers/appController.js"></script>
+    <script src="app/controllers/listingSearchController.js"></script>
+    <script src="app/services/ListingSearch.js"></script>
     <title>Stuff</title>
 </head>
 <body>
-<h1>This is the landing page!</h1>
+
+    <div class="container" ng-app="app">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div ng-include="'/app/views/header.html'"></div>
+                <div ng-include="'/app/views/nav.html'"></div>
+                <!--<a href="#/search/ct/new london/">/search/ct/new london</a>-->
+                <!--<a href="#/search/ct/new london/number-of-bedrooms/1">/search/ct/new london/number-of-bedrooms/1</a>-->
+                <div>
+                    <ng-view></ng-view>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
