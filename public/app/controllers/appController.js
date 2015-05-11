@@ -22,7 +22,7 @@ angular
                 console.log(url);
                 $location.path(url);
             } else {
-                //TODO: handle validation error
+                $('#city-state-or-zip-error').fadeIn().delay(3000).fadeOut();
             }
         }
     }]);
