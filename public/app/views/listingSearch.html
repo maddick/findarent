@@ -1,10 +1,5 @@
 <div class="row" ng-controller="appController">
     <div class="col-md-8 col-md-offset-2">
-        <div id="city-state-or-zip-error" class="alert alert-danger" role="alert" style="display: none;">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            Not a valid city / state or zip code.
-        </div>
         <div class="well" style="background-color:#f2c747 !important; background-image: none;">
             <h4>Search for Apartments/Houses for Rent in CT and RI</h4>
             <div class="input-group">
@@ -23,6 +18,11 @@
                     <option value="4">4</option>
                 </select>
             </div>
+        </div>
+        <div id="city-state-or-zip-error" class="alert alert-danger" role="alert" style="display: none;">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Not a valid city / state or zip code.
         </div>
     </div>
 </div>
