@@ -1,6 +1,11 @@
 <div class="row" ng-controller="appController">
     <div class="col-md-8 col-md-offset-2">
-        <div class="well" style="background-color:#f2c747;">
+        <div id="city-state-or-zip-error" class="alert alert-danger" role="alert" style="display: none;">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Not a valid city / state or zip code.
+        </div>
+        <div class="well" style="background-color:#f2c747 !important; background-image: none;">
             <h4>Search for Apartments/Houses for Rent in CT and RI</h4>
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="City & State or Zip" ng-model="listingSearchParams.cityStateOrZip">
@@ -11,10 +16,11 @@
             <div class="input-group">
                 <label for="numberOfBedrooms" ># of Bedrooms</label>
                 <select class="form-control" id="numberOfBedrooms" ng-model="listingSearchParams.numberOfBedrooms">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
+                    <option value="">All</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
                 </select>
             </div>
         </div>
