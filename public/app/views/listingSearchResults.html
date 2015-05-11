@@ -1,5 +1,31 @@
 <div ng-controller="listingSearchController">
-    <ul>
-        {{listings}}
-    </ul>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div ng-if="listings.result == 'success'">
+                <div class="well" ng-repeat="listing in listings.listings" style="background-color:#f2c747 !important; background-image: none;">
+                    <h4><strong>{{listing.Headline}}</strong></h4>
+                    <p>
+                        <strong>Address:</strong><br>
+                        {{listing.Address}}<br>
+                        {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}<br>
+                    </p>
+                    <p>
+                        <strong>Rent:</strong> ${{listing.Rent}}
+                    </p>
+                    <p>
+                        <strong>Bedrooms:</strong> {{listing.Bedrooms}}
+                    </p>
+                </div>
+            </div>
+            <div ng-if="listings.result == 'error' || listings.result == 'server error'">
+                <div class="well">
+                    <h4>Type: {{listings.result}}</h4>
+                    <ul class="list-unstyled">
+                        Reasons:
+                        <li ng-repeat="reason in listings.reasons">{{reason}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
