@@ -1,31 +1,80 @@
-<div ng-controller="listingSearchController">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div ng-if="listings.result == 'success'">
-                <div class="well" ng-repeat="listing in listings.listings" style="background-color:#f2c747 !important; background-image: none;">
-                    <h4><strong>{{listing.Headline}}</strong></h4>
-                    <p>
-                        <strong>Address:</strong><br>
-                        {{listing.Address}}<br>
-                        {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}<br>
-                    </p>
-                    <p>
-                        <strong>Rent:</strong> ${{listing.Rent}}
-                    </p>
-                    <p>
-                        <strong>Bedrooms:</strong> {{listing.Bedrooms}}
-                    </p>
+<div ng-controller="listingSearchController" style="margin-top:70px;">
+
+    <!-- in the case of a successful request -->
+    <div ng-if="listings.result == 'success'">
+
+        <!-- success summary message -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <p style="color: green;">
+                       Your apartment / house rental Search in <strong>{{successMessage.zipOrCityState}}</strong>
+                       has returned <strong>{{listings.count}}</strong> listings out of a database of ??? Current,
+                       Active, Local Listings.</p>
                 </div>
             </div>
-            <div ng-if="listings.result == 'error' || listings.result == 'server error'">
-                <div class="well">
-                    <h4>Type: {{listings.result}}</h4>
-                    <ul class="list-unstyled">
-                        Reasons:
-                        <li ng-repeat="reason in listings.reasons">{{reason}}</li>
-                    </ul>
+        </div>
+
+        <!-- loop through all listings and display them -->
+        <div class="container-fluid">
+            <div class="row" ng-repeat="listing in listings.listings">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="well" style="background-color:#f9f9f9 !important; background-image: none;">
+
+                        <div class="row">
+                            <!-- column for picture -->
+                            <div class="col-sm-2">
+
+                            </div>
+
+                            <!-- column for text -->
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h5><strong>{{listing.Headline}}</strong></h5>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div style="font-size: 14px;color:red;">${{listing.Rent}}</div>
+                                        <div style="font-size: 11px;">Bedrooms: {{listing.Bedrooms}}</div>
+                                    </div>
+                                    <div class="col-sm-4" style="font-size: 11px;">
+                                        {{listing.Address}}<br>
+                                        {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}<br>
+                                    </div>
+                                    <div class="col-sm-5">
+
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-top: 5px;">
+                                    <div class="col-sm-12" style="font-size: 11px;">
+                                        {{listing.MarketingMessage}}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <!-- in the case of an error -->
+    <div class="row" ng-if="listings.result == 'error' || listings.result == 'server error'">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="well">
+                <h4>Type: {{listings.result}}</h4>
+                <ul class="list-unstyled">
+                    Reasons:
+                    <li ng-repeat="reason in listings.reasons">{{reason}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 </div>

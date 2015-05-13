@@ -6,6 +6,7 @@ angular
                 var zipCode = '';
                 var numberOfBedrooms = '';
                 var cityState = '';
+                var radius = '';
 
                 if ( 'cityState' in params ) {
                     cityState = '/city-state/' + params['cityState'];
@@ -20,7 +21,11 @@ angular
                 if ( 'numberOfBedrooms' in params ) {
                     numberOfBedrooms = '/number-of-bedrooms/' + params['numberOfBedrooms'];
                 }
-                return $http.get('http://localhost:8080/listing/search' + cityState + zipCode + numberOfBedrooms);
+
+                if ( 'radius' in params ) {
+                    radius = '/radius/' + params['radius'];
+                }
+                return $http.get('http://localhost:8080/listing/search' + cityState + zipCode + numberOfBedrooms + radius);
             }
         }
     }]);

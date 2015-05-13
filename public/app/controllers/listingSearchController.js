@@ -5,17 +5,22 @@ angular
         var isCityState = $routeParams.cityState !== undefined;
         var cityState = '';
         var zipCode = '';
+        var zipOrCityState = '';
 
         if ( isCityState ) {
             cityState = $routeParams.cityState;
-            searchParams['cityState'] = cityState;
+            searchParams['cityState'] = zipOrCityState = cityState;
         } else {
             zipCode = $routeParams.zipCode;
-            searchParams['zipCode'] = zipCode;
+            searchParams['zipCode'] = zipOrCityState = zipCode;
         }
 
         if ( $routeParams.numberOfBedrooms !== undefined) {
             searchParams['numberOfBedrooms'] = $routeParams.numberOfBedrooms;
+        }
+
+        if ( $routeParams.radius !== undefined ) {
+            searchParams['radius'] = $routeParams.radius;
         }
 
         console.log(searchParams);
@@ -24,6 +29,8 @@ angular
         promise.then(
         function(response){
             $scope.listings = response.data;
+            $scope.listings.count = response.data.listings.length;
+            $scope.successMessage = { zipOrCityState : zipOrCityState };
         },
         function(response){
             $scope.listings = response.data;

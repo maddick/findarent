@@ -4,6 +4,7 @@ angular
         $scope.performSearch = function(){
             var numberOfBedrooms    = ($scope.listingSearchParams !== undefined) ? $scope.listingSearchParams.numberOfBedrooms : undefined;
             var cityStateOrZip      = ($scope.listingSearchParams !== undefined) ? $scope.listingSearchParams.cityStateOrZip : undefined;
+            var radius              = ($scope.listingSearchParams !== undefined) ? $scope.listingSearchParams.radius : undefined;
             var cityStateZipRegEx   = /^(\d{5})$|^((?:\b[a-zA-Z]+\b\s?)+,?\s?[a-zA-Z]{2})$/;
             var regEx               = new RegExp(cityStateZipRegEx);
             var regExArray          = regEx.exec(cityStateOrZip);
@@ -19,6 +20,11 @@ angular
                 if ( numberOfBedrooms !== undefined ) {
                     url = url + '/number-of-bedrooms/' + numberOfBedrooms;
                 }
+
+                if ( radius !== undefined) {
+                    url = url + '/radius/' + radius;
+                }
+
                 console.log(url);
                 $location.path(url);
             } else {
