@@ -26,8 +26,8 @@ class Custom_NumberOfBedroomsCriteria extends Custom_AbstractCriteria
         if ( empty( $this->_criteriaValue ) ) {
             $this->_validationErrors[] = 'numberOfBedrooms was unspecified';
         } else {
-            if ( !is_double( $this->_criteriaValue ) ) {
-                $this->_validationErrors[] = 'numberOfBedrooms must be a decimal value (double)';
+            if ( !is_int( $this->_criteriaValue ) ) {
+                $this->_validationErrors[] = 'numberOfBedrooms must be a integer value';
             }
         }
     }

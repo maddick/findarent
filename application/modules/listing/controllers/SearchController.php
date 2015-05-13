@@ -48,7 +48,7 @@ class Listing_SearchController extends Zend_Rest_Controller
         }
 
         if( array_key_exists('number-of-bedrooms', $searchCriteria)) {
-            $numberOfBedroomsCriteria = new Custom_NumberOfBedroomsCriteria( floatval($searchCriteria['number-of-bedrooms']));
+            $numberOfBedroomsCriteria = new Custom_NumberOfBedroomsCriteria( intval($searchCriteria['number-of-bedrooms']));
             $search->setNumberOfBedroomsCriteria($numberOfBedroomsCriteria);
         }
 
