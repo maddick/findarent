@@ -35,6 +35,11 @@ class Listing_Model_Search
     protected $_numberOfBedroomsCriteria;
 
     /**
+     * @var Custom_NumberOfBathroomsCriteria
+     */
+    protected $_numberOfBathroomsCriteria;
+
+    /**
      * @var array
      */
     public $results = array();
@@ -53,6 +58,11 @@ class Listing_Model_Search
      * @var bool true if radius is used false otherwise
      */
     protected $_useRadius = true;
+
+    /**
+     * @var bool true if a number of bathrooms is specified false otherwise
+     */
+    protected $_useNumberOfBathrooms = true;
 
     /**
      * @var bool true if number of bedrooms is used false otherwise
@@ -122,6 +132,14 @@ class Listing_Model_Search
             }
         } else {
             $this->_useNumberOfBedrooms = false;
+        }
+
+        if ( isset( $this->_numberOfBathroomsCriteria ) ) {
+            if (!$this->_numberOfBathroomsCriteria->isValid() ) {
+                $this->_validationErrors = array_merge( $this->_validationErrors, $this->_numberOfBathroomsCriteria->getValidationErrors() );
+            }
+        } else {
+            $this->_useNumberOfBathrooms = false;
         }
     }
 
@@ -241,6 +259,12 @@ class Listing_Model_Search
                 $listingsSql .= $numberOfBedRoomsInjector;
             }
 
+            if ( $this->_useNumberOfBathrooms ) {
+                $numberOfBathroomsInjector = 'AND li.Bathrooms >= ?';
+                $variableArray[] = $this->_numberOfBathroomsCriteria->getCriteria();
+                $listingsSql .= $numberOfBathroomsInjector;
+            }
+
             //prepare the statement and execute the search query
             $listingStmt = $db->prepare($listingsSql);
             $listingStmt->execute($variableArray);
@@ -309,6 +333,20 @@ class Listing_Model_Search
             $this->_numberOfBedroomsCriteria = $numberOfBedroomsCriteria;
         } else {
             throw new Exception('numberOfBedroomsCriteria must be an instance of Custom_NumberOfBedroomsCriteria');
+        }
+    }
+
+    /**
+     * Sets the dependency for the numberOfBathrooms criteria object
+     *
+     * @param $numberOfBathrooms
+     * @throws Exception when $numberOfBathroomsCriteria is not an instance of Custom_NumberOfBathroomsCriteria
+     */
+    public function setNumberOfBathroomsCriteria( $numberOfBathrooms ) {
+        if ( $numberOfBathrooms instanceof Custom_NumberOfBathroomsCriteria ) {
+            $this->_numberOfBathroomsCriteria = $numberOfBathrooms;
+        } else {
+            throw new Exception('numberOfBathroomsCriteria must be an instance of Custom_NumberOfBathroomsCriteria');
         }
     }
 }

@@ -52,6 +52,11 @@ class Listing_SearchController extends Zend_Rest_Controller
             $search->setNumberOfBedroomsCriteria($numberOfBedroomsCriteria);
         }
 
+        if( array_key_exists('number-of-bathrooms', $searchCriteria)) {
+            $numberOfBathroomsCriteria = new Custom_NumberOfBathroomsCriteria( floatval($searchCriteria['number-of-bathrooms']));
+            $search->setNumberOfBathroomsCriteria($numberOfBathroomsCriteria);
+        }
+
         //search listings
         $searchResults = $search->searchListings();
 
