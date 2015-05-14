@@ -27,10 +27,10 @@ class Listing_RestController extends Zend_Rest_Controller
         $listingIdCriteria = new Custom_IdCriteria( intval($id) );
 
         //create and initialize a listing model
-        $listingModel = new Listing_Model_Listing($listingIdCriteria);
+        $listingModel = new Listing_Model_Listing();
 
         //get the listing
-        $listing = $listingModel->getListing();
+        $listing = $listingModel->setListingIdCriteria($listingIdCriteria)->getListing();
 
         //process and send response
         if ( $listing['result'] === 'success' ){

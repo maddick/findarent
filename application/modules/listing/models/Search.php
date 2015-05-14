@@ -160,17 +160,13 @@ class Listing_Model_Search
                 FROM far_listings_tracking GROUP BY ListingID) AS Tracking ON li.ListingID = Tracking.ListingID
 
             WHERE li.LandlordID = l.LandlordID
-            AND (1 IS NULL OR li.Active = 1)
+            AND (li.Active = 1)
             AND (
-              1 IS NULL OR (
-                1 = 1 AND (
-                  li.ExpirationDate IS NULL OR
-                  DATE(li.ExpirationDate) >= DATE(now())
-                )
-              )
+              li.ExpirationDate IS NULL OR
+              DATE(li.ExpirationDate) >= DATE(now())
             )
-            AND (0 IS NULL OR li.Deleted = 0)
-            AND (1 = 0 OR (1 = 1 AND l.Active = 1 AND l.Deleted = 0 AND DATE(l.ExpirationDate) >= DATE(now())))';
+            AND (li.Deleted = 0)
+            AND (l.Active = 1 AND l.Deleted = 0 AND DATE(l.ExpirationDate) >= DATE(now()))';
 
         //initialize an array for variables passed into the query
         $variableArray = array();
