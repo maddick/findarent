@@ -120,34 +120,7 @@ class Communities_Model_FeaturedCommunities
               IFNULL(ContactEmailsSent,0) AS ContactEmailsSent
 
 
-          FROM (
-            SELECT c.*
-            FROM far_communities c
-            JOIN (
-              SELECT LandlordID
-              FROM far_landlords l
-              JOIN my_aspnet_membership m
-                ON l.UserId = m.userId
-              WHERE IsApproved = 1
-              AND Active = 1
-              AND Deleted = 0
-              AND DATE(ExpirationDate) >= DATE(NOW())
-            ) accounts ON c.LandlordID = accounts.LandlordID
-
-
-            JOIN (
-              SELECT CommunityID
-              FROM far_listings l
-              WHERE Active = 1
-              AND Deleted = 0
-              AND (ExpirationDate IS NULL OR DATE(ExpirationDate) >= DATE(NOW()))
-              :state
-              :city
-              GROUP BY CommunityID
-            ) listings ON c.CommunityID = listings.CommunityID
-            WHERE Active = 1
-            AND c.Deleted = 0
-          ) AS communities
+          FROM ( :communitiesQueryString ) AS communities
 
           LEFT JOIN (
             SELECT CommunityID, SUM(Views) AS Views, SUM(ContactRequests) AS ContactRequests, SUM(ContactEmailsSent) AS ContactEmailsSent
@@ -170,22 +143,68 @@ class Communities_Model_FeaturedCommunities
         try {
             $db = Zend_Db_Table::getDefaultAdapter();
 
-            //if we use city / state, then alter the query with LIKE statements
-            //otherwise inject an empty string
+            $accounts = $db->select()
+                ->from(
+                    array('l' => 'far_landlords'),
+                    array('LandlordID')
+                )
+                ->join(
+                    array('m' => 'my_aspnet_membership'),
+                    'l.UserId = m.userId',
+                    array()
+                )
+                ->where('IsApproved = 1')
+                ->where('Active = 1')
+                ->where('Deleted = 0')
+                ->where('DATE(ExpirationDate) >= DATE(NOW())');
+
+            $listings = $db->select()
+                ->from(
+                    array('l' => 'far_listings'),
+                    array('CommunityID')
+                )
+                ->where('Active = 1')
+                ->where('Deleted = 0')
+                ->where('ExpirationDate IS NULL OR DATE(ExpirationDate) >= DATE(NOW())')
+                ->group('CommunityID');
+
+
+            $communities = $db->select()
+                ->from(
+                    array('c' => 'far_communities'),
+                    array('c.*')
+                )
+                ->join(
+                    array( 'accounts' => new Zend_Db_Expr('(' . $accounts . ')') ),
+                    'c.LandlordID = accounts.LandlordID',
+                    array()
+                )
+                ->join(
+                    array( 'listings' => new Zend_Db_Expr('(' . $listings . ')')),
+                    'c.CommunityID = listings.CommunityID',
+                    array()
+                )
+                ->where('Active = 1')
+                ->where('c.Deleted = 0');
+
+            //echo($communities->__toString());exit(0);
+
+            //if we use city / state, then we add the where clause with the appropriate
+            //variable replacements needed
             if ( $this->_useCityState ) {
-                $stateReplace = 'AND State LIKE :state';
-                $cityReplace = 'AND City LIKE :city';
+
+                $communities->where('State LIKE :state');
+                $communities->where('City LIKE :city');
 
                 //prepare the variable array with the values needed
                 $variableArray['state'] = $this->_cityStateCriteria->getState();
                 $variableArray['city'] = $this->_cityStateCriteria->getCity();
-            } else {
-                $stateReplace = '';
-                $cityReplace = '';
             }
 
-            $searchSql = str_replace( ':state', $stateReplace, $searchSql );
-            $searchSql = str_replace( ':city', $cityReplace, $searchSql );
+            //build the entire query by injecting the now appropriately built query
+            //string of communities
+            $communitiesSql = $communities->__toString();
+            $searchSql = str_replace( ':communitiesQueryString', $communitiesSql, $searchSql );
 
             $stmt = $db->prepare( $searchSql );
             $stmt->execute( $variableArray );
