@@ -2,7 +2,7 @@ angular
     .module('app')
     .factory('ListingSearch', [ '$http', '$q', function($http,$q){
         return {
-            get: function(params){
+            getListings: function(params){
                 var zipCode = '';
                 var numberOfBedrooms = '';
                 var cityState = '';
@@ -25,7 +25,11 @@ angular
                 if ( 'radius' in params ) {
                     radius = '/radius/' + params['radius'];
                 }
-                return $http.get('http://localhost:8080/listing/search' + cityState + zipCode + numberOfBedrooms + radius);
+                return $http.get('http://localhost:8080/listing/search/get-listings/' + cityState + zipCode + numberOfBedrooms + radius);
+            },
+
+            getTotalActiveListings: function() {
+                return $http.get('http://localhost:8080/listing/search/total-active-listings/');
             }
         }
     }]);

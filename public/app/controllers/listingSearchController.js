@@ -25,7 +25,8 @@ angular
 
         console.log(searchParams);
 
-        var promise = ListingSearch.get(searchParams);
+        $scope.listings = {};
+        var promise = ListingSearch.getListings(searchParams);
         promise.then(
         function(response){
             $scope.listings = response.data;
@@ -33,6 +34,16 @@ angular
             $scope.successMessage = { zipOrCityState : zipOrCityState };
         },
         function(response){
-            $scope.listings = response.data;
+            $scope.listings = response.data;//TODO: add error handler
+        });
+
+        var totalPromise = ListingSearch.getTotalActiveListings();
+        totalPromise.then(
+        function(response){
+            $scope.totalActiveListings = response.data.TotalActiveListings;
+            console.log($scope.totalActiveListings);
+        },
+        function(response){
+            console.log('error: ' + response.data.reasons);//TODO: add error handler
         });
     }]);
