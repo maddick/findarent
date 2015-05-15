@@ -48,36 +48,6 @@ class Listing_Model_Listing
     }
 
     /**
-     * Returns the total number of active listings
-     *
-     * @return array containing the total number of active listings
-     */
-    public function getActiveListingsCount()
-    {
-        $listingSql =
-            'SELECT COUNT(*) AS ActiveListingCount
-            FROM far_listings listings,
-              (SELECT LandlordID
-                 FROM far_landlords
-                WHERE far_landlords.Active = 1 AND far_landlords.Deleted = 0 AND far_landlords.ExpirationDate >= CURDATE()) landlords
-            WHERE listings.LandlordID = landlords.LandlordID AND listings.Active = 1 AND listings.Deleted = 0 AND listings.ExpirationDate IS NULL';
-
-        try {
-            $db = Zend_Db_Table::getDefaultAdapter();
-            $stmt = $db->prepare($listingSql);
-            $stmt->execute();
-            $listingTotal = $stmt->fetchAll();
-            $this->_result['result'] = 'success';
-            $this->_result['ActiveListingCount'] = $listingTotal[0]['ActiveListingCount'];
-        } catch(Exception $e ) {
-            $this->_result['result'] = 'error';
-            $this->_result['reasons'] = $e->getMessage();
-        }
-
-        return $this->_result;
-    }
-
-    /**
      * Sets the dependency for listing id criteria
      *
      * @param $listingIdCriteria

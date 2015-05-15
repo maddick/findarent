@@ -273,6 +273,36 @@ class Listing_Model_Search
     }
 
     /**
+     * Returns the total number of active listings
+     *
+     * @return array containing the total number of active listings
+     */
+    public function getActiveListingsCount()
+    {
+        $listingSql =
+            'SELECT COUNT(*) AS TotalActiveListings
+            FROM far_listings listings,
+              (SELECT LandlordID
+                 FROM far_landlords
+                WHERE far_landlords.Active = 1 AND far_landlords.Deleted = 0 AND far_landlords.ExpirationDate >= CURDATE()) landlords
+            WHERE listings.LandlordID = landlords.LandlordID AND listings.Active = 1 AND listings.Deleted = 0 AND listings.ExpirationDate IS NULL';
+
+        try {
+            $db = Zend_Db_Table::getDefaultAdapter();
+            $stmt = $db->prepare($listingSql);
+            $stmt->execute();
+            $listingTotal = $stmt->fetchAll();
+            $this->results['result'] = 'success';
+            $this->results['TotalActiveListings'] = $listingTotal[0]['TotalActiveListings'];
+        } catch(Exception $e ) {
+            $this->results['result'] = 'server error';
+            $this->results['reasons'] = $e->getMessage();
+        }
+
+        return $this->results;
+    }
+
+    /**
      * Sets the dependency for zip Criteria object
      *
      * @param $zipCodeCriteria
