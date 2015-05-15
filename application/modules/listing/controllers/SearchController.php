@@ -1,6 +1,6 @@
 <?php
 
-class Listing_SearchController extends Zend_Rest_Controller
+class Listing_SearchController extends Zend_Controller_Action
 {
     public function init()
     {
@@ -22,7 +22,7 @@ class Listing_SearchController extends Zend_Rest_Controller
      * should respond with the server resource state of the resource identified
      * by the 'id' value.
      */
-    public function getAction()
+    public function getListingsAction()
     {
         // TODO: Implement getAction() method.
 
@@ -72,48 +72,17 @@ class Listing_SearchController extends Zend_Rest_Controller
         $this->_helper->json->sendJson( $searchResults, false, true );
     }
 
-    /**
-     * The head action handles HEAD requests and receives an 'id' parameter; it
-     * should respond with the server resource state of the resource identified
-     * by the 'id' value.
-     */
-    public function headAction()
+    public function totalActiveListingsAction()
     {
-        // TODO: Implement headAction() method.
-    }
+        $search = new Listing_Model_Search();
+        $searchResults = $search->getActiveListingsCount();
 
-    /**
-     * The post action handles POST requests; it should accept and digest a
-     * POSTed resource representation and persist the resource state.
-     */
-    public function postAction()
-    {
-        // TODO: Implement postAction() method.
-        $this->getResponse()->setHttpResponseCode(501);
-        $this->_helper->json->sendJson( array( 'result' => 'error'), false, true);
-    }
-
-    /**
-     * The put action handles PUT requests and receives an 'id' parameter; it
-     * should update the server resource state of the resource identified by
-     * the 'id' value.
-     */
-    public function putAction()
-    {
-        // TODO: Implement putAction() method.
-        $this->getResponse()->setHttpResponseCode(501);
-        $this->_helper->json->sendJson( array( 'result' => 'error'), false, true);
-    }
-
-    /**
-     * The delete action handles DELETE requests and receives an 'id'
-     * parameter; it should update the server resource state of the resource
-     * identified by the 'id' value.
-     */
-    public function deleteAction()
-    {
-        // TODO: Implement deleteAction() method.
-        $this->getResponse()->setHttpResponseCode(501);
-        $this->_helper->json->sendJson( array( 'result' => 'error'), false, true);
+        if ( $searchResults['result'] === 'server error') {
+            $this->getResponse()->setHttpResponseCode(500);
+        } else {
+            $this->getResponse()->setHttpResponseCode(200);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        $this->_helper->json->sendJson( $searchResults, false, true );
     }
 }
