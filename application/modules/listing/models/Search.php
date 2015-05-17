@@ -39,6 +39,8 @@ class Listing_Model_Search
      */
     protected $_numberOfBathroomsCriteria;
 
+    protected $_minRentCriteria;
+
     /**
      * @var array
      */
@@ -68,6 +70,8 @@ class Listing_Model_Search
      * @var bool true if number of bedrooms is used false otherwise
      */
     protected $_useNumberOfBedrooms = true;
+
+    protected $_useMinRent = true;
 
     public function searchListings()
     {
@@ -140,6 +144,14 @@ class Listing_Model_Search
             }
         } else {
             $this->_useNumberOfBathrooms = false;
+        }
+
+        if ( isset( $this->_minRentCriteria ) ) {
+            if ( !$this->_minRentCriteria->isValid() ) {
+                $this->_validationErrors = array_merge( $this->_validationErrors, $this->_minRentCriteria->getValidationErrors() );
+            }
+        } else {
+            $this->_useMinRent = false;
         }
     }
 
@@ -244,21 +256,27 @@ class Listing_Model_Search
                 //append the zip code injector to the query string
                 $listingsSql .= $zipCodesInjector;
             } else {
-                $zipCodesInjector = 'AND li.ZipCode IN( ? ) ';
+                $zipCodesInjector = ' AND li.ZipCode IN( ? ) ';
                 $listingsSql .= $zipCodesInjector;
                 $variableArray[] = $zipCode;
             }
 
             if ( $this->_useNumberOfBedrooms ) {
-                $numberOfBedRoomsInjector = 'AND li.Bedrooms = ? ';
+                $numberOfBedRoomsInjector = ' AND li.Bedrooms = ? ';
                 $variableArray[] = $this->_numberOfBedroomsCriteria->getCriteria();
                 $listingsSql .= $numberOfBedRoomsInjector;
             }
 
             if ( $this->_useNumberOfBathrooms ) {
-                $numberOfBathroomsInjector = 'AND li.Bathrooms >= ?';
+                $numberOfBathroomsInjector = ' AND li.Bathrooms >= ?';
                 $variableArray[] = $this->_numberOfBathroomsCriteria->getCriteria();
                 $listingsSql .= $numberOfBathroomsInjector;
+            }
+
+            if ( $this->_useMinRent ) {
+                $minRentInjector = ' AND li.Rent >= ?';
+                $variableArray[] = $this->_minRentCriteria->getCriteria();
+                $listingsSql .= $minRentInjector;
             }
 
             //prepare the statement and execute the search query
@@ -378,6 +396,14 @@ class Listing_Model_Search
             $this->_numberOfBathroomsCriteria = $numberOfBathrooms;
         } else {
             throw new Exception('numberOfBathroomsCriteria must be an instance of Custom_NumberOfBathroomsCriteria');
+        }
+    }
+
+    public function setMinRentCriteria( $minRent ) {
+        if ( $minRent instanceof Custom_RentCriteria ) {
+            $this->_minRentCriteria = $minRent;
+        } else {
+            throw new Exception('minRent must be an instance of Custom_RentCriteria');
         }
     }
 }

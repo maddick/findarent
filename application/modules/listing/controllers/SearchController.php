@@ -55,6 +55,11 @@ class Listing_SearchController extends Zend_Controller_Action
             $search->setNumberOfBathroomsCriteria($numberOfBathroomsCriteria);
         }
 
+        if ( array_key_exists('min-rent', $searchCriteria) ) {
+            $minRentCriteria = new Custom_RentCriteria(doubleval($searchCriteria['min-rent']));
+            $search->setMinRentCriteria($minRentCriteria);
+        }
+
         //search listings
         $searchResults = $search->searchListings();
 
