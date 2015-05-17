@@ -284,8 +284,13 @@ class Listing_Model_Search
             FROM far_listings listings,
               (SELECT LandlordID
                  FROM far_landlords
-                WHERE far_landlords.Active = 1 AND far_landlords.Deleted = 0 AND far_landlords.ExpirationDate >= CURDATE()) landlords
-            WHERE listings.LandlordID = landlords.LandlordID AND listings.Active = 1 AND listings.Deleted = 0 AND listings.ExpirationDate IS NULL';
+                WHERE far_landlords.Active = 1
+                  AND far_landlords.Deleted = 0
+                  AND ( DATE(far_landlords.ExpirationDate) >= DATE(now()) OR far_landlords.ExpirationDate IS NULL ) ) landlords
+            WHERE listings.LandlordID = landlords.LandlordID
+              AND listings.Active = 1
+              AND listings.Deleted = 0
+              AND ( DATE(listings.ExpirationDate) >= DATE(now()) OR listings.ExpirationDate IS NULL )';
 
         try {
             $db = Zend_Db_Table::getDefaultAdapter();

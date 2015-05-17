@@ -13,8 +13,7 @@ class Listing_SearchController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        // TODO: Implement indexAction() method.
-        $this->forward( 'get' );
+        $this->forward( 'getListings' );
     }
 
     /**
@@ -24,8 +23,7 @@ class Listing_SearchController extends Zend_Controller_Action
      */
     public function getListingsAction()
     {
-        // TODO: Implement getAction() method.
-
+        //create a new listing search model
         $search = new Listing_Model_Search();
 
         //get the search criteria

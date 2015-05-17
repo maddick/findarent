@@ -187,8 +187,6 @@ class Communities_Model_FeaturedCommunities
                 ->where('Active = 1')
                 ->where('c.Deleted = 0');
 
-            //echo($communities->__toString());exit(0);
-
             //if we use city / state, then we add the where clause with the appropriate
             //variable replacements needed
             if ( $this->_useCityState ) {
