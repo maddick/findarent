@@ -41,6 +41,8 @@ class Listing_Model_Search
 
     protected $_minRentCriteria;
 
+    protected $_maxRentCriteria;
+
     /**
      * @var array
      */
@@ -72,6 +74,8 @@ class Listing_Model_Search
     protected $_useNumberOfBedrooms = true;
 
     protected $_useMinRent = true;
+
+    protected $_useMaxRent = true;
 
     public function searchListings()
     {
@@ -152,6 +156,14 @@ class Listing_Model_Search
             }
         } else {
             $this->_useMinRent = false;
+        }
+
+        if ( isset( $this->_maxRentCriteria ) ) {
+            if ( !$this->_maxRentCriteria->isValid() ) {
+                $this->_validationErrors = array_merge( $this->_validationErrors, $this->_maxRentCriteria->getValidationErrors() );
+            }
+        } else {
+            $this->_useMaxRent = false;
         }
     }
 
@@ -273,10 +285,24 @@ class Listing_Model_Search
                 $listingsSql .= $numberOfBathroomsInjector;
             }
 
-            if ( $this->_useMinRent ) {
-                $minRentInjector = ' AND li.Rent >= ?';
+            if ( $this->_useMinRent and $this-> _useMaxRent ) {
+                $rentInjector = ' AND (li.Rent >= ? AND li.Rent <= ? )';
                 $variableArray[] = $this->_minRentCriteria->getCriteria();
-                $listingsSql .= $minRentInjector;
+                $variableArray[] = $this->_maxRentCriteria->getCriteria();
+                $listingsSql .= $rentInjector;
+            } else {
+
+                if ( $this->_useMinRent ) {
+                    $minRentInjector = ' AND li.Rent >= ?';
+                    $variableArray[] = $this->_minRentCriteria->getCriteria();
+                    $listingsSql .= $minRentInjector;
+                }
+
+                if ( $this->_useMaxRent ) {
+                    $maxRentInjector = ' AND li.Rent <= ?';
+                    $variableArray[] = $this->_maxRentCriteria->getCriteria();
+                    $listingsSql .= $maxRentInjector;
+                }
             }
 
             //prepare the statement and execute the search query
@@ -404,6 +430,14 @@ class Listing_Model_Search
             $this->_minRentCriteria = $minRent;
         } else {
             throw new Exception('minRent must be an instance of Custom_RentCriteria');
+        }
+    }
+
+    public function setMaxRentCriteria( $maxRent ) {
+        if ( $maxRent instanceof Custom_RentCriteria ) {
+            $this->_maxRentCriteria = $maxRent;
+        } else {
+            throw new Exception('maxRent must be an instance of Custom_RentCriteria');
         }
     }
 }

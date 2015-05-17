@@ -60,6 +60,11 @@ class Listing_SearchController extends Zend_Controller_Action
             $search->setMinRentCriteria($minRentCriteria);
         }
 
+        if ( array_key_exists('max-rent', $searchCriteria) ) {
+            $maxRentCriteria = new Custom_RentCriteria(doubleval($searchCriteria['max-rent']));
+            $search->setMaxRentCriteria($maxRentCriteria);
+        }
+
         //search listings
         $searchResults = $search->searchListings();
 
