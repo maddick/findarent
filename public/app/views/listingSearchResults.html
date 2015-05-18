@@ -15,19 +15,115 @@
             </div>
         </div>
 
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+
+                    <!-- search navbar -->
+                    <div class="navbar navbar-default">
+                        <div class="container-fluid">
+
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#findarent-navbar-results-collapse">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <!--<a class="navbar-brand">Search</a>-->
+                            </div>
+
+                            <div class="collapse navbar-collapse" id="findarent-navbar-results-collapse">
+                                <form class="navbar-form">
+                                    <input type="text" class="form-control" placeholder="City and State Or Zip">
+                                    <div class="input-group">
+                                        <select class="form-control" id="radius" ng-model="listingSearchParams.radius">
+                                            <option value="">no radius</option>
+                                            <option value="10">10 miles</option>
+                                            <option value="15">15 miles</option>
+                                            <option value="20">20 miles</option>
+                                            <option value="25">25 miles</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <select class="form-control" id="bathrooms" ng-model="listingSearchParams.bathrooms">
+                                            <option value="">all baths</option>
+                                            <option value="1">1</option>
+                                            <option value="1.5">1&#189;</option>
+                                            <option value="2">2</option>
+                                            <option value="2.5">2&#189;</option>
+                                            <option value="3">3</option>
+                                            <option value="3.5">3&#189;</option>
+                                            <option value="4">4</option>
+                                            <option value="4.5">4&#189;</option>
+                                            <option value="5">5</option>
+                                            <option value="5.5">5&#189;</option>
+                                            <option value="6">6</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <select class="form-control" id="min-rent" ng-model="listingSearchParams.minRent">
+                                            <option value="">min rent</option>
+                                            <option value="700.00">$700.00</option>
+                                            <option value="800.00">$800.00</option>
+                                            <option value="900.00">$900.00</option>
+                                            <option value="1000.00">$1000.00</option>
+                                            <option value="1100.00">$1100.00</option>
+                                            <option value="1200.00">$1200.00</option>
+                                            <option value="1300.00">$1300.00</option>
+                                            <option value="1400.00">$1400.00</option>
+                                            <option value="1500.00">$1500.00</option>
+                                            <option value="1600.00">$1600.00</option>
+                                            <option value="1700.00">$1700.00</option>
+                                            <option value="1800.00">$1800.00</option>
+                                            <option value="1900.00">$1900.00</option>
+                                            <option value="2000.00">$2000.00</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <select class="form-control" id="max-rent" ng-model="listingSearchParams.maxRent">
+                                            <option value="">max rent</option>
+                                            <option value="700.00">$700.00</option>
+                                            <option value="800.00">$800.00</option>
+                                            <option value="900.00">$900.00</option>
+                                            <option value="1000.00">$1000.00</option>
+                                            <option value="1100.00">$1100.00</option>
+                                            <option value="1200.00">$1200.00</option>
+                                            <option value="1300.00">$1300.00</option>
+                                            <option value="1400.00">$1400.00</option>
+                                            <option value="1500.00">$1500.00</option>
+                                            <option value="1600.00">$1600.00</option>
+                                            <option value="1700.00">$1700.00</option>
+                                            <option value="1800.00">$1800.00</option>
+                                            <option value="1900.00">$1900.00</option>
+                                            <option value="2000.00">$2000.00</option>
+                                        </select>
+                                    </div>
+                                    <button type="button" class="btn btn-default">Go</button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- loop through all listings and display them -->
         <div class="container-fluid">
             <div class="row" ng-repeat="listing in listings.listings">
                 <div class="col-sm-10 col-sm-offset-1">
                     <div class="well" style="background-color:#f9f9f9 !important; background-image: none;">
 
+                        <!-- row for each listing -->
                         <div class="row">
+
                             <!-- column for picture -->
                             <div class="col-sm-2">
 
                             </div>
 
-                            <!-- column for text -->
+                            <!-- column for text / well -->
                             <div class="col-sm-10">
                                 <div class="row">
                                     <div class="col-sm-12">
