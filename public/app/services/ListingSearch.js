@@ -1,10 +1,13 @@
 angular
     .module('app')
-    .factory('ListingSearch', [ '$http', '$q', function($http,$q){
+    .factory('ListingSearch', [ '$http', function($http){
         return {
             getListings: function(params){
                 var zipCode = '';
                 var numberOfBedrooms = '';
+                var numberOfBathrooms = '';
+                var minRent = '';
+                var maxRent = '';
                 var cityState = '';
                 var radius = '';
 
@@ -14,18 +17,28 @@ angular
 
                 if ( 'zipCode' in params ) {
                     zipCode = '/zip-code/' + params['zipCode'];
-                } else {
-                    zipCode = '';
                 }
 
                 if ( 'numberOfBedrooms' in params ) {
                     numberOfBedrooms = '/number-of-bedrooms/' + params['numberOfBedrooms'];
                 }
 
+                if ( 'numberOfBathrooms' in params ) {
+                    numberOfBathrooms = '/number-of-bathrooms/' + params['numberOfBathrooms'];
+                }
+
+                if ( 'minRent' in params ) {
+                    minRent = '/min-rent/' + params['minRent'];
+                }
+
+                if ( 'maxRent' in params ) {
+                    maxRent = '/max-rent/' + params['maxRent'];
+                }
+
                 if ( 'radius' in params ) {
                     radius = '/radius/' + params['radius'];
                 }
-                return $http.get('http://localhost:8080/listing/search/get-listings/' + cityState + zipCode + numberOfBedrooms + radius);
+                return $http.get('http://localhost:8080/listing/search/get-listings/' + cityState + zipCode + numberOfBedrooms + numberOfBathrooms + minRent + maxRent + radius);
             },
 
             getTotalActiveListings: function() {
