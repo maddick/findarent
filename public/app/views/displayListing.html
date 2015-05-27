@@ -4,40 +4,128 @@
 
 
             <div>Listing {{listing.ListingID}} Details</div>
+
+            <!-- title and slide show -->
             <div class="container-fluid">
-
-                <!-- title and slide show -->
                 <div class="row">
-                    <h3 style="color: #2d6c9c;"><strong>{{listing.Headline}}</strong></h3>
-                    <div id="display-listing-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="col-md-12">
 
-                        <!-- indicators -->
-                        <ol class="carousel-indicators">
-                            <li></li>
-                        </ol>
+                        <h3 style="color: #2d6c9c;"><strong>{{listing.Headline}}</strong></h3>
 
-                        <!-- wrapper for slides -->
-                        <div class="carousel-inner" role="listbox">
-                            <div class="item active">
-                                <img src="/images/FAR_Logo_and_Byline_transparent_RGB.png">
+                        <!-- image carousel -->
+                        <div id="display-listing-carousel" class="carousel slide" data-ride="carousel">
+
+                            <!-- indicators -->
+                            <ol class="carousel-indicators">
+                                <li></li>
+                            </ol>
+
+                            <!-- wrapper for slides -->
+                            <div class="carousel-inner" role="listbox">
+                                <div class="item active">
+                                    <img src="/images/FAR_Logo_and_Byline_transparent_RGB.png">
+                                </div>
                             </div>
+
+                            <!-- controls -->
+                            <a class="left carousel-control" href="" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="right carousel-control" href="" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
                         </div>
 
-                        <!-- controls -->
-                        <a class="left carousel-control" href="" role="button" data-slide="prev">
-                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="right carousel-control" href="" role="button" data-slide="next">
-                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
                     </div>
-
-
-
                 </div>
+            </div>
 
+            <br>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Description</h3>
+                        <p>{{listing.MarketingMessage}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Property Information</h3>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Address</th>
+                                <td>
+                                    {{listing.Address}}<br>
+                                    {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Rental Type(s)</th>
+                                <td>{{listing.PropertyTypes}}</td>
+                            </tr>
+                            <tr>
+                                <th>Unit Type(s)</th>
+                                <td>{{listing.UnitTypes}}</td>
+                            </tr>
+                            <tr>
+                                <th># of Bathrooms</th>
+                                <td>{{listing.Bathrooms}}</td>
+                            </tr>
+                            <tr>
+                                <th># of Bedrooms</th>
+                                <td>{{listing.Bedrooms}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Unit Information</h3>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Lease Term</th>
+                                <td>{{listing.LeaseTerm}}</td>
+                            </tr>
+                            <tr>
+                                <th>Rent</th>
+                                <td>${{listing.Rent}}</td>
+                            </tr>
+                            <tr>
+                                <th>Appliances<br>Included</th>
+                                <td>{{listing.Appliances}}</td>
+                            </tr>
+                            <tr>
+                                <th>Storage</th>
+                                <td>{{listing.Storage}}</td>
+                            </tr>
+                            <tr>
+                                <th>Utilities Included</th>
+                                <td>{{listing.Utilities}}</td>
+                            </tr>
+                            <tr>
+                                <th>Pet Policy</th>
+                                <td>{{listing.PetPolicy}}</td>
+                            </tr>
+                            <tr>
+                                <th>Additional Notes</th>
+                                <td>{{listing.PetNotes}}</td>
+                            </tr>
+                            <tr>
+                                <th>Smoking</th>
+                                <td>{{listing.Smoking}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
 
         </div>
