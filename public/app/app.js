@@ -305,6 +305,12 @@ var newApp = angular.module('app',[])
                 controller: 'listingSearchController'
             })
 
+
+            //go to specific listing
+            .when('/listing/:listingId',{
+                templateUrl: 'app/views/displayListing.html'
+            })
+
             //catch all rules
             .when('/',{
                 templateUrl: 'app/views/listingSearch.html',

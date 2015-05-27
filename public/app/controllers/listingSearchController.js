@@ -1,6 +1,6 @@
 angular
     .module('app')
-    .controller('listingSearchController',['$scope', '$routeParams', 'ListingSearch', 'SearchURL', function($scope,$routeParams,ListingSearch,SearchURL){
+    .controller('listingSearchController',['$scope', '$routeParams', 'ListingSearch', 'SearchURL', '$location', function($scope,$routeParams,ListingSearch,SearchURL,$location){
         var searchParams = {};
         var listingSearchParams = {};
         var isCityState = $routeParams.cityState !== undefined;
@@ -67,5 +67,10 @@ angular
 
         $scope.performSearch = function() {
             SearchURL.goToSearchURL($scope);
+        }
+
+        $scope.goToListing = function(listingId) {
+            //ListingRest.getListingById(listingId);
+            $location.url('/listing/' +  listingId);
         }
     }]);
