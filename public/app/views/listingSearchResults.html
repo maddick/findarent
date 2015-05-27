@@ -1,4 +1,29 @@
-<div ng-controller="listingSearchController" style="margin-top:70px;">
+<style type="text/css">
+    .search-page {
+        margin-top: 70px;
+    }
+    .search-message p {
+        color: green;
+    }
+    #searchHeading {
+        background: #f2c747 none;
+    }
+    #searchCollapse {
+        background-color:#F9E6B0;
+    }
+    #searchButtonRow {
+        padding-top:10px;
+    }
+    .search-well {
+        background: #f9f9f9 none;
+        font-size: 11px;
+    }
+    .search-text-rent {
+        font-size: 14px;
+        color: red;
+    }
+</style>
+<div ng-controller="listingSearchController" class="search-page">
 
     <!-- in the case of a successful request -->
     <div ng-if="listings.result == 'success'">
@@ -6,8 +31,8 @@
         <!-- success summary message -->
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-10 col-sm-offset-1">
-                    <p style="color: green;">
+                <div class="col-sm-10 col-sm-offset-1 search-message">
+                    <p>
                        Your apartment / house rental Search in <strong>{{successMessage.zipOrCityState}}</strong>
                        has returned <strong>{{listings.count}}</strong> listings out of a database of
                        <strong>{{totalActiveListings}}</strong> Current, Active, Local Listings.</p>
@@ -22,15 +47,14 @@
                     <!-- collapsible search form -->
                     <div id="searchAccordian" class="panel-group" role="tablist" aria-multiselectable="true">
                         <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="searchHeading" style="background-image:none; background-color:#f2c747;">
+                            <div class="panel-heading" role="tab" id="searchHeading">
                                 <h4 class="panel-title">
                                     <a role="button" data-toggle="collapse" data-target="#searchCollapse">
                                         <strong>Refine Search...</strong>
                                     </a>
                                 </h4>
                             </div>
-                            <div id="searchCollapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="searchHeading" data-expanded="false"
-                                    style="background-color:#F9E6B0;">
+                            <div id="searchCollapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="searchHeading" data-expanded="false">
                                 <div class="panel-body">
                                     <form class="form-horizontal">
 
@@ -150,7 +174,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="row" style="padding-top:10px;">
+                                        <div id="searchButtonRow" class="row">
                                             <div class="container-fluid">
                                                 <div class="col-sm-12">
                                                     <button type="button" class="btn btn-default center-block" ng-click="performSearch()">Search Listings</button>
@@ -174,7 +198,7 @@
         <div class="container-fluid">
             <div class="row" ng-repeat="listing in listings.listings">
                 <div class="col-sm-10 col-sm-offset-1">
-                    <div class="well" style="background-color:#f9f9f9 !important; background-image: none;">
+                    <div class="well search-well">
 
                         <!-- row for each listing -->
                         <div class="row">
@@ -194,11 +218,11 @@
 
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <div style="font-size: 14px;color:red;">${{listing.Rent}}</div>
-                                        <div style="font-size: 11px;">Bedrooms: {{listing.Bedrooms}}</div>
-                                        <div style="font-size: 11px;">Bathrooms: {{listing.Bathrooms}}</div>
+                                        <div class="search-text-rent">${{listing.Rent}}</div>
+                                        <div>Bedrooms: {{listing.Bedrooms}}</div>
+                                        <div>Bathrooms: {{listing.Bathrooms}}</div>
                                     </div>
-                                    <div class="col-md-4" style="font-size: 11px;">
+                                    <div class="col-md-4">
                                         {{listing.Address}}<br>
                                         {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}<br>
                                     </div>
