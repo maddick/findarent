@@ -3,19 +3,28 @@
         margin-top:70px;
     }
     #listing-display-container hr {
-        border-color: #000000 ;
+        border-color: #acacac;
     }
     #display-listing-carousel {
         min-height: 250px;
         min-width: 330px;
     }
+    .main-button-menu-border {
+        border-top: 1px solid #acacac;
+        border-bottom: 1px solid #acacac;
+        padding-top:10px;
+        padding-bottom:10px;
+        height:100%;
+        display:block;
+    }
     .main-button-menu-container {
-        width:508px;
+        display:table;
     }
     .main-button-menu {
         list-style: none;
         margin:0;
         padding:0;
+        display:inline-block;
     }
     .main-button-menu li {
         padding: 8px;
@@ -39,9 +48,7 @@
         background-color: #f2c747;
     }
     @media only screen and (max-width:600px) {
-        .main-button-menu-container {
-            width:358px;
-        }
+
         .main-button-menu li{
             padding: 6px;
             width: 100px;
@@ -55,9 +62,54 @@
         }
     }
 </style>
+
+<!-- modal for emailing a friend -->
+<div class="modal fade" id="email-friend-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Email Listing To Friend</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3 control-label">Your Name</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="name" placeholder="John Doe">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="your-email" class="col-sm-3 control-label">Your Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" id="your-email" placeholder="jdoe@email.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="friends-name" class="col-sm-3 control-label">Friend's Name</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="friends-name" placeholder="Joe Doe">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="friends-email" class="col-sm-3 control-label">Friend's Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" id="friends-email" placeholder="joedoe@otheremail.com">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid" ng-controller="displayListingController" id="listing-display-container">
     <div class="row">
-        <div class="col-sm-10 col-sm-offset-1">
+        <div class="col-sm-8 col-sm-offset-2">
 
 
             <div>Listing {{listing.ListingID}} Details</div>
@@ -71,9 +123,11 @@
                 </div>
             </div>
 
+            <br>
+
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-lg-6">
 
                         <!-- image carousel -->
                         <div id="display-listing-carousel" class="carousel slide" data-ride="carousel">
@@ -102,8 +156,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="row">
+                    <div class="col-lg-6">
                             <h4><strong>Property Information</strong></h4>
                             <table class="table table-striped">
                                 <tr>
@@ -130,37 +183,37 @@
                                     <td>{{listing.Bedrooms}}</td>
                                 </tr>
                             </table>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <!-- UI button section -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="main-button-menu-border">
+                            <div class="center-block main-button-menu-container">
+                                <ul class="main-button-menu">
+                                    <li role="button" ng-click="seeOnMap()" >
+                                        <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+                                        <span>View this listing on Map</span>
+                                    </li>
+                                    <li role="button">
+                                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                                        <span>See other properties from this landlord</span>
+                                    </li>
+                                    <li role="button" data-toggle="modal" data-target="#email-friend-modal">
+                                        <span class="glyphicon glyphicon-envelope"></span>
+                                        <span>Email this listing to a friend</span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <hr />
-
-            <div class="container-fluid">
-                <div class="row">
-
-                    <div class="center-block main-button-menu-container">
-                        <ul class="main-button-menu">
-                            <li>
-                                <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-                                <span>View this listing on Map</span>
-                            </li>
-                            <li>
-                                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                                <span>See other properties from this landlord</span>
-                            </li>
-                            <li>
-                                <span class="glyphicon glyphicon-envelope"></span>
-                                <span>Email this listing to a friend</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-
-            <hr />
 
             <div class="container-fluid">
                 <div class="row">
