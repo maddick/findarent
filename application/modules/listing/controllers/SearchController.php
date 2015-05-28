@@ -93,4 +93,25 @@ class Listing_SearchController extends Zend_Controller_Action
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
         $this->_helper->json->sendJson( $searchResults, false, true );
     }
+
+    public function getListingsByLandlordAction()
+    {
+        $search = new Listing_Model_Search();
+        $landlordId = $this->getRequest()->getParam('landlord-id');
+        $landlordIdCriteria = new Custom_IdCriteria(intval($landlordId));
+
+        $searchResults = $search->setLandlordIdCriteria($landlordIdCriteria)->getListingsByLandlord();
+
+        if ( $searchResults['result'] === 'success' ){
+            if ( empty( $searchResults['listings'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        return $this->_helper->json->sendJson( $searchResults, false, true );
+    }
 }
