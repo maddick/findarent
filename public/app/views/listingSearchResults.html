@@ -1,4 +1,8 @@
 <style type="text/css">
+    #search-results-loading {
+        display:none;
+        margin-top:100px;
+    }
     .search-page {
         margin-top: 70px;
     }
@@ -24,6 +28,15 @@
     }
 </style>
 <div ng-controller="listingSearchController" class="search-page">
+
+    <!-- loading screen -->
+    <div id="search-results-loading" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <img class="center-block" src="/images/ajax-loader.gif">
+            </div> 
+        </div>
+    </div>
 
     <!-- in the case of a successful request -->
     <div ng-if="listings.result == 'success'">

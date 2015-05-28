@@ -49,6 +49,10 @@ angular
             searchParams['landlordId'] = $routeParams.landlordId;
         }
 
+
+        //show a loading screen
+        $('#search-results-loading').fadeIn();
+
         $scope.listings = {};
         var promise = null;
         if ( isLandlordSearch ) {
@@ -59,12 +63,14 @@ angular
 
         promise.then(
         function(response){
+            $('#search-results-loading').fadeOut();
             $scope.listings = response.data;
             $scope.listings.count = response.data.listings.length;
             $scope.successMessage = { zipOrCityState : zipOrCityState };
             $scope.listingSearchParams = listingSearchParams;
         },
         function(response){
+            $('#search-results-loading').fadeOut();
             $scope.listings = response.data;//TODO: add error handler
         });
 
