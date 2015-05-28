@@ -1,3 +1,5 @@
+var listingSearchBaseURL =  'http://192.168.0.101:8080/listing/search';
+
 angular
     .module('app')
     .factory('ListingSearch', [ '$http', function($http){
@@ -38,15 +40,15 @@ angular
                 if ( 'radius' in params ) {
                     radius = '/radius/' + params['radius'];
                 }
-                return $http.get('http://localhost:8080/listing/search/get-listings/' + cityState + zipCode + numberOfBedrooms + numberOfBathrooms + minRent + maxRent + radius );
+                return $http.get( listingSearchBaseURL + '/get-listings/' + cityState + zipCode + numberOfBedrooms + numberOfBathrooms + minRent + maxRent + radius );
             },
 
             getListingsByLandlordId: function(landlordId){
-                return $http.get('http://localhost:8080/listing/search/get-listings-by-landlord/landlord-id/' + landlordId );
+                return $http.get( listingSearchBaseURL + '/get-listings-by-landlord/landlord-id/' + landlordId );
             },
 
             getTotalActiveListings: function() {
-                return $http.get('http://localhost:8080/listing/search/total-active-listings/');
+                return $http.get( listingSearchBaseURL + '/total-active-listings/');
             }
         }
     }]);
