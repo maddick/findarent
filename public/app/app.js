@@ -311,6 +311,10 @@ var newApp = angular.module('app',[])
                 templateUrl: 'app/views/displayListing.html'
             })
 
+            .when('/search/landlord-id/:landlordId',{
+                templateUrl: 'app/views/listingSearchResults.html'
+            })
+
             //catch all rules
             .when('/',{
                 templateUrl: 'app/views/listingSearch.html',
