@@ -38,7 +38,11 @@ angular
                 if ( 'radius' in params ) {
                     radius = '/radius/' + params['radius'];
                 }
-                return $http.get('http://localhost:8080/listing/search/get-listings/' + cityState + zipCode + numberOfBedrooms + numberOfBathrooms + minRent + maxRent + radius);
+                return $http.get('http://localhost:8080/listing/search/get-listings/' + cityState + zipCode + numberOfBedrooms + numberOfBathrooms + minRent + maxRent + radius );
+            },
+
+            getListingsByLandlordId: function(landlordId){
+                return $http.get('http://localhost:8080/listing/search/get-listings-by-landlord/landlord-id/' + landlordId );
             },
 
             getTotalActiveListings: function() {

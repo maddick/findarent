@@ -4,15 +4,17 @@ angular
         var searchParams = {};
         var listingSearchParams = {};
         var isCityState = $routeParams.cityState !== undefined;
+        var isZipCode = $routeParams.zipCode !== undefined;
         var cityState = '';
         var zipCode = '';
         var zipOrCityState = '';
+        var isLandlordSearch = $routeParams.landlordId !== undefined;
 
         if ( isCityState ) {
             cityState = $routeParams.cityState;
             searchParams['cityState'] = zipOrCityState = cityState;
             listingSearchParams.cityStateOrZip = cityState;
-        } else {
+        } else if ( isZipCode ) {
             zipCode = $routeParams.zipCode;
             searchParams['zipCode'] = zipOrCityState = zipCode;
             listingSearchParams.cityStateOrZip = zipCode;
@@ -43,8 +45,18 @@ angular
             listingSearchParams.radius = $routeParams.radius;
         }
 
+        if ( $routeParams.landlordId !== undefined ) {
+            searchParams['landlordId'] = $routeParams.landlordId;
+        }
+
         $scope.listings = {};
-        var promise = ListingSearch.getListings(searchParams);
+        var promise = null;
+        if ( isLandlordSearch ) {
+            promise = ListingSearch.getListingsByLandlordId(searchParams['landlordId']);
+        } else {
+            promise = ListingSearch.getListings(searchParams);
+        }
+
         promise.then(
         function(response){
             $scope.listings = response.data;
