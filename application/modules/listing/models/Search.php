@@ -39,9 +39,20 @@ class Listing_Model_Search
      */
     protected $_numberOfBathroomsCriteria;
 
+    /**
+     * @var Custom_RentCriteria
+     */
     protected $_minRentCriteria;
 
+    /**
+     * @var Custom_RentCriteria
+     */
     protected $_maxRentCriteria;
+
+    /**
+     * @var Custom_IdCriteria
+     */
+    protected $_landlordIdCriteria;
 
     /**
      * @var array
@@ -351,6 +362,63 @@ class Listing_Model_Search
         return $this->results;
     }
 
+    public function getListingsByLandlord()
+    {
+        if ( !isset( $this->_landlordIdCriteria ) ) {
+            throw new Exception('No landlordIdCriteria was set.');
+        }
+
+        $listingSql =
+          'SELECT
+            listings.*,
+              ( SELECT COUNT(*) FROM far_ads a WHERE a.ParentID = listings.ListingID AND a.Type = \'Listing\' AND a.Active = 1 ) AS AdsCount,
+              ( SELECT COUNT(*) FROM far_listings_notes n WHERE n.ListingID = listings.ListingID AND Note != \'\' ) AS NotesCount,
+              IFNULL(Views,0) AS Views, IFNULL(ContactRequests,0) AS ContactRequests, IFNULL(ContactEmailsSent,0) AS ContactEmailsSent
+          FROM (
+            SELECT * FROM (
+               SELECT li.*, l.Premium, l.Rebates
+               FROM far_listings li
+               INNER JOIN
+                 far_landlords l ON li.LandlordID = l.LandlordID
+               WHERE li.LandlordID = :landlordId
+               AND li.Active = 1
+               AND li.Deleted = 0
+            ) AS LandlordListings
+          ) AS listings
+
+
+          LEFT JOIN (
+            SELECT ListingID, SUM(Views) AS Views, SUM(ContactRequests) AS ContactRequests, SUM(ContactEmailsSent) AS ContactEmailsSent
+            FROM far_listings_tracking GROUP BY ListingID
+          ) AS Tracking ON listings.ListingID = Tracking.ListingID
+
+
+          ORDER BY listings.ListingID IN (
+            SELECT ListingID
+            FROM far_listings_photos p
+            WHERE p.Deleted = 0
+          ) DESC, AddedDate DESC;';
+
+        if ( !$this->_landlordIdCriteria->isValid() ) {
+            $this->results['result'] = 'error';
+            $this->results['reasons'] = $this->_landlordIdCriteria->getValidationErrors();
+        } else {
+            try {
+                $db = Zend_Db_Table::getDefaultAdapter();
+                $stmt = $db->prepare($listingSql);
+                $stmt->execute( array('landlordId' => $this->_landlordIdCriteria->getCriteria() ) );
+                $listings = $stmt->fetchAll();
+                $this->results['result'] = 'success';
+                $this->results['listings'] = $listings;
+            } catch(Exception $e ) {
+                $this->results['result'] = 'server error';
+                $this->results['reasons'] = $e->getMessage();
+            }
+        }
+
+        return $this->results;
+    }
+
     /**
      * Sets the dependency for zip Criteria object
      *
@@ -439,5 +507,15 @@ class Listing_Model_Search
         } else {
             throw new Exception('maxRent must be an instance of Custom_RentCriteria');
         }
+    }
+
+    public function setLandlordIdCriteria( $landlordId ) {
+        if ( $landlordId instanceof Custom_IdCriteria ) {
+            $this->_landlordIdCriteria = $landlordId;
+        } else {
+            throw new Exception('$landlordId must be an instance of Custom_IdCriteria');
+        }
+
+        return $this;
     }
 }
