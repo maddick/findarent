@@ -318,7 +318,7 @@ var newApp = angular.module('app',[])
             //catch all rules
             .when('/',{
                 templateUrl: 'app/views/listingSearch.html',
-                controller: 'listingSearchController'
+                controller: 'appController'
             })
             .otherwise({redirectTo: '/'});
     }]);
