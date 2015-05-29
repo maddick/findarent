@@ -187,14 +187,21 @@ class Listing_Model_Search
         //setup the initial query string
         $listingsSql =
             'SELECT li.*, IFNULL(Views,0) AS Views, IFNULL(ContactRequests,0) AS ContactRequests,
-                 IFNULL(ContactEmailsSent,0) AS ContactEmailsSent, l.Premium, l.Rebates
-            FROM far_landlords l, far_listings li LEFT JOIN
+                 IFNULL(ContactEmailsSent,0) AS ContactEmailsSent, l.Premium, l.Rebates, p.ImageURL
+            FROM far_landlords l, far_listings_photos p, far_listings li LEFT JOIN
 
               (SELECT ListingID, SUM(Views) AS Views, SUM(ContactRequests) AS ContactRequests, SUM(ContactEmailsSent) AS ContactEmailsSent,
                   SUM(WebsiteReferrals) AS WebsiteReferrals
                 FROM far_listings_tracking GROUP BY ListingID) AS Tracking ON li.ListingID = Tracking.ListingID
 
             WHERE li.LandlordID = l.LandlordID
+            AND p.PhotoID = (SELECT PhotoId
+					FROM far_listings_photos
+                    WHERE ListingID = li.ListingID
+                    AND (Active = 1)
+                    AND Deleted = 0
+                    ORDER BY `Order`
+                    LIMIT 1)
             AND (li.Active = 1)
             AND (
               li.ExpirationDate IS NULL OR
@@ -417,6 +424,11 @@ class Listing_Model_Search
         }
 
         return $this->results;
+    }
+
+    public function getListingImages()
+    {
+
     }
 
     /**
