@@ -17,10 +17,18 @@
     <script src="app/services/CommunitySearch.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Apartments / Houses for rent</title>
+    <style type="text/css">
+        html, body{
+            height:100%;
+        }
+        .maximized {
+            height:95%;
+        }
+    </style>
 </head>
-<body>
+<body ng-app="app">
 
-    <div class="container-fluid" ng-app="app">
+    <div class="container-fluid maximized" >
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div ng-include="'/app/views/nav.html'"></div>
@@ -31,6 +39,5 @@
             </div>
         </div>
     </div>
-
 </body>
 </html>
