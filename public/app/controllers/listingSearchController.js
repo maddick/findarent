@@ -2,7 +2,6 @@ angular
     .module('app')
     .controller('listingSearchController',['$scope', 'ListingSearch', 'SearchURL', '$location', function($scope,ListingSearch,SearchURL,$location){
         var search = $location.search();
-        console.log(search);
         var searchParams = {};
         var listingSearchParams = {};
         var isCityState = search['city-state'] !== undefined;
