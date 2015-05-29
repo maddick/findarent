@@ -11,7 +11,10 @@ angular
         var zipCode = '';
         var zipOrCityState = '';
         var isLandlordSearch = search['landlord-id'] !== undefined;
+        var noSearch = false;
 
+
+        //go through variable validations
         if ( isCityState ) {
             cityState = search['city-state'];
             searchParams['cityState'] = zipOrCityState = cityState;
@@ -20,6 +23,8 @@ angular
             zipCode = search['zip-code'];
             searchParams['zipCode'] = zipOrCityState = zipCode;
             listingSearchParams.cityStateOrZip = zipCode;
+        } else {
+            noSearch = true;
         }
 
         if ( search['number-of-bedrooms'] !== undefined) {
@@ -49,6 +54,7 @@ angular
 
         if ( search['landlord-id'] !== undefined ) {
             searchParams['landlordId'] = search['landlord-id'];
+            noSearch = false;
         }
 
 
@@ -57,33 +63,39 @@ angular
 
         $scope.listings = {};
         var promise = null;
-        if ( isLandlordSearch ) {
-            promise = ListingSearch.getListingsByLandlordId(searchParams['landlordId']);
-        } else {
-            promise = ListingSearch.getListings(searchParams);
+
+        //check if we are preforming or if we are just adding
+        //the controller for possible future searches
+        if ( !noSearch ) {
+            if ( isLandlordSearch ) {
+                promise = ListingSearch.getListingsByLandlordId(searchParams['landlordId']);
+            } else {
+                promise = ListingSearch.getListings(searchParams);
+            }
+
+            promise.then(
+                function(response){
+                    $('#search-results-loading').fadeOut();
+                    $scope.listings = response.data;
+                    $scope.listings.count = response.data.listings.length;
+                    $scope.successMessage = { zipOrCityState : zipOrCityState };
+                    $scope.listingSearchParams = listingSearchParams;
+                },
+                function(response){
+                    $('#search-results-loading').fadeOut();
+                    $scope.listings = response.data;//TODO: add error handler
+            });
+
+            var totalPromise = ListingSearch.getTotalActiveListings();
+            totalPromise.then(
+                function(response){
+                    $scope.totalActiveListings = response.data.TotalActiveListings;
+                },
+                function(response){
+                    console.log('error: ' + response.data.reasons);//TODO: add error handler
+            });
         }
 
-        promise.then(
-        function(response){
-            $('#search-results-loading').fadeOut();
-            $scope.listings = response.data;
-            $scope.listings.count = response.data.listings.length;
-            $scope.successMessage = { zipOrCityState : zipOrCityState };
-            $scope.listingSearchParams = listingSearchParams;
-        },
-        function(response){
-            $('#search-results-loading').fadeOut();
-            $scope.listings = response.data;//TODO: add error handler
-        });
-
-        var totalPromise = ListingSearch.getTotalActiveListings();
-        totalPromise.then(
-        function(response){
-            $scope.totalActiveListings = response.data.TotalActiveListings;
-        },
-        function(response){
-            console.log('error: ' + response.data.reasons);//TODO: add error handler
-        });
 
         $scope.performSearch = function() {
             SearchURL.goToSearchURL($scope);

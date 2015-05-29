@@ -4,7 +4,6 @@ var newApp = angular.module('app',[])
 
             //routing for city-state based urls
 
-            //single variables
             .when('/search',{
                 templateUrl: 'app/views/listingSearchResults.html',
                 controller: 'listingSearchController'
@@ -14,12 +13,15 @@ var newApp = angular.module('app',[])
             .when('/listing/:listingId',{
                 templateUrl: 'app/views/displayListing.html'
             })
+
+            //communities
             .when('/featured-communities/',{
                 templateUrl: 'app/views/featuredCommunitiesList.html'
             })
-            /*.when('/search/landlord-id/:landlordId',{
-                templateUrl: 'app/views/listingSearchResults.html'
-            })*/
+            .when('/featured-communities/search/city-state/:cityState',{
+                templateUrl: 'app/views/communitiesSearchResults.html'
+            })
+
             //catch all rules
             .when('/',{
                 templateUrl: 'app/views/listingSearch.html',
