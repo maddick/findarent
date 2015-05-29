@@ -57,16 +57,16 @@ angular
             noSearch = false;
         }
 
-
-        //show a loading screen
-        $('#search-results-loading').fadeIn();
-
         $scope.listings = {};
         var promise = null;
 
         //check if we are preforming or if we are just adding
         //the controller for possible future searches
         if ( !noSearch ) {
+
+            //show a loading screen
+            $('#search-results-loading').fadeIn();
+
             if ( isLandlordSearch ) {
                 promise = ListingSearch.getListingsByLandlordId(searchParams['landlordId']);
             } else {
@@ -75,11 +75,13 @@ angular
 
             promise.then(
                 function(response){
-                    $('#search-results-loading').fadeOut();
                     $scope.listings = response.data;
                     $scope.listings.count = response.data.listings.length;
                     $scope.successMessage = { zipOrCityState : zipOrCityState };
                     $scope.listingSearchParams = listingSearchParams;
+                    $('#search-results-loading').fadeOut(400,function(){
+                        $('#search-results-section').fadeIn();
+                    });
                 },
                 function(response){
                     $('#search-results-loading').fadeOut();

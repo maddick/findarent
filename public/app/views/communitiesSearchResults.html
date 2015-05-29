@@ -3,6 +3,9 @@
         display:none;
         margin-top:100px;
     }
+    #search-results-section {
+        display:none;
+    }
     .search-page {
         margin-top: 70px;
     }
@@ -30,9 +33,20 @@
 
 <!-- div for controller -->
 <div ng-controller="communitiesSearchController" class="search-page">
-    <!-- in the case of a successful request -->
-    <div ng-if="communities.result == 'success'">
 
+    <!-- loading screen -->
+    <div id="search-results-loading" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <img class="center-block" src="/images/ajax-loader.gif">
+            </div>
+        </div>
+    </div>
+
+    <!-- in the case of a successful request -->
+    <div ng-if="communities.result == 'success'"  id="search-results-section">
+
+        <!-- search form -->
         <div class="container-fluid" ng-controller="listingSearchController">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
@@ -170,7 +184,7 @@
             </div>
         </div>
 
-        <!-- loop through all listings and display them -->
+        <!-- loop through all communities and display them -->
         <div class="container-fluid">
             <div class="row" ng-repeat="community in communities.communities">
                 <div class="col-sm-8 col-sm-offset-2">
