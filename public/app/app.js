@@ -14,6 +14,9 @@ var newApp = angular.module('app',[])
             .when('/listing/:listingId',{
                 templateUrl: 'app/views/displayListing.html'
             })
+            .when('/featured-communities/',{
+                templateUrl: 'app/views/featuredCommunitiesList.html'
+            })
             /*.when('/search/landlord-id/:landlordId',{
                 templateUrl: 'app/views/listingSearchResults.html'
             })*/
