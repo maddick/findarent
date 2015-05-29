@@ -55,6 +55,11 @@ class Listing_Model_Search
     protected $_landlordIdCriteria;
 
     /**
+     * @var Custom_IdCriteria
+     */
+    protected $_listingIdCriteria;
+
+    /**
      * @var array
      */
     public $results = array();
@@ -426,9 +431,36 @@ class Listing_Model_Search
         return $this->results;
     }
 
+    /**
+     * @return array containing the listings photos
+     * @throws Exception when listingIdCriteria is not set
+     */
     public function getListingImages()
     {
+        if ( !isset($this->_listingIdCriteria) ) {
+            throw new Exception('No listingIdCriteria was set.');
+        }
 
+        if ( !$this->_listingIdCriteria->isValid() ) {
+            $this->results['result'] = 'error';
+            $this->results['reasons'] = $this->_listingIdCriteria->getValidationErrors();
+        } else {
+            $id = $this->_listingIdCriteria->getCriteria();
+            $db = Zend_Db_Table::getDefaultAdapter();
+            try {
+                $sql = 'CALL FAR_Listings_GetPhotosByListingID(:id,1)';
+                $resultObj = $db->prepare($sql);
+                $resultObj->execute(array('id' => $id));
+                $this->results['result'] = 'success';
+                $this->results['photos'] = $resultObj->fetchAll();
+            } catch ( Exception $e ) {
+                $this->results['result'] = 'error';
+                $this->results['reasons'] = $e->getMessage();
+            }
+        }
+
+        //return our results
+        return $this->results;
     }
 
     /**
@@ -526,6 +558,16 @@ class Listing_Model_Search
             $this->_landlordIdCriteria = $landlordId;
         } else {
             throw new Exception('$landlordId must be an instance of Custom_IdCriteria');
+        }
+
+        return $this;
+    }
+
+    public function setListingIdCriteria( $listingId ) {
+        if ( $listingId instanceof Custom_IdCriteria ) {
+            $this->_listingIdCriteria = $listingId;
+        } else {
+            throw new Exception('$listingId must be an instance of Custom_IdCriteria');
         }
 
         return $this;
