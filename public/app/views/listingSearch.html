@@ -1,64 +1,79 @@
-<div class="row" ng-controller="appController">
-    <div class="col-sm-8 col-sm-offset-2">
+<div class="container-fluid">
 
-        <!-- add the header to the front search page -->
-        <div ng-include="'/app/views/header.html'"></div>
+    <div class="row" ng-controller="appController">
+        <div class="col-sm-6 col-sm-offset-3">
 
-        <!-- add some search controls -->
-        <div class="row">
-            <div class="col-sm-12">
+            <!-- add the header to the front search page -->
+            <div ng-include="'/app/views/header.html'"></div>
 
-                <div class="well" style="background-color:#f2c747 !important; background-image: none;">
+            <!-- add some search controls -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
 
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <h4>Search for Apartments/Houses for Rent in CT and RI</h4>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="City & State or Zip" ng-model="listingSearchParams.cityStateOrZip">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" ng-click="performSearch()">Go!</button>
-                                </span>
+                        <div class="well" style="background-color:#f2c747 !important; background-image: none;">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Search for Apartments/Houses for Rent in CT and RI</h4>
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <form>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="form-group col-lg-6">
+                                                    <label for="cityStateOrZip" >City $ State or Zip</label>
+                                                    <input id="cityStateOrZip" type="text" class="form-control" placeholder="City & State or Zip" ng-model="listingSearchParams.cityStateOrZip">
+                                                </div>
+                                                <div class="form-group col-lg-3">
+                                                    <label for="numberOfBedrooms" >Bedrooms</label>
+                                                    <select class="form-control" id="numberOfBedrooms" ng-model="listingSearchParams.numberOfBedrooms">
+                                                        <option value="">All</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-lg-3">
+                                                    <label for="radius" >Within:</label>
+                                                    <select class="form-control" id="radius" ng-model="listingSearchParams.radius">
+                                                        <option value="">none</option>
+                                                        <option value="10">10 miles</option>
+                                                        <option value="15">15 miles</option>
+                                                        <option value="20">20 miles</option>
+                                                        <option value="25">25 miles</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-default center-block" type="button" ng-click="performSearch()">Search Listings</button>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
+
+                        <div id="city-state-or-zip-error" class="alert alert-danger" role="alert" style="display: none;">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            Not a valid city / state or zip code.
+                        </div>
+
                     </div>
-
-                    <div class="row" style="margin-top:5px;">
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <label for="numberOfBedrooms" ># of Bedrooms</label>
-                                <select class="form-control" id="numberOfBedrooms" ng-model="listingSearchParams.numberOfBedrooms">
-                                    <option value="">All</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="input-group">
-                                <label for="radius" >Within:</label>
-                                <select class="form-control" id="radius" ng-model="listingSearchParams.radius">
-                                    <option value="">none</option>
-                                    <option value="10">10 miles</option>
-                                    <option value="15">15 miles</option>
-                                    <option value="20">20 miles</option>
-                                    <option value="25">25 miles</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-
-                <div id="city-state-or-zip-error" class="alert alert-danger" role="alert" style="display: none;">
-                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                    <span class="sr-only">Error:</span>
-                    Not a valid city / state or zip code.
-                </div>
-
             </div>
-        </div>
 
+        </div>
     </div>
 </div>

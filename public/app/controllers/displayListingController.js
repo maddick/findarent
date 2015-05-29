@@ -36,7 +36,7 @@ angular
         $scope.gotToListingSearch = function () {
             var landlordId = $scope.listing.LandlordID;
             if ( landlordId !== undefined ) {
-                $location.url('/search/landlord-id/' + landlordId);
+                $location.url('/search?landlord-id=' + landlordId);
             }
         }
 

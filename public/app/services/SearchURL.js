@@ -12,42 +12,42 @@ angular
                 var cityStateZipRegEx   = /^(\d{5})$|^((?:\b[a-zA-Z]+\b\s?)+,?\s?[a-zA-Z]{2})$/;
                 var regEx               = new RegExp(cityStateZipRegEx);
                 var regExArray          = regEx.exec(cityStateOrZip);
-                var url                 = '/search';
+                var url                 = '/search?';
 
                 if (regExArray !== null) {
 
                     $scope.cityStateZipError = false;
 
                     if ( regExArray[1] !== undefined ) {
-                        url = url + '/zip-code/' + regExArray[1];
+                        url = url + 'zip-code=' + regExArray[1] + '&';
                     } else {
-                        url = url + '/city-state/' + regExArray[2];
+                        url = url + 'city-state=' + regExArray[2] + '&';
                     }
 
                     if ( numberOfBedrooms !== undefined && numberOfBedrooms !== '' ) {
-                        url = url + '/number-of-bedrooms/' + numberOfBedrooms;
+                        url = url + 'number-of-bedrooms=' + numberOfBedrooms + '&';
                     }
 
                     if ( numberOfBathrooms !== undefined && numberOfBathrooms !== '' ) {
-                        url = url + '/number-of-bathrooms/' + numberOfBathrooms;
+                        url = url + 'number-of-bathrooms=' + numberOfBathrooms + '&';
                     }
 
                     if ( minRent !== undefined && minRent !== '' ) {
-                        url = url + '/min-rent/' + minRent;
+                        url = url + 'min-rent=' + minRent + '&';
                     }
 
                     if ( maxRent !== undefined && maxRent !== '' ) {
-                        url = url + '/max-rent/' + maxRent;
+                        url = url + 'max-rent=' + maxRent + '&';
                     }
 
                     if ( radius !== undefined && radius !== '' ) {
-                        url = url + '/radius/' + radius;
+                        url = url + 'radius=' + radius + '&';
                     }
 
                     console.log(url);
 
                     //go to search url
-                    $location.path(url);
+                    $location.url(url);
                 } else {
                     $scope.cityStateZipError = true;
                 }

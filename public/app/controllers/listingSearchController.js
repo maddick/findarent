@@ -1,52 +1,54 @@
 angular
     .module('app')
-    .controller('listingSearchController',['$scope', '$routeParams', 'ListingSearch', 'SearchURL', '$location', function($scope,$routeParams,ListingSearch,SearchURL,$location){
+    .controller('listingSearchController',['$scope', 'ListingSearch', 'SearchURL', '$location', function($scope,ListingSearch,SearchURL,$location){
+        var search = $location.search();
+        console.log(search);
         var searchParams = {};
         var listingSearchParams = {};
-        var isCityState = $routeParams.cityState !== undefined;
-        var isZipCode = $routeParams.zipCode !== undefined;
+        var isCityState = search['city-state'] !== undefined;
+        var isZipCode = search['zip-code'] !== undefined;
         var cityState = '';
         var zipCode = '';
         var zipOrCityState = '';
-        var isLandlordSearch = $routeParams.landlordId !== undefined;
+        var isLandlordSearch = search['landlord-id'] !== undefined;
 
         if ( isCityState ) {
-            cityState = $routeParams.cityState;
+            cityState = search['city-state'];
             searchParams['cityState'] = zipOrCityState = cityState;
             listingSearchParams.cityStateOrZip = cityState;
         } else if ( isZipCode ) {
-            zipCode = $routeParams.zipCode;
+            zipCode = search['zip-code'];
             searchParams['zipCode'] = zipOrCityState = zipCode;
             listingSearchParams.cityStateOrZip = zipCode;
         }
 
-        if ( $routeParams.numberOfBedrooms !== undefined) {
-            searchParams['numberOfBedrooms'] = $routeParams.numberOfBedrooms;
-            listingSearchParams.numberOfBedrooms = $routeParams.numberOfBedrooms;
+        if ( search['number-of-bedrooms'] !== undefined) {
+            searchParams['numberOfBedrooms'] = search['number-of-bedrooms'];
+            listingSearchParams.numberOfBedrooms = search['number-of-bedrooms'];
         }
 
-        if ( $routeParams.numberOfBathrooms !== undefined) {
-            searchParams['numberOfBathrooms'] = $routeParams.numberOfBathrooms;
-            listingSearchParams.numberOfBathrooms = $routeParams.numberOfBathrooms;
+        if ( search['number-of-bathrooms'] !== undefined) {
+            searchParams['numberOfBathrooms'] = search['number-of-bathrooms'];
+            listingSearchParams.numberOfBathrooms = search['number-of-bathrooms'];
         }
 
-        if ( $routeParams.minRent !== undefined) {
-            searchParams['minRent'] = $routeParams.minRent;
-            listingSearchParams.minRent = $routeParams.minRent;
+        if ( search['min-rent'] !== undefined) {
+            searchParams['minRent'] = search['min-rent'];
+            listingSearchParams.minRent = search['min-rent'];
         }
 
-        if ( $routeParams.maxRent !== undefined) {
-            searchParams['maxRent'] = $routeParams.maxRent;
-            listingSearchParams.maxRent = $routeParams.maxRent;
+        if ( search['max-rent'] !== undefined) {
+            searchParams['maxRent'] = search['max-rent'];
+            listingSearchParams.maxRent = search['max-rent'];
         }
 
-        if ( $routeParams.radius !== undefined ) {
-            searchParams['radius'] = $routeParams.radius;
-            listingSearchParams.radius = $routeParams.radius;
+        if ( search['radius'] !== undefined ) {
+            searchParams['radius'] = search['radius'];
+            listingSearchParams.radius = search['radius'];
         }
 
-        if ( $routeParams.landlordId !== undefined ) {
-            searchParams['landlordId'] = $routeParams.landlordId;
+        if ( search['landlord-id'] !== undefined ) {
+            searchParams['landlordId'] = search['landlord-id'];
         }
 
 
@@ -88,7 +90,6 @@ angular
         }
 
         $scope.goToListing = function(listingId) {
-            //ListingRest.getListingById(listingId);
             $location.url('/listing/' +  listingId);
         }
     }]);
