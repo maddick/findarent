@@ -45,7 +45,8 @@
     }
     .contents h4{
         margin-top:0;
-        margin-bottom:3px;
+        margin-bottom:5px;
+        padding-bottom:3px;
         border-bottom:1px solid grey;
     }
     .contents img {
@@ -70,6 +71,9 @@
         width:175px;
         background-color:#494949;
         float:left;
+    }
+    .address {
+        font-size: 12px;
     }
     @media only screen and (max-width:1380px) {
         .contents img {
@@ -278,7 +282,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        {{listing.Address}}, {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}
+                                        <div class="address">{{listing.Address}}, {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}</div>
                                     </div>
                                 </div>
                                 <div class="row">
