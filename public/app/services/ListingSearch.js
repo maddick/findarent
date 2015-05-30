@@ -49,6 +49,10 @@ angular
 
             getTotalActiveListings: function() {
                 return $http.get( listingSearchBaseURL + '/total-active-listings/');
+            },
+            getListingPhotos: function(listingId) {
+                console.log(listingSearchBaseURL + '/get-photos-by-listing-id/listing-id/' + listingId);
+                return $http.get(listingSearchBaseURL + '/get-photos-by-listing-id/listing-id/' + listingId );
             }
         }
     }]);

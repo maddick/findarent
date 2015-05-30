@@ -1,8 +1,8 @@
 angular
     .module('app')
-    .controller('displayListingController',['$scope','$routeParams','ListingRest','$location',function($scope,$routeParams,ListingRest,$location){
+    .controller('displayListingController',['$scope','$routeParams','ListingRest','$location','ListingSearch',function($scope,$routeParams,ListingRest,$location,ListingSearch){
         var listingId = ($routeParams.listingId === undefined ) ? '' : $routeParams.listingId;
-
+        $scope.listing = {};
         //show a loading screen
         $('#display-listing-loading').fadeIn();
 
@@ -17,6 +17,17 @@ angular
                     $('#display-listing-success').fadeIn();
                 });
                 console.log($scope.listing);
+
+                var photoPromise = ListingSearch.getListingPhotos(listingId);
+                photoPromise.then(
+                    function(response){
+                        $scope.listing.photos = response.data.photos;
+                        console.log($scope.listing.photos);
+                    },
+                    function(response){
+                        console.log(response);
+                    }
+                );
             },
             function(response){
                 $('#display-listing-loading').fadeOut();

@@ -124,7 +124,7 @@ class Listing_SearchController extends Zend_Controller_Action
         $searchResults = $search->setListingIdCriteria($listingIdCriteria)->getListingImages();
 
         if ( $searchResults['result'] === 'success' ){
-            if ( empty( $searchResults['listings'] ) ) {
+            if ( empty( $searchResults['photos'] ) ) {
                 $this->getResponse()->setHttpResponseCode(404);
             } else {
                 $this->getResponse()->setHttpResponseCode(200);

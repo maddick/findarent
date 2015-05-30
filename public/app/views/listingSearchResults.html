@@ -25,6 +25,10 @@
         background: #f9f9f9 none;
         font-size: 11px;
     }
+    .search-well img {
+        margin-top:10px;
+        max-height:100px;
+    }
     .search-text-rent {
         font-size: 14px;
         color: red;
@@ -195,51 +199,54 @@
         </div>
 
         <!-- loop through all listings and display them -->
-        <div class="container-fluid">
-            <div class="row" ng-repeat="listing in listings.listings">
-                <div class="col-sm-8 col-sm-offset-2">
-                    <div class="well search-well">
+        <div class="container-fluid" ng-repeat="listing in listings.listings">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
 
-                        <!-- row for each listing -->
-                        <div class="row">
+                        <div class="well search-well">
 
-                            <!-- column for picture -->
-                            <div class="col-md-2">
-
-                            </div>
-
-                            <!-- column for text / well -->
-                            <div class="col-md-10">
+                            <!-- row for each listing -->
+                            <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <h5><a role="button" ng-click="goToListing(listing.ListingID)"><strong>{{listing.Headline}}</strong></a></h5>
-                                    </div>
-                                </div>
 
-                                <div class="row">
+                                    <!-- column for picture -->
                                     <div class="col-md-3">
-                                        <div class="search-text-rent">${{listing.Rent}}</div>
-                                        <div>Bedrooms: {{listing.Bedrooms}}</div>
-                                        <div>Bathrooms: {{listing.Bathrooms}}</div>
+                                        <img src="http://far.giddion.com/Uploads/Listings/{{listing.ImageURL}}" class="img-responsive center-block" >
                                     </div>
-                                    <div class="col-md-4">
-                                        {{listing.Address}}<br>
-                                        {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}<br>
-                                    </div>
-                                    <div class="col-md-5">
 
-                                    </div>
-                                </div>
+                                    <!-- column for text / well -->
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h5><a role="button" ng-click="goToListing(listing.ListingID)"><strong>{{listing.Headline}}</strong></a></h5>
+                                            </div>
+                                        </div>
 
-                                <div class="row" style="margin-top: 5px;">
-                                    <div class="col-md-12" style="font-size: 11px;">
-                                        {{listing.MarketingMessage | limitTo:190 }}<span ng-if="listing.MarketingMessage.length >= 190">...</span>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="search-text-rent">${{listing.Rent}}</div>
+                                                <div>Bedrooms: {{listing.Bedrooms}}</div>
+                                                <div>Bathrooms: {{listing.Bathrooms}}</div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                {{listing.Address}}<br>
+                                                {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}<br>
+                                            </div>
+                                            <div class="col-md-5">
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="margin-top: 5px;">
+                                            <div class="col-md-12" style="font-size: 11px;">
+                                                {{listing.MarketingMessage | limitTo:190 }}<span ng-if="listing.MarketingMessage.length >= 190">...</span>
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
-
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
