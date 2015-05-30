@@ -1,0 +1,245 @@
+<style type="text/css">
+    #display-community-loading {
+        display:none;
+        margin-top:100px;
+    }
+    #display-community-success {
+        display:none;
+    }
+    #community-display-container {
+        margin-top:70px;
+    }
+    #community-display-container hr {
+        border-color: #acacac;
+    }
+    #display-community-carousel {
+        min-height: 250px;
+        min-width: 330px;
+    }
+    .main-button-menu-border {
+        border-top: 1px solid #acacac;
+        border-bottom: 1px solid #acacac;
+        padding-top:10px;
+        padding-bottom:10px;
+        height:100%;
+        display:block;
+    }
+    .main-button-menu-container {
+        display:table;
+    }
+    .main-button-menu {
+        list-style: none;
+        margin:0;
+        padding:0;
+        display:inline-block;
+    }
+    .main-button-menu li {
+        padding: 8px;
+        text-align: center;
+        float:left;
+        width: 150px;
+        background-color: #E0E0E0;
+        margin: 1px;
+        height: 100px;
+    }
+    .main-button-menu .glyphicon {
+        font-size: 36px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    .main-button-menu span {
+        display: block;
+        font-size: 14px;
+    }
+    .main-button-menu li:hover {
+        background-color: #f2c747;
+    }
+    @media only screen and (max-width:600px) {
+
+        .main-button-menu li{
+            padding: 6px;
+            width: 100px;
+            height: 85px;
+        }
+        .main-button-menu .glyphicon {
+            font-size:24px;
+        }
+        .main-button-menu span {
+            font-size: 10px;
+        }
+    }
+</style>
+
+<div ng-controller="displayCommunityController" id="community-display-container">
+    <!-- modal for emailing a friend -->
+    <div class="modal fade" id="email-friend-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Email Listing To Friend</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="listing-title" class="col-sm-3 control-label">Listing Title</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" id="listing-title" placeholder="John Doe" value="" disabled="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-sm-3 control-label">Your Name</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" id="name" placeholder="John Doe">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="your-email" class="col-sm-3 control-label">Your Email</label>
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control" id="your-email" placeholder="jdoe@email.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="friends-name" class="col-sm-3 control-label">Friend's Name</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" id="friends-name" placeholder="Joe Doe">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="friends-email" class="col-sm-3 control-label">Friend's Email</label>
+                            <div class="col-sm-9">
+                                <input type="email" class="form-control" id="friends-email" placeholder="joedoe@otheremail.com">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- loading screen -->
+    <div id="display-community-loading" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <img class="center-block" src="/images/ajax-loader.gif">
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="community.result == 'success'" id="display-community-success">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+
+
+                <div>Community {{community.CommunityID}} Details</div>
+
+                <!-- title and slide show -->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3 style="color: #2d6c9c;"><strong>{{community.Headline}}</strong></h3>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+                <!-- slide show -->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <!-- image carousel -->
+                            <div id="display-community-carousel" class="carousel slide" data-ride="carousel">
+
+                                <!-- indicators -->
+                                <ol class="carousel-indicators">
+                                    <li></li>
+                                </ol>
+
+                                <!-- wrapper for slides -->
+                                <div class="carousel-inner" role="listbox">
+                                    <div class="item active">
+                                        <img src="/images/FAR_Logo_and_Byline_transparent_RGB.png">
+                                    </div>
+                                </div>
+
+                                <!-- controls -->
+                                <a class="left carousel-control" href="" role="button" data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="right carousel-control" href="" role="button" data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3><strong>{{community.Community}}</strong></h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Marketing Message -->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div ng-bind-html-unsafe="community.MarketingMessage"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- UI button section -->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="main-button-menu-border">
+                                <div class="center-block main-button-menu-container">
+                                    <ul class="main-button-menu">
+                                        <li role="button" ng-click="seeOnMap()" >
+                                            <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+                                            <span>View this listing on Map</span>
+                                        </li>
+                                        <li role="button" ng-click="gotToListingSearch()">
+                                            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                                            <span>See other properties from this landlord</span>
+                                        </li>
+                                        <li role="button" data-toggle="modal" data-target="#email-friend-modal">
+                                            <span class="glyphicon glyphicon-envelope"></span>
+                                            <span>Email this listing to a friend</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div ng-if="community.result == 'error' || community.result == 'server error'">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="well">
+                <h4>Type: {{community.result}}</h4>
+                <ul class="list-unstyled">
+                    Reasons:
+                    <li ng-repeat="reason in listing.reasons">{{community.reason}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

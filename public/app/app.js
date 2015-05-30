@@ -21,6 +21,9 @@ var newApp = angular.module('app',[])
             .when('/featured-communities/search/city-state/:cityState',{
                 templateUrl: 'app/views/communitiesSearchResults.html'
             })
+            .when('/featured-communities/:communityId',{
+                templateUrl: 'app/views/displayCommunity.html'
+            })
 
             //catch all rules
             .when('/',{

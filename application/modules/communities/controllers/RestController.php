@@ -30,7 +30,7 @@ class Communities_RestController extends Zend_Rest_Controller
         $community = $communityModel->getCommunity();
 
         if ( $community['result'] === 'success' ) {
-            if ( empty( $community['community'] ) ) {
+            if ( empty( $community['communities'] ) ) {
                 $this->getResponse()->setHttpResponseCode(404);
             } else {
                 $this->getResponse()->setHttpResponseCode(200);

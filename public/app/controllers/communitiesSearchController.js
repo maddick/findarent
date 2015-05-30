@@ -1,6 +1,6 @@
 angular
     .module('app')
-    .controller('communitiesSearchController',['$scope','$routeParams','CommunitySearch',function($scope,$routeParams,CommunitySearch){
+    .controller('communitiesSearchController',['$scope','$routeParams','CommunitySearch','$location',function($scope,$routeParams,CommunitySearch,$location){
 
         if ($routeParams.cityState !== undefined) {
             var searchParams = {};
@@ -15,6 +15,14 @@ angular
                         $('#search-results-section').fadeIn();
                     });
                     $scope.communities = response.data;
+
+                    //strip the stupid html crap from the messages
+                    for ( var i = 0; i < $scope.communities.communities.length - 1; i++ ) {
+                        var strInputCode = $scope.communities.communities[i]['MarketingMessage'];
+                        var strTagStrippedText = strInputCode.replace(/<\/?[^>]+(>|$)/g, "");
+                        strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
+                        $scope.communities.communities[i]['MarketingMessage'] = strTagStrippedText;
+                    }
                 },
                 function(response){
                     $('#search-results-loading').fadeOut();
@@ -24,4 +32,7 @@ angular
             //do error
         }
 
+        $scope.goToCommunity = function(communityId) {
+            $location.url('/featured-communities/' +  communityId);
+        }
     }]);
