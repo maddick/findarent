@@ -28,6 +28,61 @@
     .search-text-rent {
         font-size: 14px;
         color: red;
+    }.contents h4{
+         margin-top:0;
+         margin-bottom:5px;
+         padding-bottom:3px;
+         border-bottom:1px solid grey;
+     }
+    .contents img {
+        max-height:140px;
+        max-width:175px;
+    }
+    .small{
+        font-size:11px;
+    }
+    .result{
+        border-collapse:collapse;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        margin-bottom:-1px;
+    }
+    .contents{
+        padding:5px;
+        font-size:11px;
+    }
+    .img{
+        height:140px;
+        width:175px;
+        background-color:#494949;
+        float:left;
+    }
+    .address {
+        font-size: 12px;
+    }
+    @media only screen and (max-width:1380px) {
+        .contents img {
+            max-height:100px;
+            max-width:125px;
+        }
+        .img{
+            height:100px;
+            width:125px;
+            background-color:#494949;
+            float:left;
+        }
+    }
+    @media only screen and (max-width:1024px) {
+        .contents img {
+            display:none;
+        }
+        .img{
+            display:none;
+        }
+
+        .stretch{
+            width:100%;
+        }
     }
 </style>
 
@@ -184,53 +239,40 @@
             </div>
         </div>
 
-        <!-- loop through all communities and display them -->
-        <div class="container-fluid">
-            <div class="row" ng-repeat="community in communities.communities">
+
+        <div class="container-fluid" ng-repeat="community in communities.communities">
+            <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
-                    <div class="well search-well">
 
-                        <!-- row for each listing -->
-                        <div class="row">
-
-                            <!-- column for picture -->
-                            <div class="col-md-2">
-
+                    <div class="container-fluid">
+                        <div class="row result contents">
+                            <div class="img">
+                                <img src="http://far.giddion.com/Uploads/Listings/{{community.ImageURL}}" class="center-block" >
                             </div>
-
-                            <!-- column for text / well -->
-                            <div class="col-md-10">
+                            <div class="container-fluid col-sm-9 stretch">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h4><a role="button" ng-click="goToCommunity(community.CommunityID)"><strong>{{community.Headline}}</strong></a></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="address">{{community.Address}}, {{community.City}}, {{community.State}}. {{community.ZipCode}}</div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h5><a role="button" ng-click="goToCommunity(community.CommunityID)"><strong>{{community.Community}}</strong></a></h5>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        {{community.Address}}<br>
-                                        {{community.City}}, {{community.State}}. {{community.ZipCode}}<br>
-                                    </div>
-                                    <div class="col-md-3">
-
-                                    </div>
-                                    <div class="col-md-5">
-
-                                    </div>
-                                </div>
-
-                                <div class="row" style="margin-top: 5px;">
-                                    <div class="col-md-12 community-marketing-message" style="font-size: 11px;">
-                                        {{community.MarketingMessage | limitTo:190 }}<span ng-if="community.MarketingMessage.length >= 190">...</span>
+                                        <div>{{community.MarketingMessage | limitTo:190 }}<span ng-if="community.MarketingMessage.length >= 190">...</span></div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
     </div>
 
 
