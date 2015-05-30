@@ -25,9 +25,19 @@
         background: #f9f9f9 none;
         font-size: 11px;
     }
-    .search-well img {
+    .search-well-img {
         margin-top:10px;
+        background-color: #494949;
+        height:100px;
+        width:150px;
+        float:left;
+        margin-right:10px;
+    }
+    .search-well-img img {
         max-height:100px;
+    }
+    .search-well-btn {
+        float:right;
     }
     .search-text-rent {
         font-size: 14px;
@@ -210,42 +220,45 @@
                                 <div class="row">
 
                                     <!-- column for picture -->
-                                    <div class="col-md-3">
-                                        <img src="http://far.giddion.com/Uploads/Listings/{{listing.ImageURL}}" class="img-responsive center-block" >
+                                    <div class="search-well-img">
+                                        <img src="http://far.giddion.com/Uploads/Listings/{{listing.ImageURL}}" class="center-block" >
                                     </div>
 
                                     <!-- column for text / well -->
-                                    <div class="col-md-9">
+
+                                    <div class="col-md-9 container-fluid">
                                         <div class="row">
-                                            <div class="col-md-12">
-                                                <h5><a role="button" ng-click="goToListing(listing.ListingID)"><strong>{{listing.Headline}}</strong></a></h5>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h5><a role="button" ng-click="goToListing(listing.ListingID)"><strong>{{listing.Headline}}</strong></a></h5>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <div class="search-text-rent">${{listing.Rent}}</div>
-                                                <div>Bedrooms: {{listing.Bedrooms}}</div>
-                                                <div>Bathrooms: {{listing.Bathrooms}}</div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="search-text-rent">${{listing.Rent}}</div>
+                                                    <div>Bedrooms: {{listing.Bedrooms}}</div>
+                                                    <div>Bathrooms: {{listing.Bathrooms}}</div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    {{listing.Address}}<br>
+                                                    {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}<br>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <button type="button" class="btn btn-danger search-well-btn">Contact Owner</button>
+                                                </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                {{listing.Address}}<br>
-                                                {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}<br>
-                                            </div>
-                                            <div class="col-md-5">
 
-                                            </div>
-                                        </div>
-
-                                        <div class="row" style="margin-top: 5px;">
-                                            <div class="col-md-12" style="font-size: 11px;">
-                                                {{listing.MarketingMessage | limitTo:190 }}<span ng-if="listing.MarketingMessage.length >= 190">...</span>
+                                            <div class="row" style="margin-top: 5px;">
+                                                <div class="col-md-12" style="font-size: 11px;">
+                                                    {{listing.MarketingMessage | limitTo:190 }}<span ng-if="listing.MarketingMessage.length >= 190">...</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
+
                         </div>
                 </div>
             </div>
