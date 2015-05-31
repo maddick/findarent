@@ -29,6 +29,9 @@ var newApp = angular.module('app',[])
             .when('/featured-brokers/',{
                 templateUrl: '/app/views/featuredBrokers.html'
             })
+            .when('/featured-brokers/search/city-state/:cityState',{
+                templateUrl: '/app/views/brokersSearchResults.html'
+            })
 
             //catch all rules
             .when('/',{

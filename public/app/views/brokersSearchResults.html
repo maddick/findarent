@@ -1,0 +1,296 @@
+<style type="text/css">
+    #search-results-loading {
+        display:none;
+        margin-top:100px;
+    }
+    #search-results-section {
+        display:none;
+    }
+    .search-page {
+        margin-top: 70px;
+    }
+    .search-message p {
+        color: green;
+    }
+    #searchHeading {
+        background: #f2c747 none;
+    }
+    #searchCollapse {
+        background-color:#F9E6B0;
+    }
+    #searchButtonRow {
+        padding-top:10px;
+    }
+    .search-well {
+        background: #f9f9f9 none;
+        font-size: 11px;
+    }
+    .search-text-rent {
+        font-size: 14px;
+        color: red;
+    }.contents h4{
+         margin-top:0;
+         margin-bottom:5px;
+         padding-bottom:3px;
+         border-bottom:1px solid grey;
+     }
+    .contents img {
+        max-height:140px;
+        max-width:175px;
+    }
+    .small{
+        font-size:11px;
+    }
+    .result{
+        border-collapse:collapse;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        margin-bottom:-1px;
+    }
+    .contents{
+        padding:5px;
+        font-size:11px;
+    }
+    .img{
+        height:140px;
+        width:175px;
+        background-color:#494949;
+        float:left;
+    }
+    .address {
+        font-size: 12px;
+    }
+    @media only screen and (max-width:1380px) {
+        .contents img {
+            max-height:100px;
+            max-width:125px;
+        }
+        .img{
+            height:100px;
+            width:125px;
+            background-color:#494949;
+            float:left;
+        }
+    }
+    @media only screen and (max-width:1024px) {
+        .contents img {
+            display:none;
+        }
+        .img{
+            display:none;
+        }
+
+        .stretch{
+            width:100%;
+        }
+    }
+</style>
+
+<!-- div for controller -->
+<div ng-controller="brokersSearchController" class="search-page">
+
+    <!-- loading screen -->
+    <div id="search-results-loading" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <img class="center-block" src="/images/ajax-loader.gif">
+            </div>
+        </div>
+    </div>
+
+    <!-- in the case of a successful request -->
+    <div ng-if="brokers.result == 'success'"  id="search-results-section">
+
+        <!-- search form -->
+        <div class="container-fluid" ng-controller="listingSearchController">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+
+                    <!-- collapsible search form -->
+                    <div id="searchAccordian" class="panel-group" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="searchHeading">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-target="#searchCollapse">
+                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                        <strong>Search Controls</strong>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="searchCollapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="searchHeading" data-expanded="false">
+                                <div class="panel-body">
+                                    <form class="form">
+
+                                        <!-- first row of controls -->
+                                        <div class="container-fluid">
+                                            <div class="row">
+
+                                                <!-- location inputs -->
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for="cityStateOrZip">City/State or Zip</label>
+                                                        <input id="cityStateOrZip" type="text" class="form-control" placeholder="City and State Or Zip" ng-model="listingSearchParams.cityStateOrZip">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="radius">Radius</label>
+                                                        <select class="form-control" id="radius" ng-model="listingSearchParams.radius">
+                                                            <option value="">no radius</option>
+                                                            <option value="10">10 miles</option>
+                                                            <option value="15">15 miles</option>
+                                                            <option value="20">20 miles</option>
+                                                            <option value="25">25 miles</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- room inputs -->
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for="bedrooms">Bedrooms</label>
+                                                        <select class="form-control" id="bedrooms" ng-model="listingSearchParams.numberOfBedrooms">
+                                                            <option value="">all</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="bathrooms">Bathrooms</label>
+                                                        <select class="form-control" id="bathrooms" ng-model="listingSearchParams.numberOfBathrooms">
+                                                            <option value="">all</option>
+                                                            <option value="1">1</option>
+                                                            <option value="1.5">1&#189;</option>
+                                                            <option value="2">2</option>
+                                                            <option value="2.5">2&#189;</option>
+                                                            <option value="3">3</option>
+                                                            <option value="3.5">3&#189;</option>
+                                                            <option value="4">4</option>
+                                                            <option value="4.5">4&#189;</option>
+                                                            <option value="5">5</option>
+                                                            <option value="5.5">5&#189;</option>
+                                                            <option value="6">6</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <!-- rent inputs -->
+                                                <div class="col-sm-4">
+                                                    <div class="form-group">
+                                                        <label for="min-rent">Min. Rent</label>
+                                                        <select class="form-control" id="min-rent" ng-model="listingSearchParams.minRent">
+                                                            <option value="">all</option>
+                                                            <option value="700.00">$700.00</option>
+                                                            <option value="800.00">$800.00</option>
+                                                            <option value="900.00">$900.00</option>
+                                                            <option value="1000.00">$1000.00</option>
+                                                            <option value="1100.00">$1100.00</option>
+                                                            <option value="1200.00">$1200.00</option>
+                                                            <option value="1300.00">$1300.00</option>
+                                                            <option value="1400.00">$1400.00</option>
+                                                            <option value="1500.00">$1500.00</option>
+                                                            <option value="1600.00">$1600.00</option>
+                                                            <option value="1700.00">$1700.00</option>
+                                                            <option value="1800.00">$1800.00</option>
+                                                            <option value="1900.00">$1900.00</option>
+                                                            <option value="2000.00">$2000.00</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="max-rent">Max. Rent</label>
+                                                        <select class="form-control" id="max-rent" ng-model="listingSearchParams.maxRent">
+                                                            <option value="">all</option>
+                                                            <option value="700.00">$700.00</option>
+                                                            <option value="800.00">$800.00</option>
+                                                            <option value="900.00">$900.00</option>
+                                                            <option value="1000.00">$1000.00</option>
+                                                            <option value="1100.00">$1100.00</option>
+                                                            <option value="1200.00">$1200.00</option>
+                                                            <option value="1300.00">$1300.00</option>
+                                                            <option value="1400.00">$1400.00</option>
+                                                            <option value="1500.00">$1500.00</option>
+                                                            <option value="1600.00">$1600.00</option>
+                                                            <option value="1700.00">$1700.00</option>
+                                                            <option value="1800.00">$1800.00</option>
+                                                            <option value="1900.00">$1900.00</option>
+                                                            <option value="2000.00">$2000.00</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div id="searchButtonRow" class="row">
+                                            <div class="col-sm-12">
+                                                <button type="button" class="btn btn-default center-block" ng-click="performSearch()">Search Listings</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $('#searchCollapse').collapse('hide');
+                    </script>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container-fluid" ng-repeat="broker in brokers.brokers">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+
+                    <div class="container-fluid">
+                        <div class="row result contents">
+                            <div class="img">
+                                <img src="http://far.giddion.com/Uploads/Brokers/{{broker.Advertisement}}" class="center-block" >
+                            </div>
+                            <div class="container-fluid col-sm-9 stretch">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h4><a role="button" ng-click=""><strong>{{broker.FirstName}} {{broker.LastName}} - {{broker.BusinessName}}</strong></a></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="address">{{broker.Address}}, {{broker.City}}, {{broker.State}}. {{broker.ZipCode}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div>{{broker.MarketingMessage | limitTo:190 }}<span ng-if="broker.MarketingMessage.length >= 190">...</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!-- in the case of an error -->
+    <div class="row" ng-if="communities.result == 'error' || communities.result == 'server error'">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="well">
+                <h4>Type: {{communities.result}}</h4>
+                <ul class="list-unstyled">
+                    Reasons:
+                    <li ng-repeat="reason in communities.reasons">{{reason}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $('.community-marketing-message').text();
+</script>
