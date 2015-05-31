@@ -25,6 +25,11 @@ var newApp = angular.module('app',[])
                 templateUrl: 'app/views/displayCommunity.html'
             })
 
+            //brokers
+            .when('/featured-brokers/',{
+                templateUrl: '/app/views/featuredBrokers.html'
+            })
+
             //catch all rules
             .when('/',{
                 templateUrl: 'app/views/listingSearch.html',
