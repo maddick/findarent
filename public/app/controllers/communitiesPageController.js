@@ -8,9 +8,8 @@ angular
 
         promiseCt.then(
             function(response){
-                $scope.ct = response.data;console.log(response.data);
-                console.log(Math.floor($scope.ct.cities.length / 4));
-                var numCols = ( Math.floor($scope.ct.cities.length / 4) < 4 ) ? 3 : 4;
+                $scope.ct = response.data;
+                var numCols = ( $scope.ct.cities.length < 4 ) ? 3 : 4;
                 var perColumn = ( Math.floor($scope.ct.cities.length / numCols) < 1 ) ? 1 : Math.floor($scope.ct.cities.length / numCols);
                 var addToColumnOne = $scope.ct.cities.length % numCols;
                 $scope.ct.cityColumns = {};
@@ -26,17 +25,14 @@ angular
                         index++;
                     }
                 }
-
-                console.log($scope.ct.cityColumns);
             },
             function(response){
                 console.log(response);
             });
         promiseRi.then(
             function(response){
-                $scope.ri = response.data;console.log(response.data);
-                console.log(Math.floor($scope.ri.cities.length / 4));
-                var numCols = ( Math.floor($scope.ri.cities.length / 4) < 4 ) ? 3 : 4;
+                $scope.ri = response.data;
+                var numCols = ( $scope.ri.cities.length < 4 ) ? 3 : 4;
                 var perColumn = ( Math.floor($scope.ri.cities.length / numCols) < 1 ) ? 1 : Math.floor($scope.ri.cities.length / numCols);
                 var addToColumnOne = $scope.ri.cities.length % numCols;
                 $scope.ri.cityColumns = {};
@@ -52,8 +48,6 @@ angular
                         index++;
                     }
                 }
-
-                console.log($scope.ri.cityColumns);
             },
             function(response){
                 console.log(response);

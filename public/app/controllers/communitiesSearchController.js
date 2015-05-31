@@ -17,9 +17,12 @@ angular
                     $scope.communities = response.data;
 
                     //strip the stupid html crap from the messages
-                    for ( var i = 0; i < $scope.communities.communities.length - 1; i++ ) {
+                    for ( var i = 0; i < $scope.communities.communities.length; i++ ) {
                         var strInputCode = $scope.communities.communities[i]['MarketingMessage'];
-                        var strTagStrippedText = strInputCode.replace(/<\/?[^>]+(>|$)/g, "");
+                        /*strInputCode = strInputCode.replace(/&(lt|gt);/g, function (strMatch, p1){
+                            return (p1 == "lt")? "<" : ">";
+                        });*/
+                        var strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;"'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
                         strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
                         $scope.communities.communities[i]['MarketingMessage'] = strTagStrippedText;
                     }
