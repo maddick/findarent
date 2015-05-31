@@ -1,14 +1,14 @@
 angular
     .module('app')
-    .controller('communitiesPageController',['$scope','CommunitySearch',function($scope,CommunitySearch){
+    .controller('brokersPageController',['$scope','BrokersSearch',function($scope,BrokersSearch){
 
         $scope.ct = {};
-        var promiseCt = CommunitySearch.getCommunityCitiesByState('ct');
-        var promiseRi = CommunitySearch.getCommunityCitiesByState('ri');
+        var promiseCt = BrokersSearch.getBrokerCitiesByState('ct');
+        var promiseRi = BrokersSearch.getBrokerCitiesByState('ri');
 
         promiseCt.then(
             function(response){
-                $scope.ct = response.data;console.log(response.data);
+                $scope.ct = response.data;
                 console.log(Math.floor($scope.ct.cities.length / 4));
                 var numCols = ( Math.floor($scope.ct.cities.length / 4) < 4 ) ? 3 : 4;
                 var perColumn = ( Math.floor($scope.ct.cities.length / numCols) < 1 ) ? 1 : Math.floor($scope.ct.cities.length / numCols);
@@ -26,17 +26,16 @@ angular
                         index++;
                     }
                 }
-
-                console.log($scope.ct.cityColumns);
             },
             function(response){
                 console.log(response);
             });
+
         promiseRi.then(
             function(response){
-                $scope.ri = response.data;console.log(response.data);
+                $scope.ri = response.data;
                 console.log(Math.floor($scope.ri.cities.length / 4));
-                var numCols = ( Math.floor($scope.ri.cities.length / 4) < 4 ) ? 3 : 4;
+                var numCols = ( $scope.ri.cities.length < 4 ) ? 3 : 4;
                 var perColumn = ( Math.floor($scope.ri.cities.length / numCols) < 1 ) ? 1 : Math.floor($scope.ri.cities.length / numCols);
                 var addToColumnOne = $scope.ri.cities.length % numCols;
                 $scope.ri.cityColumns = {};
@@ -52,8 +51,6 @@ angular
                         index++;
                     }
                 }
-
-                console.log($scope.ri.cityColumns);
             },
             function(response){
                 console.log(response);

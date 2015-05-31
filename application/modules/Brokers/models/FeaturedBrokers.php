@@ -2,6 +2,10 @@
 
 class Brokers_Model_FeaturedBrokers
 {
+    /**
+     * @var Custom_StateCriteria
+     */
+    protected $_stateCriteria;
 
     /**
      * @var Custom_CityStateCriteria
@@ -22,6 +26,33 @@ class Brokers_Model_FeaturedBrokers
      * @var array containing the end results of a search
      */
     protected $_results = array();
+
+    public function getBrokerCitiesByState()
+    {
+        if ( !isset( $this->_stateCriteria ) ) {
+            throw new Exception('No state criteria was set.');
+        }
+
+        if ( !$this->_stateCriteria->isValid() ) {
+            $this->_results['result'] = 'error';
+            $this->_results['reasons'] = $this->_stateCriteria->getValidationErrors();
+        } else {
+            try {
+                $db = Zend_Db_Table::getDefaultAdapter();
+                $sql = 'CALL FAR_Accounts_GetBrokerCitiesByState( :state )';
+                $stmt = $db->prepare( $sql );
+                $stmt->execute( array( 'state' => $this->_stateCriteria->getCriteria() ) );
+                $brokerCitiesByState = $stmt->fetchAll();
+                $this->_results['result'] = 'success';
+                $this->_results['cities'] = $brokerCitiesByState;
+            } catch ( Exception $e ) {
+                $this->_results['result'] = 'server error';
+                $this->_results['reasons'] = $e->getMessage();
+            }
+        }
+
+        return $this->_results;
+    }
 
     /**
      * @return array containing the search results
@@ -165,6 +196,24 @@ class Brokers_Model_FeaturedBrokers
         } catch ( Exception $e ) {
             throw $e;
         }
+    }
+
+    /**
+     * Sets the dependency for state criteria
+     *
+     * @param $stateCriteria
+     * @return $this
+     * @throws Exception when $stateCriteria is not an instance of Custom_StateCriteria
+     */
+    public function setStateCriteria( $stateCriteria )
+    {
+        if ( $stateCriteria instanceof Custom_StateCriteria ) {
+            $this->_stateCriteria = $stateCriteria;
+        } else {
+            throw new Exception('stateCriteria must be an instance of Custom_StateCriteria');
+        }
+
+        return $this;
     }
 
     public function setCityStateCriteria($cityStateCriteria)

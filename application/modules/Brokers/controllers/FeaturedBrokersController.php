@@ -8,6 +8,40 @@ class Brokers_FeaturedBrokersController extends Zend_Controller_Action
     }
 
     /**
+     * @return mixed
+     */
+    public function getBrokerCitiesByStateAction()
+    {
+        //get parameters
+        $state = $this->getRequest()->getParam('state');
+
+        //create a state criteria
+        $stateCriteria = new Custom_StateCriteria( $state );
+
+        //initialize a featured communities model and get a list of cities by state
+        $featuredCommunitiesModel = new Brokers_Model_FeaturedBrokers();
+        $citiesByState = $featuredCommunitiesModel->setStateCriteria($stateCriteria)->getBrokerCitiesByState();
+
+        if ( $citiesByState['result'] === 'success' ) {
+            if ( empty( $citiesByState['cities'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
+        } else {
+            if ( $citiesByState['result'] === 'server error' ) {
+                $this->getResponse()->setHttpResponseCode(500);
+            } else {
+                $this->getResponse()->setHttpResponseCode(400);
+            }
+        }
+
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        $this->_helper->json->sendJson( $citiesByState, false, true );
+    }
+
+
+    /**
      * The search action handles searches against featured brokers and receives a 'city-state' criteria. It returns
      * a json string containing the results of the search.
      */
