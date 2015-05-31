@@ -1,4 +1,4 @@
-var communitySearchBaseURL =  'http://192.168.0.101:8080/communities/featured-communities/search';
+var communitySearchBaseURL =  'http://192.168.0.101:8080/communities/featured-communities';
 
 angular
     .module('app')
@@ -11,7 +11,10 @@ angular
                     cityState = '/city-state/' + params['cityState'];
                 }
 
-                return $http.get( communitySearchBaseURL + cityState );
+                return $http.get( communitySearchBaseURL + '/search' + cityState );
+            },
+            getCommunityCitiesByState : function (state) {
+                return $http.get( communitySearchBaseURL + '/get-community-cities-by-state/state/' + state);
             }
         }
     }]);
