@@ -27,6 +27,12 @@ class Brokers_Model_FeaturedBrokers
      */
     protected $_results = array();
 
+    /**
+     * Returns an array of broker cities by state
+     *
+     * @return array containing broker cities by state
+     * @throws Exception when no state criteria is set
+     */
     public function getBrokerCitiesByState()
     {
         if ( !isset( $this->_stateCriteria ) ) {
@@ -80,7 +86,6 @@ class Brokers_Model_FeaturedBrokers
 
     /**
      * performs validation on the search criteria. Currently, the only valid search criteria is a city / state criteria.
-     * State alone is not accounted for as of yet. Validations for each criteria is handled at the criteria level.
      */
     protected function _validateSearch()
     {
@@ -174,6 +179,12 @@ class Brokers_Model_FeaturedBrokers
                 $brokerIdResults = $brokerIdStmt->fetchAll();
                 $brokerIdStmt->closeCursor();
 
+                //if no broker ID's are returned for the city / state provided then
+                //return an empty array
+                if ( empty( $brokerIdResults ) ) {
+                    return array();
+                }
+
                 //create IN clause using ID's found above
                 $brokerIdInClause = 'brokers.BrokerID IN(';
                 for( $index = 0; $index < count($brokerIdResults); $index++ ) {
@@ -216,6 +227,13 @@ class Brokers_Model_FeaturedBrokers
         return $this;
     }
 
+    /**
+     * Sets the dependency for city / state criteria
+     *
+     * @param $cityStateCriteria
+     * @return $this
+     * @throws Exception when $cityStateCriteria is not an instance of Custom_CityStateCriteria
+     */
     public function setCityStateCriteria($cityStateCriteria)
     {
         if ( $cityStateCriteria instanceof Custom_CityStateCriteria ) {
