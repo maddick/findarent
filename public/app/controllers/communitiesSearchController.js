@@ -22,7 +22,7 @@ angular
                         /*strInputCode = strInputCode.replace(/&(lt|gt);/g, function (strMatch, p1){
                             return (p1 == "lt")? "<" : ">";
                         });*/
-                        var strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;"'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
+                        var strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
                         strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
                         $scope.communities.communities[i]['MarketingMessage'] = strTagStrippedText;
                     }
