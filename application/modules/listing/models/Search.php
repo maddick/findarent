@@ -60,6 +60,11 @@ class Listing_Model_Search
     protected $_listingIdCriteria;
 
     /**
+     * @var Custom_AutocompleteCriteria
+     */
+    protected $_autocompleteCriteria;
+
+    /**
      * @var array
      */
     public $results = array();
@@ -339,6 +344,58 @@ class Listing_Model_Search
         }
     }
 
+    public function autoCompleteCityStateOrZip()
+    {
+        if ( !isset( $this->_autocompleteCriteria ) ) {
+            throw new Exception('No autocompleteCriteria was set.');
+        }
+
+        //validate the autocomplete criteria sent along to the controller
+        if ( !$this->_autocompleteCriteria->isValid() ) {
+            $this->results['result'] = 'error';
+            $this->results['reasons'] = $this->_autocompleteCriteria->getValidationErrors();
+        } else {
+
+            $sql = 'CALL ZipCodes_AutoSuggestLocations( :city, :state, :zipCode, 1)';
+            $variableArray = array();
+
+            //if we have a zip code
+            if ( $this->_autocompleteCriteria->hasZipCode() ) {
+                $sql = str_replace( ':city', '\'\'', $sql );
+                $sql = str_replace( ':state', '\'\'', $sql );
+                $variableArray['zipCode'] = $this->_autocompleteCriteria->getZipCode();
+            }
+
+            //if we have a city
+            if ( $this->_autocompleteCriteria->hasCity() ) {
+                $sql = str_replace( ':zipCode', '\'\'', $sql );
+                $variableArray['city'] = $this->_autocompleteCriteria->getCity();
+            }
+
+            //include the state if it was detected
+            if ( $this->_autocompleteCriteria->hasState() ) {
+                $variableArray['state'] = $this->_autocompleteCriteria->getState();
+            } else {
+                $sql = str_replace( ':state', '\'\'', $sql );
+            }
+
+            try {
+                $db = Zend_Db_Table::getDefaultAdapter();
+                $stmt = $db->prepare($sql);
+                $stmt->execute($variableArray);
+                $suggestedValues = $stmt->fetchAll();
+                $stmt->closeCursor();
+                $this->results['result'] = 'success';
+                $this->results['suggestedValues'] = $suggestedValues;
+            } catch ( Exception $e ) {
+                $this->results['result'] = 'server error';
+                $this->results['reasons'] = $e->getMessage();
+            }
+        }
+
+        return $this->results;
+    }
+
     /**
      * Returns the total number of active listings
      *
@@ -568,6 +625,17 @@ class Listing_Model_Search
             $this->_listingIdCriteria = $listingId;
         } else {
             throw new Exception('$listingId must be an instance of Custom_IdCriteria');
+        }
+
+        return $this;
+    }
+
+    public function setAutocompleteCriteria( $autocompleteCriteria )
+    {
+        if ( $autocompleteCriteria instanceof Custom_AutocompleteCriteria ) {
+            $this->_autocompleteCriteria = $autocompleteCriteria;
+        } else {
+            throw new Exception('$autocompleteCriteria must be an instance of Custom_AutocompleteCriteria');
         }
 
         return $this;
