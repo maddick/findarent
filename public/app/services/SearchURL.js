@@ -9,7 +9,7 @@ angular
                 var numberOfBathrooms   = ($scope.listingSearchParams !== undefined) ? $scope.listingSearchParams.numberOfBathrooms : undefined;
                 var minRent             = ($scope.listingSearchParams !== undefined) ? $scope.listingSearchParams.minRent : undefined;
                 var maxRent             = ($scope.listingSearchParams !== undefined) ? $scope.listingSearchParams.maxRent : undefined;
-                var cityStateZipRegEx   = /^(\d{5})$|^((?:\b[a-zA-Z]+\b\s?)+,?\s?[a-zA-Z]{2})$/;
+                var cityStateZipRegEx   = /^(\d{5})$|^((?:[a-zA-Z]+\s?)+,?\s?([a-zA-Z]{2}))\s?(?:\d{5})?$/;
                 var regEx               = new RegExp(cityStateZipRegEx);
                 var regExArray          = regEx.exec(cityStateOrZip);
                 var url                 = '/search?';
