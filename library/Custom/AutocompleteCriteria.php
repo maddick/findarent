@@ -48,8 +48,6 @@ class Custom_AutocompleteCriteria extends Custom_AbstractCriteria
                 //parse our input and store the discovered values
                 preg_match( $zipCityStateRegEx, $this->_criteriaValue, $matches );
 
-                print_r($matches);
-
                 if ( count( $matches ) === 2 ) {
                     $this->_zipCode = $matches[1];
                 }
