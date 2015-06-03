@@ -136,6 +136,24 @@ class Listing_SearchController extends Zend_Controller_Action
         return $this->_helper->json->sendJson( $searchResults, false, true );
     }
 
+    public function getAllCitiesAndZipCodesAction()
+    {
+        $search = new Listing_Model_Search();
+        $searchResults = $search->getAllCitiesAndZipCodes();
+
+        if ( $searchResults['result'] === 'success' ){
+            if ( empty( $searchResults['cities-and-zip-codes'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        return $this->_helper->json->sendJson( $searchResults, false, true );
+    }
+
     public function getAutocompleteSuggestionsAction()
     {
         $search = new Listing_Model_Search();
