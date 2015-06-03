@@ -344,6 +344,31 @@ class Listing_Model_Search
         }
     }
 
+    public function getAllCitiesAndZipCodes()
+    {
+        $sql =
+            'SELECT zip_code, city_name, state_abbr
+               FROM zipcodes
+           ORDER BY
+              city_type = \'D\' DESC,
+              city_type = \'A\' DESC,
+              city_name, state_abbr';
+        try {
+            $db = Zend_Db_Table::getDefaultAdapter();
+            $stmt = $db->prepare( $sql );
+            $stmt->execute();
+            $searchResults = $stmt->fetchAll();
+            $stmt->closeCursor();
+            $this->results['result'] = 'success';
+            $this->results['cities-and-zip-codes'] = $searchResults;
+        } catch ( Exception $e ) {
+            $this->results['result'] = 'server error';
+            $this->results['reasons'] = $e->getMessage();
+        }
+
+        return $this->results;
+    }
+
     public function autoCompleteCityStateOrZip()
     {
         if ( !isset( $this->_autocompleteCriteria ) ) {
