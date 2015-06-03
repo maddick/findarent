@@ -142,8 +142,6 @@ class Listing_SearchController extends Zend_Controller_Action
         $autocompleteData = $this->getRequest()->getParam('autocomplete-data');
         $autocompleteCriteria = new Custom_AutocompleteCriteria($autocompleteData);
 
-        var_dump($autocompleteCriteria);
-
         $searchResults = $search->setAutocompleteCriteria($autocompleteCriteria)->autoCompleteCityStateOrZip();
 
         if ( $searchResults['result'] === 'success' ){
