@@ -1,12 +1,11 @@
-var newApp = angular.module('app',[])
+var newApp = angular.module('app',['ngRoute'])
     .config(['$routeProvider', function($routeProvider){
         $routeProvider
 
             //routing for city-state based urls
 
             .when('/search',{
-                templateUrl: 'app/views/listingSearchResults.html',
-                controller: 'listingSearchController'
+                templateUrl: 'app/views/listingSearchResults.html'
             })
 
             //go to specific listing

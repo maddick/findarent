@@ -154,7 +154,7 @@
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <label for="cityStateOrZip">City/State or Zip</label>
-                                                        <input id="cityStateOrZip" type="text" class="form-control" placeholder="City and State Or Zip" ng-model="listingSearchParams.cityStateOrZip">
+                                                        <input id="cityStateOrZip" type="text" class="form-control" placeholder="City and State Or Zip" autocomplete ng-model="listingSearchParams.cityStateOrZip">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="radius">Radius</label>
@@ -247,9 +247,9 @@
                                         </div>
 
                                         <div id="searchButtonRow" class="row">
-                                                <div class="col-sm-12">
-                                                    <button type="button" class="btn btn-default center-block" ng-click="performSearch()">Search Listings</button>
-                                                </div>
+                                            <div class="col-sm-12">
+                                                <button type="button" class="btn btn-default center-block" ng-click="performSearch()">Search Listings</button>
+                                            </div>
                                         </div>
 
                                     </form>
@@ -265,7 +265,9 @@
         </div>
 
         <!-- loop through all listings and display them -->
-        <div class="container-fluid" ng-repeat="listing in listings.listings">
+        <div class="container-fluid"
+             ng-repeat="listing in listings.listings | orderBy:'Rent'"
+             ng-show="( $index >= ( ( pagination.currentPage - 1 ) * pagination.numPerPage ) ) && ( $index < ( pagination.currentPage * pagination.numPerPage ) )">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
 
@@ -308,6 +310,33 @@
             </div>
         </div>
 
+        <!-- pagination buttons -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <nav class="center-block" style="display:table;">
+                        <ul class="pagination">
+                            <li ng-repeat="page in pagination.pages" ng-class="(page === pagination.currentPage) ? 'active' : ''">
+                                <a role="button" ng-click="goToPage(page)">{{page}}</a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <p class="center-block" style="display:table;">page <strong>{{pagination.currentPage}}</strong> of <strong>{{pagination.numPages}}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <p class="center-block" style="display:table;"><i>Didn't find what you were looking of? Try narrowing your search!</i></p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
@@ -318,7 +347,7 @@
                 <h4>Type: {{listings.result}}</h4>
                 <ul class="list-unstyled">
                     Reasons:
-                    <li ng-repeat="reason in listings.reasons">{{reason}}</li>
+                    <li ng-repeat="reason in listings.reasons" ng-class="">{{reason}}</li>
                 </ul>
             </div>
         </div>
