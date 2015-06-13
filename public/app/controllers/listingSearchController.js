@@ -78,6 +78,38 @@ angular
                     $scope.listings.count = response.data.listings.length;
                     $scope.successMessage = { zipOrCityState : zipOrCityState };
                     $scope.listingSearchParams = listingSearchParams;
+
+                    //convert rent to a number
+                    angular.forEach($scope.listings.listings, function(listing){
+                        listing.Rent = parseFloat(listing.Rent);
+                    });
+
+                    //paginate the results
+                    $scope.pagination = {};
+                    $scope.pagination.currentPage = 1;
+                    $scope.pagination.numPages = Math.ceil( $scope.listings.count / 5 );
+                    $scope.pagination.numLastPage = $scope.listings.count % 5;
+                    $scope.pagination.numPerPage = ( $scope.pagination.currentPage !== $scope.pagination.numPages ) ? 5 : $scope.pagination.numLastPage;
+
+                    $scope.pagination.pages = [];
+                    for ( var i = 1; i <= $scope.pagination.numPages; i++ ) {
+                        $scope.pagination.pages.push(i);
+                    }
+
+                    /*$scope.listings.pages = {};
+                    var index = 0;
+                    for ( var page = 1; page <= $scope.numPages; page++ ) {
+                        var listingsPerPage = ( page !== $scope.numPages ) ? 5 : $scope.numLastPage;
+                        $scope.listings.pages['page' + page] = {};
+                        for ( var listing = 1; listing <= listingsPerPage; listing++ ) {
+                            $scope.listings.pages['page' + page]['listing' + listing] = {};
+                            $scope.listings.pages['page' + page]['listing' + listing] = response.data.listings[index];
+                            index++;
+                        }
+                    }
+
+                    console.log($scope.listings.pages);*/
+
                     $('#search-results-loading').fadeOut(400,function(){
                         $('#search-results-section').fadeIn();
                     });
@@ -104,5 +136,25 @@ angular
 
         $scope.goToListing = function(listingId) {
             $location.url('/listing/' +  listingId);
+        }
+
+        $scope.nextPage = function() {
+            $scope.currentPage = ( $scope.currentPage !== $scope.numPages ) ? $scope.currentPage + 1 : $scope.currentPage;
+        }
+
+        $scope.previousPage = function() {
+            $scope.currentPage = ( $scope.currentPage !== 1 ) ? $scope.currentPage - 1 : $scope.currentPage;
+        }
+
+        $scope.lastPage = function() {
+
+        }
+
+        $scope.firstPage = function() {
+
+        }
+
+        $scope.goToPage = function(page) {
+            $scope.pagination.currentPage = page;
         }
     }]);
