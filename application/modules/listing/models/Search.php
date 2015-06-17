@@ -369,6 +369,11 @@ class Listing_Model_Search
         return $this->results;
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     * @deprecated
+     */
     public function autoCompleteCityStateOrZip()
     {
         if ( !isset( $this->_autocompleteCriteria ) ) {
@@ -545,6 +550,31 @@ class Listing_Model_Search
         return $this->results;
     }
 
+    public function getPopularSearches()
+    {
+        try {
+            $sql =
+                'SELECT
+               DISTINCT City, State
+                   FROM far_listings
+                  WHERE Active = 1
+                    AND (ExpirationDate IS NULL OR DATE(ExpirationDate) >= DATE(now()))
+                    AND (State != \'\')
+               ORDER BY State ASC, City ASC';
+
+            $db = Zend_Db_Table::getDefaultAdapter();
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            $this->results['result'] = 'success';
+            $this->results['searches'] = $stmt->fetchAll();
+        } catch ( Exception $e ) {
+            $this->results['result'] = 'error';
+            $this->results['reasons'] = $e->getMessage();
+        }
+
+        return $this->results;
+    }
+
     /**
      * Sets the dependency for zip Criteria object
      *
@@ -655,6 +685,12 @@ class Listing_Model_Search
         return $this;
     }
 
+    /**
+     * @param $autocompleteCriteria
+     * @return $this
+     * @throws Exception
+     * @deprecated
+     */
     public function setAutocompleteCriteria( $autocompleteCriteria )
     {
         if ( $autocompleteCriteria instanceof Custom_AutocompleteCriteria ) {

@@ -17,9 +17,8 @@ class Listing_SearchController extends Zend_Controller_Action
     }
 
     /**
-     * The get action handles GET requests and receives an 'id' parameter; it
-     * should respond with the server resource state of the resource identified
-     * by the 'id' value.
+     * This function gathers search parameters from the url and uses them
+     * to perform a search against active listings.
      */
     public function getListingsAction()
     {
@@ -80,6 +79,9 @@ class Listing_SearchController extends Zend_Controller_Action
         $this->_helper->json->sendJson( $searchResults, false, true );
     }
 
+    /**
+     * This function returns the total active listings count
+     */
     public function totalActiveListingsAction()
     {
         $search = new Listing_Model_Search();
@@ -94,6 +96,9 @@ class Listing_SearchController extends Zend_Controller_Action
         $this->_helper->json->sendJson( $searchResults, false, true );
     }
 
+    /**
+     * This function searches against active listings by a given landlord id.
+     */
     public function getListingsByLandlordAction()
     {
         $search = new Listing_Model_Search();
@@ -112,9 +117,12 @@ class Listing_SearchController extends Zend_Controller_Action
             $this->getResponse()->setHttpResponseCode(500);
         }
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        return $this->_helper->json->sendJson( $searchResults, false, true );
+        $this->_helper->json->sendJson( $searchResults, false, true );
     }
 
+    /**
+     * This function returns the photos associated to a listing.
+     */
     public function getPhotosByListingIdAction()
     {
         $search = new Listing_Model_Search();
@@ -133,9 +141,12 @@ class Listing_SearchController extends Zend_Controller_Action
             $this->getResponse()->setHttpResponseCode(500);
         }
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        return $this->_helper->json->sendJson( $searchResults, false, true );
+        $this->_helper->json->sendJson( $searchResults, false, true );
     }
 
+    /**
+     * This function returns all cities and zip codes.
+     */
     public function getAllCitiesAndZipCodesAction()
     {
         $search = new Listing_Model_Search();
@@ -151,9 +162,12 @@ class Listing_SearchController extends Zend_Controller_Action
             $this->getResponse()->setHttpResponseCode(500);
         }
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        return $this->_helper->json->sendJson( $searchResults, false, true );
+        $this->_helper->json->sendJson( $searchResults, false, true );
     }
 
+    /**
+     * @deprecated
+     */
     public function getAutocompleteSuggestionsAction()
     {
         $search = new Listing_Model_Search();
@@ -172,6 +186,28 @@ class Listing_SearchController extends Zend_Controller_Action
             $this->getResponse()->setHttpResponseCode(500);
         }
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        return $this->_helper->json->sendJson( $searchResults, false, true );
+        $this->_helper->json->sendJson( $searchResults, false, true );
+    }
+
+    /**
+     * This function returns a list of unique cities / states that have valid
+     * active listings.
+     */
+    public function getPopularSearchesAction()
+    {
+        $search = new Listing_Model_Search();
+        $searchResults = $search->getPopularSearches();
+
+        if ( $searchResults['result'] === 'success' ) {
+            if ( empty($searchResults['searches'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json');
+        $this->_helper->json->sendJson( $searchResults, false, true );
     }
 }
