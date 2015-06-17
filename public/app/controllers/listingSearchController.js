@@ -88,27 +88,12 @@ angular
                     $scope.pagination = {};
                     $scope.pagination.currentPage = 1;
                     $scope.pagination.numPages = Math.ceil( $scope.listings.count / 5 );
-                    $scope.pagination.numLastPage = $scope.listings.count % 5;
-                    $scope.pagination.numPerPage = ( $scope.pagination.currentPage !== $scope.pagination.numPages ) ? 5 : $scope.pagination.numLastPage;
+                    $scope.pagination.numPerPage = 5;
 
                     $scope.pagination.pages = [];
                     for ( var i = 1; i <= $scope.pagination.numPages; i++ ) {
                         $scope.pagination.pages.push(i);
                     }
-
-                    /*$scope.listings.pages = {};
-                    var index = 0;
-                    for ( var page = 1; page <= $scope.numPages; page++ ) {
-                        var listingsPerPage = ( page !== $scope.numPages ) ? 5 : $scope.numLastPage;
-                        $scope.listings.pages['page' + page] = {};
-                        for ( var listing = 1; listing <= listingsPerPage; listing++ ) {
-                            $scope.listings.pages['page' + page]['listing' + listing] = {};
-                            $scope.listings.pages['page' + page]['listing' + listing] = response.data.listings[index];
-                            index++;
-                        }
-                    }
-
-                    console.log($scope.listings.pages);*/
 
                     $('#search-results-loading').fadeOut(400,function(){
                         $('#search-results-section').fadeIn();
@@ -138,23 +123,27 @@ angular
             $location.url('/listing/' +  listingId);
         }
 
+        $scope.goToPage = function(page) {
+            $scope.pagination.currentPage = page;
+        }
+
         $scope.nextPage = function() {
-            $scope.currentPage = ( $scope.currentPage !== $scope.numPages ) ? $scope.currentPage + 1 : $scope.currentPage;
+            if ( $scope.pagination.currentPage !== $scope.pagination.numPages ) {
+                $scope.pagination.currentPage = $scope.pagination.currentPage + 1;
+            }
         }
 
         $scope.previousPage = function() {
-            $scope.currentPage = ( $scope.currentPage !== 1 ) ? $scope.currentPage - 1 : $scope.currentPage;
-        }
-
-        $scope.lastPage = function() {
-
+            if ( $scope.pagination.currentPage !== 1 ) {
+                $scope.pagination.currentPage = $scope.pagination.currentPage - 1;
+            }
         }
 
         $scope.firstPage = function() {
-
+            $scope.pagination.currentPage = 1;
         }
 
-        $scope.goToPage = function(page) {
-            $scope.pagination.currentPage = page;
+        $scope.lastPage = function() {
+            $scope.pagination.currentPage = $scope.pagination.numPages;
         }
     }]);

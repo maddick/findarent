@@ -316,8 +316,23 @@
                 <div class="col-sm-8 col-sm-offset-2">
                     <nav class="center-block" style="display:table;">
                         <ul class="pagination">
-                            <li ng-repeat="page in pagination.pages" ng-class="(page === pagination.currentPage) ? 'active' : ''">
+                            <li>
+                                <a role="button" ng-click="firstPage()">First</a>
+                            </li>
+                            <li>
+                                <a role="button" ng-click="previousPage()" aria-label="Previous">&laquo;</a>
+                            </li>
+                            <li ng-repeat="page in pagination.pages" ng-class="(page === pagination.currentPage) ? 'active' : ''"
+                                ng-show="(pagination.currentPage - 2 <= 0)
+                                    ? (page <= 5)
+                                    : ((pagination.currentPage + 2 > pagination.numPages)
+                                        ? (page > pagination.currentPage - (5 - (pagination.numPages - pagination.currentPage)))
+                                        : (page <= pagination.currentPage + 2) && (page >= pagination.currentPage - 2) ) ">
                                 <a role="button" ng-click="goToPage(page)">{{page}}</a>
+                            </li>
+                            <li><a role="button" ng-click="nextPage()" aria-label="Next">&raquo;</a></li>
+                            <li>
+                                <a role="button" ng-click="lastPage()">Last</a>
                             </li>
                         </ul>
                     </nav>
