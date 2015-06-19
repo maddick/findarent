@@ -1,0 +1,41 @@
+<style type="text/css">
+    #popular-searches-body {
+        background-color: #f2c747;
+    }
+    .popular-searches-column {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .popular-searches-column a {
+        color: black;
+        font-size: 11px;
+    }
+</style>
+
+<div class="container-fluid" ng-controller="popularSearchesController">
+    <div class="row">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1" id="popular-searches-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5>POPULAR APARTMENT SEARCHES</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-2" ng-repeat="column in popularSearches.searchColumns">
+                                <ul class="popular-searches-column">
+                                    <li ng-repeat="row in column"><a role="button">{{row.city}}, {{row.state}}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

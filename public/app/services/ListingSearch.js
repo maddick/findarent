@@ -51,8 +51,11 @@ angular
                 return $http.get( listingSearchBaseURL + '/total-active-listings/');
             },
             getListingPhotos: function(listingId) {
-                console.log(listingSearchBaseURL + '/get-photos-by-listing-id/listing-id/' + listingId);
+                //console.log(listingSearchBaseURL + '/get-photos-by-listing-id/listing-id/' + listingId);
                 return $http.get(listingSearchBaseURL + '/get-photos-by-listing-id/listing-id/' + listingId );
+            },
+            getPopularSearches: function() {
+                return $http.get(listingSearchBaseURL + '/get-popular-searches/');
             }
         }
     }]);
