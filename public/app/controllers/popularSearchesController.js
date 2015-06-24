@@ -7,7 +7,7 @@ angular
             function(response){
                 $scope.popularSearches = response.data.searches;
 
-                var numColumns = 6;
+                var numColumns = 4;
                 var perColumn = Math.floor( $scope.popularSearches.length / numColumns );
                 var addToColumnOne = $scope.popularSearches.length % numColumns;
 
