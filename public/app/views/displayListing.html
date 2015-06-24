@@ -219,7 +219,8 @@
                                 </tr>
                                 <tr>
                                     <th># of Bedrooms</th>
-                                    <td>{{listing.Bedrooms}}</td>
+                                    <td ng-if="listing.Bedrooms == 6">studio</td>
+                                    <td ng-if="listing.Bedrooms != 6">{{listing.Bedrooms}}</td>
                                 </tr>
                             </table>
                         </div>

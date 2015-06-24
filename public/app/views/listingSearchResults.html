@@ -178,6 +178,7 @@
                                                             <option value="2">2</option>
                                                             <option value="3">3</option>
                                                             <option value="4">4</option>
+                                                            <option value="6">Studio</option>
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
@@ -294,7 +295,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div>bedrooms: {{listing.Bedrooms}} • bathrooms: {{listing.Bathrooms}}</div>
+                                        <div>bedrooms:
+                                            <span ng-if="listing.Bedrooms == 6">Studio</span>
+                                            <span ng-if="listing.Bedrooms != 6">{{listing.Bedrooms}}</span> • bathrooms: {{listing.Bathrooms}}</div>
                                     </div>
                                 </div>
                                 <div class="row">
