@@ -9,7 +9,6 @@
     }
     .popular-searches-column a {
         color: black;
-        font-size: 11px;
     }
 </style>
 
@@ -17,7 +16,7 @@
     <div class="row">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-10 col-md-offset-1" id="popular-searches-body">
+                <div class="col-md-8 col-md-offset-2" id="popular-searches-body">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-12">
@@ -27,9 +26,9 @@
                     </div>
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-2" ng-repeat="column in popularSearches.searchColumns">
+                            <div class="col-md-3" ng-repeat="column in popularSearches.searchColumns">
                                 <ul class="popular-searches-column">
-                                    <li ng-repeat="row in column"><a role="button">{{row.city}}, {{row.state}}</a></li>
+                                    <li ng-repeat="row in column"><a role="button" href="/#/search?city-state={{row.city}}, {{row.state}}">{{row.city}}, {{row.state}}</a></li>
                                 </ul>
                             </div>
                         </div>
