@@ -86,7 +86,7 @@ angular
 
                     //paginate the results
                     $scope.pagination = {};
-                    $scope.pagination.currentPage = 1;
+                    $scope.pagination.currentPage = ( $scope.listings.count === 0 ) ? 0 : 1;
                     $scope.pagination.numPages = Math.ceil( $scope.listings.count / 5 );
                     $scope.pagination.numPerPage = 5;
 
