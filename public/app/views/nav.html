@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="navController">
     <div class="container-fluid col-lg-8 col-lg-offset-2">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#findarent-navbar-collapse">
@@ -23,8 +23,8 @@
                 </li>
             </ul>-->
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#/blog/">Blog</a></li>
-                <li><a href="#/list-your-property/">List Your Property</a></li>
+                <li><a href="{{blogURL}}" ng-click="goToExternalURL({{blogURL}})">Blog</a></li>
+                <li><a href="{{postPropertyURL}}" ng-click="goToExternalURL({{postPropertyURL}})">List Your Property</a></li>
             </ul>
         </div>
     </div>
