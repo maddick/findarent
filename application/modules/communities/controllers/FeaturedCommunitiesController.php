@@ -58,6 +58,11 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
             $featuredCommunityModel->setCityStateCriteria( $cityStateCriteria );
         }
 
+        if ( array_key_exists( 'zip-code', $searchCriteria ) ) {
+            $zipCodeCriteria = new Custom_ZipCodeCriteria( $searchCriteria['zip-code'] );
+            $featuredCommunityModel->setZipCodeCriteria( $zipCodeCriteria );
+        }
+
         //search the communities
         $searchResults = $featuredCommunityModel->searchFeaturedCommunities();
 

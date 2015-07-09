@@ -14,9 +14,19 @@ class Communities_Model_FeaturedCommunities
     protected $_cityStateCriteria;
 
     /**
+     * @var Custom_ZipCodeCriteria
+     */
+    protected $_zipCodeCriteria;
+
+    /**
      * @var bool true if city state is used false otherwise
      */
     protected $_useCityState = true;
+
+    /**
+     * @var bool true if zip code is used false otherwise
+     */
+    protected $_useZipCode = true;
 
     /**
      * @var array containing any validation errors
@@ -99,8 +109,18 @@ class Communities_Model_FeaturedCommunities
             $this->_useCityState = false;
         }
 
-        if ( !$this->_useCityState ) {
-            $this->_validationErrors[] = 'you must provide a city-state to perform a search';
+        if ( isset( $this->_zipCodeCriteria ) ) {
+            if ( !$this->_zipCodeCriteria->isValid() ) {
+                $this->_validationErrors = array_merge( $this->_validationErrors, $this->_zipCodeCriteria->getValidationErrors() );
+            }
+        } else {
+            $this->_useZipCode = false;
+        }
+
+        if ( !$this->_useCityState and !$this->_useZipCode ) {
+            $this->_validationErrors[] = 'you must provide a city-state or a zip code to perform a search';
+        } elseif ( !( $this->_useZipCode xor $this->_useCityState ) ) {
+            $this->_validationErrors[] = 'you must have either a zip code or a city/state, but not both';
         }
     }
 
@@ -199,6 +219,12 @@ class Communities_Model_FeaturedCommunities
                 $variableArray['city'] = $this->_cityStateCriteria->getCity();
             }
 
+            if ( $this->_useZipCode ) {
+                $communities->where('ZipCode IN(:zipCode)');
+
+                $variableArray['zipCode'] = $this->_zipCodeCriteria->getCriteria();
+            }
+
             //build the entire query by injecting the now appropriately built query
             //string of communities
             $communitiesSql = $communities->__toString();
@@ -245,6 +271,17 @@ class Communities_Model_FeaturedCommunities
             $this->_cityStateCriteria = $cityStateCriteria;
         } else {
             throw new Exception('cityStateCriteria must be an instance of Custom_CityStateCriteria');
+        }
+
+        return $this;
+    }
+
+    public function setZipCodeCriteria($zipCodeCriteria)
+    {
+        if ( $zipCodeCriteria instanceof Custom_ZipCodeCriteria ) {
+            $this->_zipCodeCriteria = $zipCodeCriteria;
+        } else {
+            throw new Exception('zipCodeCriteria must be an instance of Custom_ZipCodeCriteria');
         }
 
         return $this;
