@@ -192,6 +192,7 @@ class Brokers_Model_FeaturedBrokers
                 //prepare the variable array with the values needed
                 $variableArray['state'] = $this->_cityStateCriteria->getState();
                 $variableArray['city'] = $this->_cityStateCriteria->getCity();
+
             } elseif ( $this->_useZipCode ) {
 
                 //add the needed zip code where clause
