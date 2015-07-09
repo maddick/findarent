@@ -6,12 +6,17 @@ angular
         return {
             getBrokers : function (params) {
                 var cityState = '';
+                var zipCode   = '';
 
                 if ( 'cityState' in params) {
                     cityState = '/city-state/' + params['cityState'];
                 }
 
-                return $http.get( brokerSearchBaseURL + '/search' + cityState );
+                if ( 'zipCode' in params ) {
+                    zipCode = '/zip-code/' + params['zipCode'];
+                }
+
+                return $http.get( brokerSearchBaseURL + '/search' + cityState + zipCode );
             },
             getBrokerCitiesByState : function (state) {
                 return $http.get( brokerSearchBaseURL + '/get-broker-cities-by-state/state/' + state);

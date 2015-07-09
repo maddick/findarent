@@ -6,12 +6,17 @@ angular
         return {
             getCommunities : function (params) {
                 var cityState = '';
+                var zipCode   = '';
 
                 if ( 'cityState' in params) {
                     cityState = '/city-state/' + params['cityState'];
                 }
 
-                return $http.get( communitySearchBaseURL + '/search' + cityState );
+                if ( 'zipCode' in params ) {
+                    zipCode = '/zip-code/' + params['zipCode'];
+                }
+
+                return $http.get( communitySearchBaseURL + '/search' + cityState + zipCode );
             },
             getCommunityCitiesByState : function (state) {
                 return $http.get( communitySearchBaseURL + '/get-community-cities-by-state/state/' + state);
