@@ -59,6 +59,11 @@ class Brokers_FeaturedBrokersController extends Zend_Controller_Action
             $featuredBrokersModel->setCityStateCriteria( $cityStateCriteria );
         }
 
+        if ( array_key_exists( 'zip-code', $searchCriteria ) ) {
+            $zipCodeCriteria = new Custom_ZipCodeCriteria( $searchCriteria['zip-code'] );
+            $featuredBrokersModel->setZipCodeCriteria( $zipCodeCriteria );
+        }
+
         //search the communities
         $searchResults = $featuredBrokersModel->searchFeaturedBrokers();
 

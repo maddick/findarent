@@ -13,9 +13,19 @@ class Brokers_Model_FeaturedBrokers
     protected $_cityStateCriteria;
 
     /**
+     * @var Custom_ZipCodeCriteria
+     */
+    protected $_zipCodeCriteria;
+
+    /**
      * @var bool true if city state is used false otherwise
      */
     protected $_useCityState = true;
+
+    /**
+     * @var bool true if zip code is used false otherwise
+     */
+    protected $_useZipCode = true;
 
     /**
      * @var array containing any validation errors
@@ -97,8 +107,18 @@ class Brokers_Model_FeaturedBrokers
             $this->_useCityState = false;
         }
 
-        if ( !$this->_useCityState ) {
-            $this->_validationErrors[] = 'you must provide a city-state to perform a search';
+        if ( isset( $this->_zipCodeCriteria ) ) {
+            if ( !$this->_zipCodeCriteria->isValid() ) {
+                $this->_validationErrors = array_merge( $this->_validationErrors, $this->_zipCodeCriteria->getValidationErrors() );
+            }
+        } else {
+            $this->_useZipCode = false;
+        }
+
+        if ( !$this->_useCityState and !$this->_useZipCode ) {
+            $this->_validationErrors[] = 'you must provide a city-state or zip code to perform a search';
+        } elseif ( !( $this->_useZipCode xor $this->_useCityState ) ) {
+            $this->_validationErrors[] = 'you must have either a zip code or a city/state, but not both';
         }
     }
 
@@ -141,59 +161,67 @@ class Brokers_Model_FeaturedBrokers
                     array()
                 );
 
+            $brokersIdSelect = $db->select()
+                ->distinct()
+                ->from(
+                    array('l' => 'far_listings'),
+                    array('l.BrokerID')
+                )
+                ->join(
+                    array('b' => 'far_brokers'),
+                    'b.BrokerID = l.BrokerID',
+                    array()
+                )
+                ->join(
+                    array('la' => new Zend_Db_Expr( '(select LandlordID from far_landlords where Active = 1)' )),
+                    'la.LandlordID = b.LandlordID',
+                    array()
+                )
+                ->where('l.Active = 1 and b.Active = 1')
+                ->where('l.Deleted = 0 and b.Deleted = 0')
+                ->where('l.ExpirationDate IS NULL OR DATE(l.ExpirationDate) >= DATE(NOW())');
+
             //if we use city / state, then we add the where clause with the appropriate
             //variable replacements needed
             if ( $this->_useCityState ) {
 
-                $brokersIdSelect = $db->select()
-                    ->distinct()
-                    ->from(
-                        array('l' => 'far_listings'),
-                        array('l.BrokerID')
-                    )
-                    ->join(
-                        array('b' => 'far_brokers'),
-                        'b.BrokerID = l.BrokerID',
-                        array()
-                    )
-                    ->join(
-                        array('la' => new Zend_Db_Expr( '(select LandlordID from far_landlords where Active = 1)' )),
-                        'la.LandlordID = b.LandlordID',
-                        array()
-                    )
-                    ->where('l.Active = 1 and b.Active = 1')
-                    ->where('l.Deleted = 0 and b.Deleted = 0')
-                    ->where('l.ExpirationDate IS NULL OR DATE(l.ExpirationDate) >= DATE(NOW())');
-
+                //add the needed where clause
                 $brokersIdSelect->where('l.State LIKE :state');
                 $brokersIdSelect->where('l.City LIKE :city');
 
                 //prepare the variable array with the values needed
                 $variableArray['state'] = $this->_cityStateCriteria->getState();
                 $variableArray['city'] = $this->_cityStateCriteria->getCity();
+            } elseif ( $this->_useZipCode ) {
 
-                //get broker ID's in request city State
-                $brokerIdSql = $brokersIdSelect->__toString();
-                $brokerIdStmt = $db->prepare($brokerIdSql);
-                $brokerIdStmt->execute($variableArray);
-                $brokerIdResults = $brokerIdStmt->fetchAll();
-                $brokerIdStmt->closeCursor();
+                //add the needed zip code where clause
+                $brokersIdSelect->where('l.ZipCode IN(:zipCode)');
 
-                //if no broker ID's are returned for the city / state provided then
-                //return an empty array
-                if ( empty( $brokerIdResults ) ) {
-                    return array();
-                }
-
-                //create IN clause using ID's found above
-                $brokerIdInClause = 'brokers.BrokerID IN(';
-                for( $index = 0; $index < count($brokerIdResults); $index++ ) {
-                    $brokerIdInClause .= ( $index === ( count($brokerIdResults) - 1 ) ) ? $brokerIdResults[$index]['BrokerID'] : $brokerIdResults[$index]['BrokerID'] . ',';
-                }
-                $brokerIdInClause .= ')';
-
-                $select->where($brokerIdInClause);
+                //prepare the variable array with the values needed
+                $variableArray['zipCode'] = $this->_zipCodeCriteria->getCriteria();
             }
+
+            //get broker ID's in request city State
+            $brokerIdSql = $brokersIdSelect->__toString();
+            $brokerIdStmt = $db->prepare($brokerIdSql);
+            $brokerIdStmt->execute($variableArray);
+            $brokerIdResults = $brokerIdStmt->fetchAll();
+            $brokerIdStmt->closeCursor();
+
+            //if no broker ID's are returned for the city / state provided then
+            //return an empty array
+            if ( empty( $brokerIdResults ) ) {
+                return array();
+            }
+
+            //create IN clause using ID's found above
+            $brokerIdInClause = 'brokers.BrokerID IN(';
+            for( $index = 0; $index < count($brokerIdResults); $index++ ) {
+                $brokerIdInClause .= ( $index === ( count($brokerIdResults) - 1 ) ) ? $brokerIdResults[$index]['BrokerID'] : $brokerIdResults[$index]['BrokerID'] . ',';
+            }
+            $brokerIdInClause .= ')';
+
+            $select->where($brokerIdInClause);
 
             //build the entire query by injecting the now appropriately built query
             //string of communities
@@ -240,6 +268,17 @@ class Brokers_Model_FeaturedBrokers
             $this->_cityStateCriteria = $cityStateCriteria;
         } else {
             throw new Exception('cityStateCriteria must be an instance of Custom_CityStateCriteria');
+        }
+
+        return $this;
+    }
+
+    public function setZipCodeCriteria($zipCodeCriteria)
+    {
+        if ( $zipCodeCriteria instanceof Custom_ZipCodeCriteria ) {
+            $this->_zipCodeCriteria = $zipCodeCriteria;
+        } else {
+            throw new Exception('zipCodeCriteria must be an instance of Custom_ZipCodeCriteria');
         }
 
         return $this;
