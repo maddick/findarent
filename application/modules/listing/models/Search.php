@@ -230,8 +230,12 @@ class Listing_Model_Search
             //otherwise simply use the zip code provided
             if ( $this->_useCityState ) {
 
-                //translate city/state to zip code
-                $cityStateToZipSql = 'CALL ZipCodes_GetZipCodeByCityState(:city, :state)';
+                //translate the city/state into a group of zip codes
+                $cityStateToZipSql =
+                    'SELECT zip_code
+                       FROM zipcodes
+                      WHERE city_name = :city
+                        AND state_abbr = :state';
                 $cityStateToZipStmt = $db->prepare($cityStateToZipSql);
                 $cityStateToZipStmt->execute( array(
                     'city' => $this->_cityStateCriteria->getCity(),
@@ -245,7 +249,14 @@ class Listing_Model_Search
 
                 $cityStateToZipResult = $cityStateToZipStmt->fetchAll();
                 $cityStateToZipStmt->closeCursor();
+
+                //store the first zip code for radius search if needed
                 $zipCode = $cityStateToZipResult[0]['zip_code'];
+
+                //add all zip codes to variable array
+                foreach( $cityStateToZipResult as $zipCodeRow) {
+                    $variableArray[] = $zipCodeRow['zip_code'];
+                }
             } else {
                 $zipCode = $this->_zipCodeCriteria->getCriteria();
             }
@@ -296,9 +307,13 @@ class Listing_Model_Search
                 //append the zip code injector to the query string
                 $listingsSql .= $zipCodesInjector;
             } else {
-                $zipCodesInjector = ' AND li.ZipCode IN( ? ) ';
+                $zipCodesInjector = ' AND li.ZipCode IN(';
+                for ( $index = 0; $index < count($variableArray); $index++ ) {
+                    $zipCodesInjector .= ( $index === ( count($variableArray) - 1 ) ) ? '?' : '?,';
+                }
+                $zipCodesInjector .= ') ';
                 $listingsSql .= $zipCodesInjector;
-                $variableArray[] = $zipCode;
+                //$variableArray[] = $zipCode;
             }
 
             if ( $this->_useNumberOfBedrooms ) {
