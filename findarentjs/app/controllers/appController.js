@@ -9,4 +9,5 @@ angular
                 $('#city-state-or-zip-error').fadeIn().delay(3000).fadeOut();
             }
         }
+        $scope.status = 'ready';
     }]);

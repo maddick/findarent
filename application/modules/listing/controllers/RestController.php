@@ -14,6 +14,17 @@ class Listing_RestController extends Zend_Rest_Controller
         $this->_helper->json->sendJson( array( 'result' => 'error' ), false, true );
     }
 
+    private function setHeader()
+    {
+        $config = new Zend_config_Ini(APPLICATION_PATH . '/configs/application.ini', 'production');
+        if ( $this->getRequest()->getHeader('Origin') ) {
+            foreach( $config->headers->allowOrigin as $header ) {
+                if ( $header === $this->getRequest()->getHeader('Origin') ) {
+                    $this->getResponse()->setHeader('Access-Control-Allow-Origin', $header);
+                }
+            }
+        }
+    }
 
     /**
      * The get action handles GET requests and receives an 'id' parameter; it
@@ -43,7 +54,8 @@ class Listing_RestController extends Zend_Rest_Controller
             $this->getResponse()->setHttpResponseCode(500);
         }
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        return $this->_helper->json->sendJson( $listing, false, true );
+        $this->setHeader();
+        $this->_helper->json->sendJson( $listing, false, true );
     }
 
     /**
@@ -54,6 +66,7 @@ class Listing_RestController extends Zend_Rest_Controller
     public function headAction()
     {
         // TODO: Implement headAction() method.
+        $this->setHeader();
     }
 
     /**

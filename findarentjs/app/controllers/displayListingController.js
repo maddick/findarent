@@ -42,16 +42,18 @@ angular
                 var win = window.open(url, '_blank');
                 win.focus();
             }
-        }
+        };
 
         $scope.gotToListingSearch = function () {
             var landlordId = $scope.listing.LandlordID;
             if ( landlordId !== undefined ) {
                 $location.url('/search?landlord-id=' + landlordId);
             }
-        }
+        };
 
         $scope.emailToFriend = function () {
 
-        }
+        };
+
+        $scope.status = 'ready';
     }]);

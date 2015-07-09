@@ -117,33 +117,35 @@ angular
 
         $scope.performSearch = function() {
             SearchURL.goToSearchURL($scope);
-        }
+        };
 
         $scope.goToListing = function(listingId) {
             $location.url('/listing/' +  listingId);
-        }
+        };
 
         $scope.goToPage = function(page) {
             $scope.pagination.currentPage = page;
-        }
+        };
 
         $scope.nextPage = function() {
             if ( $scope.pagination.currentPage !== $scope.pagination.numPages ) {
                 $scope.pagination.currentPage = $scope.pagination.currentPage + 1;
             }
-        }
+        };
 
         $scope.previousPage = function() {
             if ( $scope.pagination.currentPage !== 1 ) {
                 $scope.pagination.currentPage = $scope.pagination.currentPage - 1;
             }
-        }
+        };
 
         $scope.firstPage = function() {
             $scope.pagination.currentPage = 1;
-        }
+        };
 
         $scope.lastPage = function() {
             $scope.pagination.currentPage = $scope.pagination.numPages;
-        }
+        };
+
+        $scope.status = 'ready';
     }]);

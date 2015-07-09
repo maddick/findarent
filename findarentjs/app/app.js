@@ -1,27 +1,29 @@
 var newApp = angular.module('app',['ngRoute'])
-    .config(['$routeProvider', function($routeProvider){
+    .config(['$routeProvider', '$locationProvider', function($routeProvider,$locationProvider){
+        $locationProvider.html5Mode(true);
+        //$locationProvider.hashPrefix('!');
         $routeProvider
 
             //routing for city-state based urls
 
             .when('/search',{
-                templateUrl: 'app/views/listingSearchResults.html'
+                templateUrl: '/app/views/listingSearchResults.html'
             })
 
             //go to specific listing
             .when('/listing/:listingId',{
-                templateUrl: 'app/views/displayListing.html'
+                templateUrl: '/app/views/displayListing.html'
             })
 
             //communities
             .when('/featured-communities/',{
-                templateUrl: 'app/views/featuredCommunitiesList.html'
+                templateUrl: '/app/views/featuredCommunitiesList.html'
             })
             .when('/featured-communities/search/city-state/:cityState',{
-                templateUrl: 'app/views/communitiesSearchResults.html'
+                templateUrl: '/app/views/communitiesSearchResults.html'
             })
             .when('/featured-communities/:communityId',{
-                templateUrl: 'app/views/displayCommunity.html'
+                templateUrl: '/app/views/displayCommunity.html'
             })
 
             //brokers
@@ -34,7 +36,7 @@ var newApp = angular.module('app',['ngRoute'])
 
             //catch all rules
             .when('/',{
-                templateUrl: 'app/views/listingSearch.html',
+                templateUrl: '/app/views/listingSearch.html',
                 controller: 'appController'
             })
             .otherwise({redirectTo: '/'});
