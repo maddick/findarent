@@ -12,6 +12,7 @@ angular
                 $scope.community = response.data.communities[0];
                 $scope.community.MarketingMessage = $sce.trustAsHtml($scope.community.MarketingMessage);
                 $scope.community.result = response.data.result;
+                $scope.goToAddress = $scope.community.Address + ',' + $scope.community.City + ',' + $scope.community.State;
                 $('#display-community-loading').fadeOut(400, function(){
                     $('#display-community-success').fadeIn();
                 });
@@ -23,4 +24,19 @@ angular
                 console.log(response);
             }
         );
+
+        $scope.seeOnMap = function(){
+            if ( $scope.goToAddress !== undefined ) {
+                var url = 'http://maps.google.com/maps?q=' + $scope.goToAddress;
+                var win = window.open(url, '_blank');
+                win.focus();
+            }
+        };
+
+        $scope.gotToListingSearch = function () {
+            var communityId = $scope.community.CommunityID;
+            if ( communityId !== undefined ) {
+                $location.url('/search?community-id=' + communityId);
+            }
+        };
     }]);
