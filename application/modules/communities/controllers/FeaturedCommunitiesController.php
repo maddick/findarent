@@ -7,6 +7,18 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
+    private function setHeader()
+    {
+        $config = new Zend_config_Ini(APPLICATION_PATH . '/configs/application.ini', 'production');
+        if ( $this->getRequest()->getHeader('Origin') ) {
+            foreach( $config->headers->allowOrigin as $header ) {
+                if ( $header === $this->getRequest()->getHeader('Origin') ) {
+                    $this->getResponse()->setHeader('Access-Control-Allow-Origin', $header);
+                }
+            }
+        }
+    }
+
     /**
      * @return mixed
      */
@@ -37,6 +49,7 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
         }
 
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        $this->setHeader();
         $this->_helper->json->sendJson( $citiesByState, false, true );
     }
 
@@ -75,6 +88,7 @@ class Communities_FeaturedCommunitiesController extends Zend_Controller_Action
             $this->getResponse()->setHttpResponseCode(200);
         }
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        $this->setHeader();
         $this->_helper->json->sendJson( $searchResults, false, true );
     }
 }
