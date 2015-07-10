@@ -227,9 +227,8 @@ class Brokers_Model_FeaturedBrokers
             //build the entire query by injecting the now appropriately built query
             //string of communities
             $brokerSql = $select->__toString();
-
             $stmt = $db->prepare( $brokerSql );
-            $stmt->execute( $variableArray );
+            $stmt->execute();
             $searchResults = $stmt->fetchAll();
             $stmt->closeCursor();
             return $searchResults;
