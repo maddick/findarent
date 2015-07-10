@@ -64,8 +64,6 @@ angular
 
         $scope.listings = {};
         var promise         = null;
-        var comPromise      = null;
-        var brokerPromise   = null;
 
         //check if we are preforming or if we are just adding
         //the controller for possible future searches
@@ -76,6 +74,45 @@ angular
 
             if ( isLandlordSearch ) {
                 promise = ListingSearch.getListingsByLandlordId(searchParams['landlordId']);
+
+                promise.then(
+                     function(response){
+                         $scope.results = [];
+                         $scope.searchResult = 'success';
+
+                         var listings = response.data;
+                         $scope.listingResultCount = response.data.listings.length;
+                         $scope.successMessage = { zipOrCityState : zipOrCityState };
+                         $scope.listingSearchParams = listingSearchParams;
+
+                         //convert rent to a number and give a type value for sorting and add to results
+                         angular.forEach(listings.listings, function(listing){
+                             listing.Rent = parseFloat(listing.Rent);
+                             listing.Type = 1;
+                             $scope.results.push(listing);
+                         });
+
+                         //paginate the results
+                         $scope.pagination = {};
+                         $scope.pagination.currentPage = ( $scope.results.length === 0 ) ? 0 : 1;
+                         $scope.pagination.numPages = Math.ceil( $scope.results.length / 5 );
+                         $scope.pagination.numPerPage = 5;
+
+                         $scope.pagination.pages = [];
+                         for ( var i = 1; i <= $scope.pagination.numPages; i++ ) {
+                            $scope.pagination.pages.push(i);
+                         }
+
+                         $('#search-results-loading').fadeOut(400,function(){
+                            $('#search-results-section').fadeIn();
+                         });
+                     },
+                     function(response){
+                         $('#search-results-loading').fadeOut();
+                         $scope.listings = response.data;//TODO: add error handler
+                     }
+                );
+
             } else {
                 $q.all([
                     ListingSearch.getListings(searchParams),
@@ -86,7 +123,7 @@ angular
                         $scope.searchResult = 'success';
 
                         var listings = response[0].data;
-                        listings.count = response[0].data.listings.length;
+                        $scope.listingResultCount = response[0].data.listings.length;
                         $scope.successMessage = { zipOrCityState : zipOrCityState };
                         $scope.listingSearchParams = listingSearchParams;
 
@@ -139,39 +176,6 @@ angular
                 );
             }
 
-            /*promise.then(
-                function(response){
-                    $scope.listings = response.data;
-                    $scope.listings.count = response.data.listings.length;
-                    $scope.successMessage = { zipOrCityState : zipOrCityState };
-                    $scope.listingSearchParams = listingSearchParams;
-
-                    //convert rent to a number
-                    angular.forEach($scope.listings.listings, function(listing){
-                        listing.Rent = parseFloat(listing.Rent);
-                    });
-
-                    //paginate the results
-                    $scope.pagination = {};
-                    $scope.pagination.currentPage = ( $scope.listings.count === 0 ) ? 0 : 1;
-                    $scope.pagination.numPages = Math.ceil( $scope.listings.count / 5 );
-                    $scope.pagination.numPerPage = 5;
-
-                    $scope.pagination.pages = [];
-                    for ( var i = 1; i <= $scope.pagination.numPages; i++ ) {
-                        $scope.pagination.pages.push(i);
-                    }
-
-                    $('#search-results-loading').fadeOut(400,function(){
-                        $('#search-results-section').fadeIn();
-                    });
-                },
-                function(response){
-                    $('#search-results-loading').fadeOut();
-                    $scope.listings = response.data;//TODO: add error handler
-                }
-            );*/
-
             var totalPromise = ListingSearch.getTotalActiveListings();
             totalPromise.then(
                 function(response){
@@ -213,6 +217,10 @@ angular
 
         $scope.lastPage = function() {
             $scope.pagination.currentPage = $scope.pagination.numPages;
+        };
+
+        $scope.goToCommunity = function(communityId) {
+            $location.url('/featured-communities/' +  communityId);
         };
 
         $scope.status = 'ready';
