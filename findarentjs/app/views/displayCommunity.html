@@ -154,8 +154,32 @@
 
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-lg-6">
                             <img src="http://far.giddion.com/Uploads/Communities/{{community.Advertisement}}" class="img-rounded center-block community-display-img">
+                        </div>
+                        <div class="col-lg-6">
+                            <h4><strong>Community Information</strong></h4>
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Address</th>
+                                    <td>
+                                        {{community.Address}}<br>
+                                        {{community.City}}, {{community.State}}. {{community.ZipCode}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Phone Number</th>
+                                    <td>{{community.Phone}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fax Number</th>
+                                    <td>{{community.Fax}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{community.Email}}</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -171,15 +195,11 @@
                                     <ul class="main-button-menu">
                                         <li role="button" ng-click="seeOnMap()" >
                                             <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-                                            <span>View this listing on Map</span>
+                                            <span>View this community on Map</span>
                                         </li>
                                         <li role="button" ng-click="gotToListingSearch()">
                                             <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                                            <span>See other properties from this landlord</span>
-                                        </li>
-                                        <li role="button" data-toggle="modal" data-target="#email-friend-modal">
-                                            <span class="glyphicon glyphicon-envelope"></span>
-                                            <span>Email this listing to a friend</span>
+                                            <span>See other properties for this community</span>
                                         </li>
                                     </ul>
                                 </div>
