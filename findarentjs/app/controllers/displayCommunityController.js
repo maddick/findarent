@@ -1,6 +1,6 @@
 angular
     .module('app')
-    .controller('displayCommunityController',['$scope','$routeParams','CommunityRest','$location',function($scope,$routeParams,CommunityRest,$location){
+    .controller('displayCommunityController',['$scope','$routeParams','CommunityRest','$location','$sce',function($scope,$routeParams,CommunityRest,$location,$sce){
         var communityId = ($routeParams.communityId === undefined ) ? '' : $routeParams.communityId;
 
         //show a loading screen
@@ -10,6 +10,7 @@ angular
         promise.then(
             function(response){
                 $scope.community = response.data.communities[0];
+                $scope.community.MarketingMessage = $sce.trustAsHtml($scope.community.MarketingMessage);
                 $scope.community.result = response.data.result;
                 $('#display-community-loading').fadeOut(400, function(){
                     $('#display-community-success').fadeIn();
