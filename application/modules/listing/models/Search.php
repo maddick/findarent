@@ -57,6 +57,11 @@ class Listing_Model_Search
     /**
      * @var Custom_IdCriteria
      */
+    protected $_communityIdCriteria;
+
+    /**
+     * @var Custom_IdCriteria
+     */
     protected $_listingIdCriteria;
 
     /**
@@ -534,6 +539,63 @@ class Listing_Model_Search
         return $this->results;
     }
 
+    public function getListingsByCommunityId()
+    {
+        if ( !isset( $this->_communityIdCriteria ) ) {
+            throw new Exception('No communityIdCriteria was set.');
+        }
+
+        $listingSql =
+            'SELECT
+              listings.*,
+              ( SELECT COUNT(*) FROM far_ads a WHERE a.ParentID = listings.ListingID AND a.Type = \'Listing\' AND a.Active = 1 ) AS AdsCount,
+              ( SELECT COUNT(*) FROM far_listings_notes n WHERE n.ListingID = listings.ListingID AND Note != \'\' ) AS NotesCount,
+              IFNULL(Views,0) AS Views, IFNULL(ContactRequests,0) AS ContactRequests, IFNULL(ContactEmailsSent,0) AS ContactEmailsSent
+            FROM (
+              SELECT * FROM (
+                  SELECT li.*, l.Premium, l.Rebates
+                  FROM far_listings li
+                  INNER JOIN
+                    far_landlords l ON li.LandlordID = l.LandlordID
+                  WHERE li.CommunityID = :communityId
+                  AND li.Active = 1
+                  AND li.Deleted = 0
+                ) AS CommunityListings
+            ) AS listings
+
+
+          LEFT JOIN (
+            SELECT ListingID, SUM(Views) AS Views, SUM(ContactRequests) AS ContactRequests, SUM(ContactEmailsSent) AS ContactEmailsSent
+            FROM far_listings_tracking GROUP BY ListingID
+          ) AS Tracking ON listings.ListingID = Tracking.ListingID
+
+
+          ORDER BY listings.ListingID IN (
+            SELECT ListingID
+            FROM far_listings_photos p
+            WHERE p.Deleted = 0
+          ) DESC, AddedDate DESC;';
+
+        if ( !$this->_communityIdCriteria->isValid() ) {
+            $this->results['result'] = 'error';
+            $this->results['reasons'] = $this->_communityIdCriteria->getValidationErrors();
+        } else {
+            try {
+                $db = Zend_Db_Table::getDefaultAdapter();
+                $stmt = $db->prepare($listingSql);
+                $stmt->execute( array('communityId' => $this->_communityIdCriteria->getCriteria() ) );
+                $listings = $stmt->fetchAll();
+                $this->results['result'] = 'success';
+                $this->results['listings'] = $listings;
+            } catch(Exception $e ) {
+                $this->results['result'] = 'server error';
+                $this->results['reasons'] = $e->getMessage();
+            }
+        }
+
+        return $this->results;
+    }
+
     /**
      * @return array containing the listings photos
      * @throws Exception when listingIdCriteria is not set
@@ -694,6 +756,16 @@ class Listing_Model_Search
             $this->_landlordIdCriteria = $landlordId;
         } else {
             throw new Exception('$landlordId must be an instance of Custom_IdCriteria');
+        }
+
+        return $this;
+    }
+
+    public function setCommunityIdCriteria( $communityId ) {
+        if ( $communityId instanceof Custom_IdCriteria ) {
+            $this->_communityIdCriteria = $communityId;
+        } else {
+            throw new Exception('$communityId must be an instance of Custom_IdCriteria');
         }
 
         return $this;

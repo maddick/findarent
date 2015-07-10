@@ -135,6 +135,28 @@ class Listing_SearchController extends Zend_Controller_Action
         $this->_helper->json->sendJson( $searchResults, false, true );
     }
 
+    public function getListingsByCommunityIdAction()
+    {
+        $search = new Listing_Model_Search();
+        $communityId = $this->getRequest()->getParam('community-id');
+        $communityIdCriteria = new Custom_IdCriteria(intval($communityId));
+
+        $searchResults = $search->setCommunityIdCriteria($communityIdCriteria)->getListingsByCommunityId();
+
+        if ( $searchResults['result'] === 'success' ){
+            if ( empty( $searchResults['listings'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        $this->setHeader();
+        $this->_helper->json->sendJson( $searchResults, false, true );
+    }
+
     /**
      * This function returns the photos associated to a listing.
      */
