@@ -232,7 +232,7 @@ angular
         };
 
         $scope.goToListing = function(listingId) {
-            $location.url('/listing/' +  listingId);
+            $location.url('/Listings/' +  listingId);
         };
 
         $scope.goToPage = function(page) {
