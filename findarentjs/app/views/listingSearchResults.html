@@ -334,6 +334,31 @@
                         </div>
                     </div>
 
+                    <div class="container-fluid" ng-if="result.Type === 3">
+                        <div class="row result contents">
+                            <div class="img">
+                                <img src="http://far.giddion.com/Uploads/Brokers/{{result.Headshot}}" class="center-block" >
+                            </div>
+                            <div class="container-fluid col-sm-9 stretch">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h4><a role="button" ng-click=""><strong>{{result.BusinessName}} - {{result.FirstName}} {{result.LastName}}</strong></a></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="address">{{result.Address}}, {{result.City}}, {{result.State}}. {{result.ZipCode}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div>{{result.MarketingMessage | limitTo:190 }}<span ng-if="result.MarketingMessage.length >= 190">...</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

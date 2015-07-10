@@ -7,6 +7,7 @@ angular
         var search = $location.search();
         var searchParams = {};
         var comSearchParams = {};
+        var brokerSearchParams = {};
         var listingSearchParams = {};
         var isCityState = search['city-state'] !== undefined;
         var isZipCode = search['zip-code'] !== undefined;
@@ -22,11 +23,13 @@ angular
             cityState = search['city-state'];
             searchParams['cityState'] = zipOrCityState = cityState;
             comSearchParams['cityState'] = cityState;
+            brokerSearchParams['cityState'] = cityState;
             listingSearchParams.cityStateOrZip = cityState;
         } else if ( isZipCode ) {
             zipCode = search['zip-code'];
             searchParams['zipCode'] = zipOrCityState = zipCode;
             comSearchParams['zipCode'] = zipCode;
+            brokerSearchParams['zipCode'] = zipCode;
             listingSearchParams.cityStateOrZip = zipCode;
         } else {
             noSearch = true;
@@ -116,7 +119,8 @@ angular
             } else {
                 $q.all([
                     ListingSearch.getListings(searchParams),
-                    CommunitySearch.getCommunities(comSearchParams)
+                    CommunitySearch.getCommunities(comSearchParams),
+                    BrokersSearch.getBrokers(brokerSearchParams)
                 ]).then(
                     function(response){
                         $scope.results = [];
@@ -137,12 +141,14 @@ angular
                         var communities = response[1].data;
 
                         //strip the stupid html crap from the messages
+                        var strTagStrippedText;
+                        var strInputCode;
                         for ( var i = 0; i < communities.communities.length; i++ ) {
-                            var strInputCode = communities.communities[i]['MarketingMessage'];
+                            strInputCode = communities.communities[i]['MarketingMessage'];
                             /*strInputCode = strInputCode.replace(/&(lt|gt);/g, function (strMatch, p1){
                              return (p1 == "lt")? "<" : ">";
                              });*/
-                            var strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
+                            strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
                             strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
                             communities.communities[i]['MarketingMessage'] = strTagStrippedText;
                         }
@@ -152,6 +158,26 @@ angular
                             community.Rent = 0;
                             community.Type = 2;
                             $scope.results.push(community);
+                        });
+
+                        var brokers = response[2].data;
+
+                        //strip the stupid html crap from the messages
+                        for ( var i = 0; i < brokers.brokers.length; i++ ) {
+                            strInputCode = brokers.brokers[i]['MarketingMessage'];
+                            /*strInputCode = strInputCode.replace(/&(lt|gt);/g, function (strMatch, p1){
+                             return (p1 == "lt")? "<" : ">";
+                             });*/
+                            strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
+                            strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
+                            brokers.brokers[i]['MarketingMessage'] = strTagStrippedText;
+                        }
+
+                        //give a rent and type value for sorting and add to results
+                        angular.forEach(brokers.brokers, function(broker){
+                            broker.Rent = 0;
+                            broker.Type = 3;
+                            $scope.results.push(broker);
                         });
 
                         //paginate the results
