@@ -1,8 +1,12 @@
 angular
     .module('app')
-    .controller('listingSearchController',['$scope', 'ListingSearch', 'SearchURL', '$location', function($scope,ListingSearch,SearchURL,$location){
+    .controller('listingSearchController',
+        ['$scope', 'ListingSearch', 'CommunitySearch', 'BrokersSearch', 'SearchURL', '$location', '$q',
+            function($scope,ListingSearch,CommunitySearch,BrokersSearch,SearchURL,$location,$q){
+
         var search = $location.search();
         var searchParams = {};
+        var comSearchParams = {};
         var listingSearchParams = {};
         var isCityState = search['city-state'] !== undefined;
         var isZipCode = search['zip-code'] !== undefined;
@@ -17,10 +21,12 @@ angular
         if ( isCityState ) {
             cityState = search['city-state'];
             searchParams['cityState'] = zipOrCityState = cityState;
+            comSearchParams['cityState'] = cityState;
             listingSearchParams.cityStateOrZip = cityState;
         } else if ( isZipCode ) {
             zipCode = search['zip-code'];
             searchParams['zipCode'] = zipOrCityState = zipCode;
+            comSearchParams['zipCode'] = zipCode;
             listingSearchParams.cityStateOrZip = zipCode;
         } else {
             noSearch = true;
@@ -57,7 +63,9 @@ angular
         }
 
         $scope.listings = {};
-        var promise = null;
+        var promise         = null;
+        var comPromise      = null;
+        var brokerPromise   = null;
 
         //check if we are preforming or if we are just adding
         //the controller for possible future searches
@@ -69,10 +77,69 @@ angular
             if ( isLandlordSearch ) {
                 promise = ListingSearch.getListingsByLandlordId(searchParams['landlordId']);
             } else {
-                promise = ListingSearch.getListings(searchParams);
+                $q.all([
+                    ListingSearch.getListings(searchParams),
+                    CommunitySearch.getCommunities(comSearchParams)
+                ]).then(
+                    function(response){
+                        $scope.results = [];
+                        $scope.searchResult = 'success';
+
+                        var listings = response[0].data;
+                        listings.count = response[0].data.listings.length;
+                        $scope.successMessage = { zipOrCityState : zipOrCityState };
+                        $scope.listingSearchParams = listingSearchParams;
+
+                        //convert rent to a number and give a type value for sorting and add to results
+                        angular.forEach(listings.listings, function(listing){
+                            listing.Rent = parseFloat(listing.Rent);
+                            listing.Type = 1;
+                            $scope.results.push(listing);
+                        });
+
+                        var communities = response[1].data;
+
+                        //strip the stupid html crap from the messages
+                        for ( var i = 0; i < communities.communities.length; i++ ) {
+                            var strInputCode = communities.communities[i]['MarketingMessage'];
+                            /*strInputCode = strInputCode.replace(/&(lt|gt);/g, function (strMatch, p1){
+                             return (p1 == "lt")? "<" : ">";
+                             });*/
+                            var strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
+                            strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
+                            communities.communities[i]['MarketingMessage'] = strTagStrippedText;
+                        }
+
+                        //give a rent and type value for sorting and add to results
+                        angular.forEach(communities.communities, function(community){
+                            community.Rent = 0;
+                            community.Type = 2;
+                            $scope.results.push(community);
+                        });
+
+                        //paginate the results
+                        $scope.pagination = {};
+                        $scope.pagination.currentPage = ( $scope.results.length === 0 ) ? 0 : 1;
+                        $scope.pagination.numPages = Math.ceil( $scope.results.length / 5 );
+                        $scope.pagination.numPerPage = 5;
+
+                        $scope.pagination.pages = [];
+                        for ( var i = 1; i <= $scope.pagination.numPages; i++ ) {
+                            $scope.pagination.pages.push(i);
+                        }
+
+                        $('#search-results-loading').fadeOut(400,function(){
+                            $('#search-results-section').fadeIn();
+                        });
+                    },
+                    function(response){
+                        $('#search-results-loading').fadeOut();
+                        $scope.listings = response.data;//TODO: add error handler
+                    }
+                );
             }
 
-            promise.then(
+            /*promise.then(
                 function(response){
                     $scope.listings = response.data;
                     $scope.listings.count = response.data.listings.length;
@@ -102,7 +169,8 @@ angular
                 function(response){
                     $('#search-results-loading').fadeOut();
                     $scope.listings = response.data;//TODO: add error handler
-            });
+                }
+            );*/
 
             var totalPromise = ListingSearch.getTotalActiveListings();
             totalPromise.then(

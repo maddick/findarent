@@ -112,7 +112,7 @@
     </div>
 
     <!-- in the case of a successful request -->
-    <div ng-if="listings.result == 'success'">
+    <div ng-if="searchResult == 'success'">
 
         <!-- success summary message -->
         <div class="container-fluid">
@@ -267,42 +267,67 @@
 
         <!-- loop through all listings and display them -->
         <div class="container-fluid"
-             ng-repeat="listing in listings.listings | orderBy:'Rent'"
+             ng-repeat="result in results | orderBy:['Type','Rent']"
              ng-show="( $index >= ( ( pagination.currentPage - 1 ) * pagination.numPerPage ) ) && ( $index < ( pagination.currentPage * pagination.numPerPage ) )">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
 
-                    <div class="container-fluid">
+                    <div class="container-fluid" ng-if="result.Type === 1">
                         <div class="row result contents">
                             <div class="img">
-                                <img src="http://far.giddion.com/Uploads/Listings/{{listing.ImageURL}}" class="center-block" >
+                                <img src="http://far.giddion.com/Uploads/Listings/{{result.ImageURL}}" class="center-block" >
                             </div>
                             <div class="container-fluid col-sm-9 stretch">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <h4><a role="button" ng-click="goToListing(listing.ListingID)"><strong>{{listing.Headline}}</strong></a></h4>
+                                        <h4><a role="button" ng-click="goToListing(result.ListingID)"><strong>{{result.Headline}}</strong></a></h4>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <div class="address">{{listing.Address}}, {{listing.City}}, {{listing.State}}. {{listing.ZipCode}}</div>
+                                        <div class="address">{{result.Address}}, {{result.City}}, {{result.State}}. {{result.ZipCode}}</div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <div class="search-text-rent">${{listing.Rent}}</div>
+                                        <div class="search-text-rent">${{result.Rent}}</div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div>bedrooms:
-                                            <span ng-if="listing.Bedrooms == 6">Studio</span>
-                                            <span ng-if="listing.Bedrooms != 6">{{listing.Bedrooms}}</span> • bathrooms: {{listing.Bathrooms}}</div>
+                                            <span ng-if="result.Bedrooms == 6">Studio</span>
+                                            <span ng-if="result.Bedrooms != 6">{{result.Bedrooms}}</span> • bathrooms: {{result.Bathrooms}}</div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div>{{listing.MarketingMessage | limitTo:190 }}<span ng-if="listing.MarketingMessage.length >= 190">...</span></div>
+                                        <div>{{result.MarketingMessage | limitTo:190 }}<span ng-if="result.MarketingMessage.length >= 190">...</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container-fluid" ng-if="result.Type === 2">
+                        <div class="row result contents">
+                            <div class="img">
+                                <img src="http://far.giddion.com/Uploads/Communities/{{result.Advertisement}}" class="center-block" >
+                            </div>
+                            <div class="container-fluid col-sm-9 stretch">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h4><a role="button" ng-click="goToCommunity(result.CommunityID)"><strong>{{result.Community}}</strong></a></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="address">{{result.Address}}, {{result.City}}, {{result.State}}. {{result.ZipCode}}</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div>{{result.MarketingMessage | limitTo:190 }}<span ng-if="result.MarketingMessage.length >= 190">...</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -359,7 +384,7 @@
 
 
     <!-- in the case of an error -->
-    <div class="row" ng-if="listings.result == 'error' || listings.result == 'server error'">
+    <div class="row" ng-if="searchResult == 'error' || searchResult == 'server error'">
         <div class="col-md-10 col-md-offset-1">
             <div class="well">
                 <h4>Type: {{listings.result}}</h4>
