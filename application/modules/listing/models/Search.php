@@ -259,6 +259,7 @@ class Listing_Model_Search
                 }
             } else {
                 $zipCode = $this->_zipCodeCriteria->getCriteria();
+                $variableArray[] = $zipCode;
             }
 
             //if a radius is provided then get all zip codes within the given
