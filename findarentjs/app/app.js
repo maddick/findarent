@@ -33,6 +33,9 @@ var newApp = angular.module('app',['ngRoute'])
             .when('/featured-brokers/search/city-state/:cityState',{
                 templateUrl: '/app/views/brokersSearchResults.html'
             })
+            .when('/featured-brokers/:brokerId',{
+                templateUrl: '/app/views/displayBroker.html'
+            })
 
             //catch all rules
             .when('/',{

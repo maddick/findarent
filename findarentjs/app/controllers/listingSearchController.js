@@ -263,5 +263,9 @@ angular
             $location.url('/featured-communities/' +  communityId);
         };
 
+        $scope.goToBroker = function(brokerId) {
+            $location.url('/featured-brokers/' +  brokerId);
+        };
+
         $scope.status = 'ready';
     }]);

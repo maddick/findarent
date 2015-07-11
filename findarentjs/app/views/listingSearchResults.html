@@ -112,7 +112,7 @@
     </div>
 
     <!-- in the case of a successful request -->
-    <div ng-if="searchResult == 'success'">
+    <div ng-if="searchResult == 'success'" id="search-results-section">
 
         <!-- success summary message -->
         <div class="container-fluid">
@@ -342,7 +342,7 @@
                             <div class="container-fluid col-sm-9 stretch">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <h4><a role="button" ng-click=""><strong>{{result.BusinessName}} - {{result.FirstName}} {{result.LastName}}</strong></a></h4>
+                                        <h4><a role="button" ng-click="goToBroker(result.BrokerID)"><strong>{{result.BusinessName}} - {{result.FirstName}} {{result.LastName}}</strong></a></h4>
                                     </div>
                                 </div>
                                 <div class="row">
