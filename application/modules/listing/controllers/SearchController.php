@@ -93,96 +93,6 @@ class Listing_SearchController extends Zend_Controller_Action
     }
 
     /**
-     * This function returns the total active listings count
-     */
-    public function totalActiveListingsAction()
-    {
-        $search = new Listing_Model_Search();
-        $searchResults = $search->getActiveListingsCount();
-
-        if ( $searchResults['result'] === 'server error') {
-            $this->getResponse()->setHttpResponseCode(500);
-        } else {
-            $this->getResponse()->setHttpResponseCode(200);
-        }
-        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        $this->setHeader();
-        $this->_helper->json->sendJson( $searchResults, false, true );
-    }
-
-    /**
-     * This function searches against active listings by a given landlord id.
-     */
-    public function getListingsByLandlordAction()
-    {
-        $search = new Listing_Model_Search();
-        $landlordId = $this->getRequest()->getParam('landlord-id');
-        $landlordIdCriteria = new Custom_IdCriteria(intval($landlordId));
-
-        $searchResults = $search->setLandlordIdCriteria($landlordIdCriteria)->getListingsByLandlord();
-
-        if ( $searchResults['result'] === 'success' ){
-            if ( empty( $searchResults['listings'] ) ) {
-                $this->getResponse()->setHttpResponseCode(404);
-            } else {
-                $this->getResponse()->setHttpResponseCode(200);
-            }
-        } else {
-            $this->getResponse()->setHttpResponseCode(500);
-        }
-        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        $this->setHeader();
-        $this->_helper->json->sendJson( $searchResults, false, true );
-    }
-
-    public function getListingsByCommunityIdAction()
-    {
-        $search = new Listing_Model_Search();
-        $communityId = $this->getRequest()->getParam('community-id');
-        $communityIdCriteria = new Custom_IdCriteria(intval($communityId));
-
-        $searchResults = $search->setCommunityIdCriteria($communityIdCriteria)->getListingsByCommunityId();
-
-        if ( $searchResults['result'] === 'success' ){
-            if ( empty( $searchResults['listings'] ) ) {
-                $this->getResponse()->setHttpResponseCode(404);
-            } else {
-                $this->getResponse()->setHttpResponseCode(200);
-            }
-        } else {
-            $this->getResponse()->setHttpResponseCode(500);
-        }
-        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        $this->setHeader();
-        $this->_helper->json->sendJson( $searchResults, false, true );
-    }
-
-    /**
-     * This function returns the photos associated to a listing.
-     */
-    public function getPhotosByListingIdAction()
-    {
-        $search = new Listing_Model_Search();
-        $listingId = $this->getRequest()->getParam('listing-id');
-        $listingIdCriteria = new Custom_IdCriteria(intval($listingId));
-
-        $searchResults = $search->setListingIdCriteria($listingIdCriteria)->getListingImages();
-
-        if ( $searchResults['result'] === 'success' ){
-            if ( empty( $searchResults['photos'] ) ) {
-                $this->getResponse()->setHttpResponseCode(404);
-            } else {
-                $this->getResponse()->setHttpResponseCode(200);
-            }
-        } else {
-            $this->getResponse()->setHttpResponseCode(500);
-        }
-        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        $this->setHeader();
-        $this->_helper->json->sendJson( $searchResults, false, true );
-    }
-
-    /**
      * This function returns all cities and zip codes.
      */
     public function getAllCitiesAndZipCodesAction()
@@ -229,6 +139,100 @@ class Listing_SearchController extends Zend_Controller_Action
         $this->_helper->json->sendJson( $searchResults, false, true );
     }
 
+    public function getListingsByBrokerIdAction()
+    {
+        $search = new Listing_Model_Search();
+        $brokerId = $this->getRequest()->getParam('broker-id');
+        $brokerIdCriteria = new Custom_IdCriteria(intval($brokerId));
+
+        $searchResults = $search->setBrokerIdCriteria($brokerIdCriteria)->getListingsByBrokerId();
+
+        if ( $searchResults['result'] === 'success' ){
+            if ( empty( $searchResults['listings'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        $this->setHeader();
+        $this->_helper->json->sendJson( $searchResults, false, true );
+    }
+
+    public function getListingsByCommunityIdAction()
+    {
+        $search = new Listing_Model_Search();
+        $communityId = $this->getRequest()->getParam('community-id');
+        $communityIdCriteria = new Custom_IdCriteria(intval($communityId));
+
+        $searchResults = $search->setCommunityIdCriteria($communityIdCriteria)->getListingsByCommunityId();
+
+        if ( $searchResults['result'] === 'success' ){
+            if ( empty( $searchResults['listings'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        $this->setHeader();
+        $this->_helper->json->sendJson( $searchResults, false, true );
+    }
+
+    /**
+     * This function searches against active listings by a given landlord id.
+     */
+    public function getListingsByLandlordAction()
+    {
+        $search = new Listing_Model_Search();
+        $landlordId = $this->getRequest()->getParam('landlord-id');
+        $landlordIdCriteria = new Custom_IdCriteria(intval($landlordId));
+
+        $searchResults = $search->setLandlordIdCriteria($landlordIdCriteria)->getListingsByLandlord();
+
+        if ( $searchResults['result'] === 'success' ){
+            if ( empty( $searchResults['listings'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        $this->setHeader();
+        $this->_helper->json->sendJson( $searchResults, false, true );
+    }
+
+    /**
+     * This function returns the photos associated to a listing.
+     */
+    public function getPhotosByListingIdAction()
+    {
+        $search = new Listing_Model_Search();
+        $listingId = $this->getRequest()->getParam('listing-id');
+        $listingIdCriteria = new Custom_IdCriteria(intval($listingId));
+
+        $searchResults = $search->setListingIdCriteria($listingIdCriteria)->getListingImages();
+
+        if ( $searchResults['result'] === 'success' ){
+            if ( empty( $searchResults['photos'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+        $this->setHeader();
+        $this->_helper->json->sendJson( $searchResults, false, true );
+    }
+
     /**
      * This function returns a list of unique cities / states that have valid
      * active listings.
@@ -248,6 +252,24 @@ class Listing_SearchController extends Zend_Controller_Action
             $this->getResponse()->setHttpResponseCode(500);
         }
         $this->getResponse()->setHeader( 'Content-Type', 'application/json');
+        $this->setHeader();
+        $this->_helper->json->sendJson( $searchResults, false, true );
+    }
+
+    /**
+     * This function returns the total active listings count
+     */
+    public function totalActiveListingsAction()
+    {
+        $search = new Listing_Model_Search();
+        $searchResults = $search->getActiveListingsCount();
+
+        if ( $searchResults['result'] === 'server error') {
+            $this->getResponse()->setHttpResponseCode(500);
+        } else {
+            $this->getResponse()->setHttpResponseCode(200);
+        }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
         $this->setHeader();
         $this->_helper->json->sendJson( $searchResults, false, true );
     }

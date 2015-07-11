@@ -62,6 +62,11 @@ class Listing_Model_Search
     /**
      * @var Custom_IdCriteria
      */
+    protected $_brokerIdCriteria;
+
+    /**
+     * @var Custom_IdCriteria
+     */
     protected $_listingIdCriteria;
 
     /**
@@ -482,6 +487,63 @@ class Listing_Model_Search
         return $this->results;
     }
 
+    public function getListingsByBrokerId()
+    {
+        if ( !isset( $this->_brokerIdCriteria ) ) {
+            throw new Exception('No brokerIdCriteria was set.');
+        }
+
+        $listingSql =
+            'SELECT
+              listings.*,
+              ( SELECT COUNT(*) FROM far_ads a WHERE a.ParentID = listings.ListingID AND a.Type = \'Listing\' AND a.Active = 1 ) AS AdsCount,
+              ( SELECT COUNT(*) FROM far_listings_notes n WHERE n.ListingID = listings.ListingID AND Note != \'\' ) AS NotesCount,
+              IFNULL(Views,0) AS Views, IFNULL(ContactRequests,0) AS ContactRequests, IFNULL(ContactEmailsSent,0) AS ContactEmailsSent
+            FROM (
+              SELECT * FROM (
+                SELECT li.*, l.Premium, l.Rebates
+                FROM far_listings li
+                INNER JOIN
+                  far_landlords l ON li.LandlordID = l.LandlordID
+                WHERE li.BrokerID = :brokerId
+                AND li.Active = 1
+                AND li.Deleted = 0
+              ) AS BrokerListings
+            ) AS listings
+
+
+          LEFT JOIN (
+            SELECT ListingID, SUM(Views) AS Views, SUM(ContactRequests) AS ContactRequests, SUM(ContactEmailsSent) AS ContactEmailsSent
+            FROM far_listings_tracking GROUP BY ListingID
+          ) AS Tracking ON listings.ListingID = Tracking.ListingID
+
+
+          ORDER BY listings.ListingID IN (
+            SELECT ListingID
+            FROM far_listings_photos p
+            WHERE p.Deleted = 0
+          ) DESC, AddedDate DESC;';
+
+        if ( !$this->_brokerIdCriteria->isValid() ) {
+            $this->results['result'] = 'error';
+            $this->results['reasons'] = $this->_brokerIdCriteria->getValidationErrors();
+        } else {
+            try {
+                $db = Zend_Db_Table::getDefaultAdapter();
+                $stmt = $db->prepare($listingSql);
+                $stmt->execute( array('brokerId' => $this->_brokerIdCriteria->getCriteria() ) );
+                $listings = $stmt->fetchAll();
+                $this->results['result'] = 'success';
+                $this->results['listings'] = $listings;
+            } catch(Exception $e ) {
+                $this->results['result'] = 'server error';
+                $this->results['reasons'] = $e->getMessage();
+            }
+        }
+
+        return $this->results;
+    }
+
     public function getListingsByLandlord()
     {
         if ( !isset( $this->_landlordIdCriteria ) ) {
@@ -776,6 +838,17 @@ class Listing_Model_Search
             $this->_listingIdCriteria = $listingId;
         } else {
             throw new Exception('$listingId must be an instance of Custom_IdCriteria');
+        }
+
+        return $this;
+    }
+
+    public function setBrokerIdCriteria( $brokerId )
+    {
+        if ( $brokerId instanceof Custom_IdCriteria ) {
+            $this->_brokerIdCriteria = $brokerId;
+        } else {
+            throw new Exception('$brokerId must be an instance of Custom_IdCriteria');
         }
 
         return $this;
