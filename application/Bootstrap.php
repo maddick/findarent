@@ -9,7 +9,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $router = $front->getRouter();
         $restRoute = new Zend_Rest_Route($front, array(), array(
             'listing' => array( 'rest', ),
-            'communities' => array( 'rest' )
+            'communities' => array( 'rest' ),
+            'brokers' => array( 'rest' )
         ));
         $router->addRoute('rest', $restRoute);
     }
