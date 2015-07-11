@@ -51,6 +51,10 @@ angular
                 return $http.get( listingSearchBaseURL + '/get-listings-by-community-id/community-id/' + communityId);
             },
 
+            getListingsByBrokerId: function(brokerId){
+                return $http.get( listingSearchBaseURL + '/get-listings-by-broker-id/broker-id/' + brokerId);
+            },
+
             getTotalActiveListings: function() {
                 return $http.get( listingSearchBaseURL + '/total-active-listings/');
             },

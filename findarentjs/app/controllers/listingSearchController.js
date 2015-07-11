@@ -16,6 +16,7 @@ angular
         var zipOrCityState = '';
         var isLandlordSearch = search['landlord-id'] !== undefined;
         var isCommunitySearch = search['community-id'] !== undefined;
+        var isBrokerSearch = search['broker-id'] !== undefined;
         var noSearch = false;
 
 
@@ -71,6 +72,11 @@ angular
             noSearch = false;
         }
 
+        if ( isBrokerSearch ) {
+            searchParams['brokerId'] = search['broker-id'];
+            noSearch = false;
+        }
+
         $scope.listings = {};
         var promise = null;
 
@@ -82,7 +88,7 @@ angular
             $('#search-results-loading').fadeIn();
 
             //if this isn't a community or landlord search
-            if ( !isLandlordSearch && !isCommunitySearch ) {
+            if ( !isLandlordSearch && !isCommunitySearch && !isBrokerSearch ) {
 
                 $q.all([
                     ListingSearch.getListings(searchParams),
@@ -175,6 +181,8 @@ angular
                     promise = ListingSearch.getListingsByLandlordId(searchParams['landlordId']);
                 } else if ( isCommunitySearch ) {
                     promise = ListingSearch.getListingsByCommunityId(searchParams['communityId']);
+                } else if ( isBrokerSearch ) {
+                    promise = ListingSearch.getListingsByBrokerId(searchParams['brokerId']);
                 }
 
                 promise.then(
