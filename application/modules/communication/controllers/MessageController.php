@@ -39,7 +39,8 @@ class Communication_MessageController extends Zend_Controller_Action
             }
 
             if ( array_key_exists( 'recipientAddress', $data ) ) {
-                $messageModel->setRecipientAddress($data['recipientAddress']);
+                $recipientAddress = new Custom_EmailCriteria($data['recipientAddress']);
+                $messageModel->setRecipientAddress($recipientAddress);
             }
 
             if ( array_key_exists( 'listingTitle', $data ) ) {

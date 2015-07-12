@@ -8,6 +8,9 @@ abstract class Custom_AbstractMessage
 
     protected $_subject;
 
+    /**
+     * @var Custom_EmailCriteria
+     */
     protected $_recipientAddress;
 
     protected abstract function _createMessage();
@@ -32,7 +35,7 @@ abstract class Custom_AbstractMessage
             $mail = new Zend_Mail();
 
             $mail
-                ->addTo($this->_recipientAddress)
+                ->addTo($this->_recipientAddress->getCriteriaValue())
                 ->setSubject($this->_subject)
                 ->setBodyHtml($this->_body)
                 ->setFrom($config->messaging->email, 'Mike Matovic');
@@ -40,7 +43,7 @@ abstract class Custom_AbstractMessage
             try {
                 $mail->send($mailTransport);
                 $this->_results['result'] = 'success';
-                $this->_results['message'] = 'email successfully sent to ' . $this->_recipientAddress;
+                $this->_results['message'] = 'email successfully sent to ' . $this->_recipientAddress->getCriteriaValue();
             } catch( Exception $e ){
                 $this->_results['result'] = 'server error';
                 $this->_results['reasons'] = $e->getMessage();
@@ -62,9 +65,13 @@ abstract class Custom_AbstractMessage
         return $this;
     }
 
-    public function setRecipientAddress($toAddress)
+    public function setRecipientAddress($recipientAddress)
     {
-        $this->_recipientAddress = $toAddress;
+        if ( $recipientAddress instanceof Custom_AutocompleteCriteria ) {
+            $this->_recipientAddress = $recipientAddress;
+        } else {
+            throw new Exception('$recipientAddress must be an instance of Custom_AutocompleteCriteria');
+        }
         return $this;
     }
 }
