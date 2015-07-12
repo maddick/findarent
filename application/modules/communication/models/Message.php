@@ -146,7 +146,7 @@ class Communication_Model_Message
         return $this;
     }
 
-    public function setListingNubmer($listingNumber)
+    public function setListingNumber($listingNumber)
     {
         $this->_listingNumber = $listingNumber;
         return $this;

@@ -51,7 +51,7 @@ class Communication_MessageController extends Zend_Controller_Action
             }
 
             if ( array_key_exists( 'listingNumber', $data ) ) {
-                $messageModel->setListingNubmer($data['listingNumber']);
+                $messageModel->setListingNumber($data['listingNumber']);
             }
 
             $result = $messageModel->sendEmail(Communication_Model_Message::TYPE_TO_FRIEND);
