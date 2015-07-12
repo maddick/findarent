@@ -24,9 +24,9 @@ class Communication_Model_SendListingToFriendMessage extends Custom_AbstractMess
             $reasons[] = 'No recipient name was provided';
         }
 
-        if ( !isset( $this->_recipientAddress ) ) {
+        if ( !$this->_recipientAddress->isValid() ) {
             $this->_results['result'] = 'error';
-            $reasons[] = 'No recipient address was provided.';
+            array_merge( $reasons, $this->_recipientAddress->getValidationErrors() );
         }
 
         if ( !isset( $this->_listingTitle ) ) {
