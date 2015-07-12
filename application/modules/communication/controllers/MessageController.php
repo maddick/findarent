@@ -6,10 +6,36 @@ class Communication_MessageController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
     }
 
+    private function setHeader()
+    {
+        $config = new Zend_config_Ini(APPLICATION_PATH . '/configs/application.ini', 'production');
+        if ( $this->getRequest()->getHeader('Origin') ) {
+            foreach( $config->headers->allowOrigin as $header ) {
+                if ( $header === $this->getRequest()->getHeader('Origin') ) {
+                    $this->getResponse()->setHeader('Access-Control-Allow-Origin', $header);
+                }
+            }
+        }
+
+        $this->getResponse()->setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+    }
+
+    public function preDispatch()
+    {
+        $this->setHeader();
+    }
+
     public function sendEmailToFriendAction()
     {
         $result = array();
 
+        //handle pre-flight requests
+        if ( $this->getRequest()->isOptions() ) {
+            return;
+        }
+
+        //only accept post requests
         if ( !$this->getRequest()->isPost() ) {
             $result['result'] = 'method error';
             $result['reasons'] = 'Method not allowed';
@@ -17,6 +43,7 @@ class Communication_MessageController extends Zend_Controller_Action
             $this->_helper->json->sendJson($result, false, true);
         }
 
+        //ensure data type as json in request headers
         if ( $this->getRequest()->getHeader('Content-Type') !== 'application/json' ) {
             $result['result'] = 'error';
             $result['reason'] = 'requests must be json';
@@ -24,6 +51,7 @@ class Communication_MessageController extends Zend_Controller_Action
             $this->_helper->json->sendJson($result, false, true);
         }
 
+        //and away we go...
         try {
             $body = $this->getRequest()->getRawBody();
             $data = Zend_Json::decode($body, Zend_Json::TYPE_ARRAY);
