@@ -67,10 +67,10 @@ abstract class Custom_AbstractMessage
 
     public function setRecipientAddress($recipientAddress)
     {
-        if ( $recipientAddress instanceof Custom_AutocompleteCriteria ) {
+        if ( $recipientAddress instanceof Custom_EmailCriteria ) {
             $this->_recipientAddress = $recipientAddress;
         } else {
-            throw new Exception('$recipientAddress must be an instance of Custom_AutocompleteCriteria');
+            throw new Exception('$recipientAddress must be an instance of Custom_EmailCriteria');
         }
         return $this;
     }
