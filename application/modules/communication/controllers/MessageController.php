@@ -28,7 +28,7 @@ class Communication_MessageController extends Zend_Controller_Action
             $body = $this->getRequest()->getRawBody();
             $data = Zend_Json::decode($body, Zend_Json::TYPE_ARRAY);
 
-            $messageModel = new Communication_Model_Message();
+            $messageModel = new Communication_Model_SendListingToFriendMessage();
 
             if ( array_key_exists( 'senderName', $data ) ) {
                 $messageModel->setSenderName($data['senderName']);
@@ -54,7 +54,7 @@ class Communication_MessageController extends Zend_Controller_Action
                 $messageModel->setListingNumber($data['listingNumber']);
             }
 
-            $result = $messageModel->sendEmail(Communication_Model_Message::TYPE_TO_FRIEND);
+            $result = $messageModel->sendMessage();
 
         } catch ( Zend_Json_Exception $json_e) {
             $result['result'] = 'json error';
