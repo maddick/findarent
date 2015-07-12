@@ -57,7 +57,7 @@ class Brokers_Model_FeaturedBrokers
                 $db = Zend_Db_Table::getDefaultAdapter();
                 $sql = 'CALL FAR_Accounts_GetBrokerCitiesByState( :state )';
                 $stmt = $db->prepare( $sql );
-                $stmt->execute( array( 'state' => $this->_stateCriteria->getCriteria() ) );
+                $stmt->execute( array( 'state' => $this->_stateCriteria->getCriteriaValue() ) );
                 $brokerCitiesByState = $stmt->fetchAll();
                 $this->_results['result'] = 'success';
                 $this->_results['cities'] = $brokerCitiesByState;
@@ -199,7 +199,7 @@ class Brokers_Model_FeaturedBrokers
                 $brokersIdSelect->where('l.ZipCode IN(:zipCode)');
 
                 //prepare the variable array with the values needed
-                $variableArray['zipCode'] = $this->_zipCodeCriteria->getCriteria();
+                $variableArray['zipCode'] = $this->_zipCodeCriteria->getCriteriaValue();
             }
 
             //get broker ID's in request city State

@@ -268,7 +268,7 @@ class Listing_Model_Search
                     $variableArray[] = $zipCodeRow['zip_code'];
                 }
             } else {
-                $zipCode = $this->_zipCodeCriteria->getCriteria();
+                $zipCode = $this->_zipCodeCriteria->getCriteriaValue();
                 $variableArray[] = $zipCode;
             }
 
@@ -295,7 +295,7 @@ class Listing_Model_Search
                 $zipCodesInRadiusStmt->execute(array(
                     'lat' => $zipCoords[0]['lat'],
                     'lon' => $zipCoords[0]['lon'],
-                    'rad' => $this->_radiusCriteria->getCriteria()
+                    'rad' => $this->_radiusCriteria->getCriteriaValue()
                 ));
 
                 $zipCodesInRadius = $zipCodesInRadiusStmt->fetchAll();
@@ -329,32 +329,32 @@ class Listing_Model_Search
 
             if ( $this->_useNumberOfBedrooms ) {
                 $numberOfBedRoomsInjector = ' AND li.Bedrooms = ? ';
-                $variableArray[] = $this->_numberOfBedroomsCriteria->getCriteria();
+                $variableArray[] = $this->_numberOfBedroomsCriteria->getCriteriaValue();
                 $listingsSql .= $numberOfBedRoomsInjector;
             }
 
             if ( $this->_useNumberOfBathrooms ) {
                 $numberOfBathroomsInjector = ' AND li.Bathrooms >= ?';
-                $variableArray[] = $this->_numberOfBathroomsCriteria->getCriteria();
+                $variableArray[] = $this->_numberOfBathroomsCriteria->getCriteriaValue();
                 $listingsSql .= $numberOfBathroomsInjector;
             }
 
             if ( $this->_useMinRent and $this-> _useMaxRent ) {
                 $rentInjector = ' AND (li.Rent >= ? AND li.Rent <= ? )';
-                $variableArray[] = $this->_minRentCriteria->getCriteria();
-                $variableArray[] = $this->_maxRentCriteria->getCriteria();
+                $variableArray[] = $this->_minRentCriteria->getCriteriaValue();
+                $variableArray[] = $this->_maxRentCriteria->getCriteriaValue();
                 $listingsSql .= $rentInjector;
             } else {
 
                 if ( $this->_useMinRent ) {
                     $minRentInjector = ' AND li.Rent >= ?';
-                    $variableArray[] = $this->_minRentCriteria->getCriteria();
+                    $variableArray[] = $this->_minRentCriteria->getCriteriaValue();
                     $listingsSql .= $minRentInjector;
                 }
 
                 if ( $this->_useMaxRent ) {
                     $maxRentInjector = ' AND li.Rent <= ?';
-                    $variableArray[] = $this->_maxRentCriteria->getCriteria();
+                    $variableArray[] = $this->_maxRentCriteria->getCriteriaValue();
                     $listingsSql .= $maxRentInjector;
                 }
             }
@@ -531,7 +531,7 @@ class Listing_Model_Search
             try {
                 $db = Zend_Db_Table::getDefaultAdapter();
                 $stmt = $db->prepare($listingSql);
-                $stmt->execute( array('brokerId' => $this->_brokerIdCriteria->getCriteria() ) );
+                $stmt->execute( array('brokerId' => $this->_brokerIdCriteria->getCriteriaValue() ) );
                 $listings = $stmt->fetchAll();
                 $this->results['result'] = 'success';
                 $this->results['listings'] = $listings;
@@ -588,7 +588,7 @@ class Listing_Model_Search
             try {
                 $db = Zend_Db_Table::getDefaultAdapter();
                 $stmt = $db->prepare($listingSql);
-                $stmt->execute( array('landlordId' => $this->_landlordIdCriteria->getCriteria() ) );
+                $stmt->execute( array('landlordId' => $this->_landlordIdCriteria->getCriteriaValue() ) );
                 $listings = $stmt->fetchAll();
                 $this->results['result'] = 'success';
                 $this->results['listings'] = $listings;
@@ -645,7 +645,7 @@ class Listing_Model_Search
             try {
                 $db = Zend_Db_Table::getDefaultAdapter();
                 $stmt = $db->prepare($listingSql);
-                $stmt->execute( array('communityId' => $this->_communityIdCriteria->getCriteria() ) );
+                $stmt->execute( array('communityId' => $this->_communityIdCriteria->getCriteriaValue() ) );
                 $listings = $stmt->fetchAll();
                 $this->results['result'] = 'success';
                 $this->results['listings'] = $listings;
@@ -672,7 +672,7 @@ class Listing_Model_Search
             $this->results['result'] = 'error';
             $this->results['reasons'] = $this->_listingIdCriteria->getValidationErrors();
         } else {
-            $id = $this->_listingIdCriteria->getCriteria();
+            $id = $this->_listingIdCriteria->getCriteriaValue();
             $db = Zend_Db_Table::getDefaultAdapter();
             try {
                 $sql = 'CALL FAR_Listings_GetPhotosByListingID(:id,1)';

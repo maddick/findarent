@@ -29,7 +29,7 @@ class Listing_Model_Listing
             $this->_result['result'] = 'error';
             $this->_result['reasons'] = $this->_listingIdCriteria->getValidationErrors();
         } else {
-            $id = $this->_listingIdCriteria->getCriteria();
+            $id = $this->_listingIdCriteria->getCriteriaValue();
             $db = Zend_Db_Table::getDefaultAdapter();
             try {
                 $sql = 'CALL FAR_Listings_GetListingByID(:id, 1, 0, 1)';

@@ -39,7 +39,7 @@ class Communities_Model_Community
             $this->_result['result'] = 'error';
             $this->_result['reasons'] = $this->_communityIdCriteria->getValidationErrors();
         } else {
-            $id = $this->_communityIdCriteria->getCriteria();
+            $id = $this->_communityIdCriteria->getCriteriaValue();
             $db = Zend_Db_Table::getDefaultAdapter();
             try {
                 $sql = 'CALL FAR_Accounts_GetCommunityByID( :id, 1, 0, 1 )';

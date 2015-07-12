@@ -33,7 +33,7 @@ abstract class Custom_AbstractCriteria
     /**
      * @return mixed the criteria's value
      */
-    public function getCriteria()
+    public function getCriteriaValue()
     {
         return $this->_criteriaValue;
     }

@@ -58,7 +58,7 @@ class Communities_Model_FeaturedCommunities
                 $db = Zend_Db_Table::getDefaultAdapter();
                 $sql = 'CALL FAR_Accounts_GetCommunityCitiesByState( :state )';
                 $stmt = $db->prepare( $sql );
-                $stmt->execute( array( 'state' => $this->_stateCriteria->getCriteria() ) );
+                $stmt->execute( array( 'state' => $this->_stateCriteria->getCriteriaValue() ) );
                 $communityCitiesByState = $stmt->fetchAll();
                 $this->_results['result'] = 'success';
                 $this->_results['cities'] = $communityCitiesByState;
@@ -222,7 +222,7 @@ class Communities_Model_FeaturedCommunities
             if ( $this->_useZipCode ) {
                 $communities->where('ZipCode IN(:zipCode)');
 
-                $variableArray['zipCode'] = $this->_zipCodeCriteria->getCriteria();
+                $variableArray['zipCode'] = $this->_zipCodeCriteria->getCriteriaValue();
             }
 
             //build the entire query by injecting the now appropriately built query

@@ -39,7 +39,7 @@ class Brokers_Model_Broker
             $this->_result['result'] = 'error';
             $this->_result['reasons'] = $this->_brokerIdCriteria->getValidationErrors();
         } else {
-            $id = $this->_brokerIdCriteria->getCriteria();
+            $id = $this->_brokerIdCriteria->getCriteriaValue();
             $db = Zend_Db_Table::getDefaultAdapter();
             try {
                 $sql = 'CALL FAR_Accounts_GetBrokerByID( :id, 1, 0, 1 )';
