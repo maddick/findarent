@@ -8,8 +8,8 @@ angular
         $scope.validation.failedRecipientTest = true;
         $scope.validation.failedSenderTest = true;
 
+        //this function will return true or false in order to disable the send email button
         $scope.disableButton = function(){
-            //console.log('disabledButton: ' + $scope.validation.disableButton);
             $scope.validation.disableButton = $scope.validation.failedRecipientTest || $scope.validation.failedSenderTest;
             return $scope.validation.disableButton;
         };
@@ -45,6 +45,11 @@ angular
                             //dismiss the send email modal
                             $('#email-friend-button').prop('disabled',false);
                             $('#email-friend-modal').modal('hide');
+
+                            $scope.emailForm.senderName = '';
+                            $scope.emailForm.senderAddress = '';
+                            $scope.emailForm.recipientName = '';
+                            $scope.emailForm.recipientAddress = '';
 
                             //set the values for the result modal
                             $scope.resultModalMessage = 'Email Sent Successfully!';

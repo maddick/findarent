@@ -98,10 +98,10 @@
                                     <input class="form-control" id="name" placeholder="John Doe" ng-model="emailForm.senderName">
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error': validation.failedSenderTest}">
                                 <label for="your-email" class="col-sm-3 control-label">Your Email</label>
                                 <div class="col-sm-9">
-                                    <input email-validation="failedSenderTest" type="text" class="form-control" id="your-email" placeholder="jdoe@email.com" ng-model="emailForm.senderAddress">
+                                    <input email-validation="failedSenderTest" type="text" class="form-control" id="your-email" placeholder="your.email@email.com" ng-model="emailForm.senderAddress">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -110,19 +110,15 @@
                                     <input class="form-control" id="friends-name" placeholder="Joe Doe" ng-model="emailForm.recipientName">
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error': validation.failedRecipientTest}">
                                 <label for="friends-email" class="col-sm-3 control-label">Friend's Email</label>
                                 <div class="col-sm-9">
-                                    <input email-validation="failedRecipientTest" type="text" class="form-control" id="friends-email" placeholder="joedoe@otheremail.com" ng-model="emailForm.recipientAddress">
+                                    <input email-validation="failedRecipientTest" type="text" class="form-control" id="friends-email" placeholder="friends.email@email.com" ng-model="emailForm.recipientAddress">
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <!--<p>value: {{recipientAddress}}</p>
-                        <p>repVal: {{recipientEmailValid}}</p>
-                        <p>sendval: {{senderEmailValid}}</p>
-                        <p>formval: {{formDataValid}}</p>-->
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button id="email-friend-button" type="button" class="btn btn-primary" ng-click="sendEmail()" ng-disabled="disableButton()">Send Email</button>
                     </div>
