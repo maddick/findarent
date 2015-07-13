@@ -92,25 +92,25 @@
                                     <input class="form-control" id="listing-title" placeholder="John Doe" value="{{listing.Headline}}" disabled="true">
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error': validation.senderNameEmpty, 'has-success': !validation.senderNameEmpty}">
                                 <label for="name" class="col-sm-3 control-label">Your Name</label>
                                 <div class="col-sm-9">
                                     <input class="form-control" id="name" placeholder="John Doe" ng-model="emailForm.senderName">
                                 </div>
                             </div>
-                            <div class="form-group" ng-class="{'has-error': validation.failedSenderTest}">
+                            <div class="form-group" ng-class="{'has-error': validation.failedSenderTest, 'has-success': !validation.failedSenderTest}">
                                 <label for="your-email" class="col-sm-3 control-label">Your Email</label>
                                 <div class="col-sm-9">
                                     <input email-validation="failedSenderTest" type="text" class="form-control" id="your-email" placeholder="your.email@email.com" ng-model="emailForm.senderAddress">
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error': validation.recipientNameEmpty, 'has-success': !validation.recipientNameEmpty}">
                                 <label for="friends-name" class="col-sm-3 control-label">Friend's Name</label>
                                 <div class="col-sm-9">
                                     <input class="form-control" id="friends-name" placeholder="Joe Doe" ng-model="emailForm.recipientName">
                                 </div>
                             </div>
-                            <div class="form-group" ng-class="{'has-error': validation.failedRecipientTest}">
+                            <div class="form-group" ng-class="{'has-error': validation.failedRecipientTest, 'has-success': !validation.failedRecipientTest}">
                                 <label for="friends-email" class="col-sm-3 control-label">Friend's Email</label>
                                 <div class="col-sm-9">
                                     <input email-validation="failedRecipientTest" type="text" class="form-control" id="friends-email" placeholder="friends.email@email.com" ng-model="emailForm.recipientAddress">

@@ -16,13 +16,12 @@ angular
                 $('#display-listing-loading').fadeOut(400, function(){
                     $('#display-listing-success').fadeIn();
                 });
-                console.log($scope.listing);
+                //console.log($scope.listing);
 
                 var photoPromise = ListingSearch.getListingPhotos(listingId);
                 photoPromise.then(
                     function(response){
                         $scope.listing.photos = response.data.photos;
-                        console.log($scope.listing.photos);
                     },
                     function(response){
                         console.log(response);
@@ -32,7 +31,7 @@ angular
             function(response){
                 $('#display-listing-loading').fadeOut();
                 $scope.listing = response.data.listing[0];
-                console.log(response);
+                //console.log(response);
             }
         );
 

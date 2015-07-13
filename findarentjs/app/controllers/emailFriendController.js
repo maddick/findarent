@@ -10,7 +10,13 @@ angular
 
         //this function will return true or false in order to disable the send email button
         $scope.disableButton = function(){
-            $scope.validation.disableButton = $scope.validation.failedRecipientTest || $scope.validation.failedSenderTest;
+            $scope.validation.senderNameEmpty = $scope.emailForm.senderName === '' || $scope.emailForm.senderName === undefined;
+            $scope.validation.recipientNameEmpty = $scope.emailForm.recipientName === '' || $scope.emailForm.recipientName === undefined;
+
+            $scope.validation.disableButton = $scope.validation.failedRecipientTest ||
+                                              $scope.validation.failedSenderTest ||
+                                              $scope.validation.senderNameEmpty ||
+                                              $scope.validation.recipientNameEmpty;
             return $scope.validation.disableButton;
         };
 
