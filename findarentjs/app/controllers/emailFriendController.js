@@ -1,20 +1,32 @@
 angular
     .module('app')
     .controller('emailFriendController',['$scope','$http',function($scope,$http){
+        $scope.emailForm = {};
+        $scope.emailForm.recipientAddress = '';
+        $scope.emailForm.senderAddress = '';
+        $scope.validation = {};
+        $scope.validation.failedRecipientTest = true;
+        $scope.validation.failedSenderTest = true;
+
+        $scope.disableButton = function(){
+            //console.log('disabledButton: ' + $scope.validation.disableButton);
+            $scope.validation.disableButton = $scope.validation.failedRecipientTest || $scope.validation.failedSenderTest;
+            return $scope.validation.disableButton;
+        };
+
+        $scope.disableButton();
+
         $scope.sendEmail = function(){
             //lock the button for sending
             $('#email-friend-button').prop('disabled',true);
 
-            var recipientEmailValid = !$('#friends-email').parent().parent().hasClass('has-error') && $scope.recipientAddress != "";
-            var senderEmailValid = !$('#your-email').parent().parent().hasClass('has-error') && $scope.senderAddress != "";
-            var formDataValid = recipientEmailValid && senderEmailValid;
 
-            if (formDataValid) {
+            if (!$scope.validation.disableButton) {
                 var emailData = {
                     listingTitle :  $scope.listing.Headline,
-                    senderName : $scope.senderName,
-                    recipientName :$scope.recipientName,
-                    recipientAddress : $scope.recipientAddress,
+                    senderName : $scope.emailForm.senderName,
+                    recipientName :$scope.emailForm.recipientName,
+                    recipientAddress : $scope.emailForm.recipientAddress,
                     listingNumber : $scope.listing.ListingID,
                     listingURL : window.location.href
                 };
@@ -44,7 +56,7 @@ angular
                         $('#email-friend-button').prop('disabled',false);
                         $('#email-friend-modal').modal('hide');
 
-                        $scope.resultModalMessage = 'An error occurred when sending your email.'
+                        $scope.resultModalMessage = 'An error occurred when sending your email.';
                         $scope.resultModalTitle = 'Email Error';
                         $('#email-friend-result-modal').modal('show');
                     }

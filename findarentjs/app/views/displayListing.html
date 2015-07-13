@@ -95,38 +95,42 @@
                             <div class="form-group">
                                 <label for="name" class="col-sm-3 control-label">Your Name</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" id="name" placeholder="John Doe" ng-model="senderName">
+                                    <input class="form-control" id="name" placeholder="John Doe" ng-model="emailForm.senderName">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="your-email" class="col-sm-3 control-label">Your Email</label>
                                 <div class="col-sm-9">
-                                    <input emailvalidation type="email" class="form-control" id="your-email" placeholder="jdoe@email.com" ng-model="senderAddress">
+                                    <input email-validation="failedSenderTest" type="text" class="form-control" id="your-email" placeholder="jdoe@email.com" ng-model="emailForm.senderAddress">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="friends-name" class="col-sm-3 control-label">Friend's Name</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" id="friends-name" placeholder="Joe Doe" ng-model="recipientName">
+                                    <input class="form-control" id="friends-name" placeholder="Joe Doe" ng-model="emailForm.recipientName">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="friends-email" class="col-sm-3 control-label">Friend's Email</label>
                                 <div class="col-sm-9">
-                                    <input emailvalidation type="email" class="form-control" id="friends-email" placeholder="joedoe@otheremail.com" ng-model="recipientAddress">
+                                    <input email-validation="failedRecipientTest" type="text" class="form-control" id="friends-email" placeholder="joedoe@otheremail.com" ng-model="emailForm.recipientAddress">
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
+                        <!--<p>value: {{recipientAddress}}</p>
+                        <p>repVal: {{recipientEmailValid}}</p>
+                        <p>sendval: {{senderEmailValid}}</p>
+                        <p>formval: {{formDataValid}}</p>-->
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button id="email-friend-button" type="button" class="btn btn-primary" ng-click="sendEmail()">Send Email</button>
+                        <button id="email-friend-button" type="button" class="btn btn-primary" ng-click="sendEmail()" ng-disabled="disableButton()">Send Email</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="modal fade" id="email-friend-result-modal" aria-hidden="true" ng-controller="emailFriendController">
+        <div class="modal fade" id="email-friend-result-modal" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
