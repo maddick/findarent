@@ -5,7 +5,7 @@ angular
             restrict: 'A',
             link: function (scope, element, attrs){
                 //var emailRegEx = /^(?:[a-zA-Z0-9#\-_~!$&'\(\)\*\+\.,;=:]+)@(?:(?:[a-zA-Z0-9]+)\-?(?:[a-zA-Z0-9]+)\.?)+(?:[a-zA-Z0-9]+)$/;
-                var emailRegEx = /\b[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,4}\b/;
+                var emailRegEx = /\b[a-zA-Z0-9\._%\+\-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,4}\b/;
 
                 //this function will alter a validation boolean passed in by way of the attribute
                 //value i.e., email-validation="the_boolean_passed_here". That boolean is used in
