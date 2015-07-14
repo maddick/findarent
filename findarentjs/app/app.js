@@ -26,6 +26,14 @@ var newApp = angular.module('app',['ngRoute'])
                 templateUrl: '/app/views/displayCommunity.html'
             })
 
+            //contact owner form
+            .when('/Contact-Owner',{
+                templateUrl: '/app/views/contactForm.html'
+            })
+            .when('/Contact-Owner/:listingId',{
+                templateUrl: '/app/views/contactForm.html'
+            })
+
             //brokers
             .when('/featured-brokers/',{
                 templateUrl: '/app/views/featuredBrokers.html'
