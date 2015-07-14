@@ -67,6 +67,8 @@ angular
         $scope.additionalField.title = '';
         $scope.additionalField.isRequired = false;
 
+        $scope.phoneInfo = {};
+
         //create an object for form validation
         $scope.validation = {};
         $scope.validation.senderEmailNotValid = true;
@@ -96,6 +98,7 @@ angular
                 function(response){
                     $scope.message.resource = response.data.listing[0];
                     $scope.message.subject += $scope.message.resource.Headline;
+                    $scope.phoneInfo.extension = $scope.message.resource.ListingID;
                 },
                 function(response){
                     //TODO: set an error message or redirect
@@ -108,6 +111,7 @@ angular
                 function(response){
                     $scope.message.resource = response.data.brokers[0];
                     $scope.message.subject += $scope.message.resource.FirstName + ' ' + $scope.message.resource.LastName + ' - Broker # ' +$scope.message.resource.BrokerID;
+                    $scope.phoneInfo.extension = $scope.message.resource.BrokerID;
                 },
                 function(response){
                     //TODO: set an error message or redirect
@@ -120,6 +124,7 @@ angular
                 function(response){
                     $scope.message.resource = response.data.communities[0];
                     $scope.message.subject += $scope.message.resource.Community + ' - Community # ' + $scope.message.resource.CommunityID;
+                    $scope.phoneInfo.extension = $scope.message.resource.CommunityID;
                 },
                 function(response){
                     //TODO: set an error message or redirect
