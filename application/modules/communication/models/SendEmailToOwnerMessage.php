@@ -23,6 +23,8 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         //reasons array to hold failure messages
         $reasons = array();
 
+        //TODO: use value to determine type of email
+
         if ( !isset( $this->_listing ) ) {
             $this->_results['result'] = 'error';
             $reasons[] = 'listing was not provided';
@@ -33,10 +35,10 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
             }
         }
 
-        if ( !isset( $this->_ownerName ) ) {
+        /*if ( !isset( $this->_ownerName ) ) {
             $this->_results['result'] = 'error';
             $reasons[] = 'ownerName was not provided';
-        }
+        }*/
         if ( !isset( $this->_senderEmail ) ) {
             $this->_results['result'] = 'error';
             $reasons[] = 'senderEmail was not provided';
@@ -74,6 +76,9 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         // - photo of the listing
 
         $listing = $this->_listing->getCriteriaValue();
+        $this->_ownerName = $listing['ContactName'];
+        $listingURL = 'http://www.findarent.net/Listings/' . $listing['ListingID'];
+        $listingImage =  '';
 
         $miniListing =
             "<div style=\"color: #5a5a5a;\">" .
@@ -89,7 +94,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
                                 "<tbody>" .
                                   "<tr>" .
                                     "<td align=\"center\" width=\"300\">" .
-                                      "<a href=\"". $listing['URL'] ."\" rel=\"nofollow\" target=\"_blank\"><img src=\"". $listing['Image'] ."\" alt=\"\" width=\"250px\"></a>" .
+                                      "<a href=\"". $listingURL ."\" rel=\"nofollow\" target=\"_blank\"><img src=\"". $listingImage ."\" alt=\"\" width=\"250px\"></a>" .
                                       "<br><strong>Listing #" . $listing['ListingID'] . "</strong>".
                                     "</td>".
                                     "<td>".
@@ -109,14 +114,14 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
                                               "<td>" .
                                                 $listing['City'] .", " . $listing['State'] .
                                                 "<br>" .
-                                                "<a href=\"". $listing['URL'] ."\" rel=\"nofollow\" target=\"_blank\"><strong>Click for contact info &amp; details</strong></a>".
+                                                "<a href=\"". $listingURL ."\" rel=\"nofollow\" target=\"_blank\"><strong>Click for contact info &amp; details</strong></a>".
                                               "</td>".
                                             "</tr>".
                                             "<tr>".
                                               "<td colspan=\"2\">".
                                                 "<div style=\"color: #000000;\">".
                                                 $listing['MarketingMessage'] .
-                                                "<a href=\"". $listing['URL'] ."\" rel=\"nofollow\" target=\"_blank\"> <strong>MORE »</strong></a>".
+                                                "<a href=\"". $listingURL ."\" rel=\"nofollow\" target=\"_blank\"> <strong>MORE »</strong></a>".
                                                 "<br>".
                                                 "<br>".
                                                 "<hr size=\"1\" noshade=\"\" style=\"border-top: 1px solid #BDBCAB;\">".
