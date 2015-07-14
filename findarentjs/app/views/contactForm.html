@@ -21,7 +21,7 @@
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input ng-model="message.senderEmail" type="text" class="form-control" id="email" placeholder="john.doe@email.com">
+                            <input ng-model="message.senderEmail" email-validation="senderEmailNotValid" type="text" class="form-control" id="email" placeholder="john.doe@email.com">
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone</label>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="form-group">
                             <label for="additional">{{additionalField.title}}</label>
-                            <textarea ng-show="showAdditionalField()" id="additional" class="form-control ng-hide" rows="4"></textarea>
+                            <textarea ng-show="showAdditionalField()" ng-model="message.senderAdditionalMessage" id="additional" class="form-control ng-hide" rows="4"></textarea>
                         </div>
                         <button ng-click="submit()" type="submit" class="btn btn-primary">Send Contact Request</button>
                     </form>

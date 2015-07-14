@@ -34,9 +34,32 @@ angular
         $scope.message.senderPhone = '';
         $scope.message.ownerName = '';
         $scope.message.listing = {};
+        $scope.message.senderAdditionalMessage = '';
 
         $scope.additionalField = {};
         $scope.additionalField.title = '';
+        $scope.additionalField.isRequired = false;
+
+        $scope.validation = {};
+        $scope.validation.senderEmailNotValid = true;
+        $scope.validation.formIsValid = false;
+        $scope.validation.validateInfo = function() {
+            var senderFirstNameValid = $scope.message.senderFirstName !== undefined &&
+                $scope.message.senderFirstName !== null &&
+                $scope.message.senderFirstName !== '';
+
+            var senderAdditionalMessageValid = ($scope.additionalField.isRequired) ? $scope.message.senderAdditionalMessage !== undefined &&
+                $scope.message.senderAdditionalMessage !== null &&
+                $scope.message.senderAdditionalMessage !== '' : true;
+
+            console.log(senderFirstNameValid);
+            console.log(senderAdditionalMessageValid);
+            var temp = $scope.validation.senderEmailNotValid;
+            console.log(temp);
+
+            return (senderFirstNameValid && senderAdditionalMessageValid && !$scope.validation.senderEmailNotValid);
+
+        };
 
         if (forListing) {
             //need to get the listing and send it along
@@ -60,19 +83,23 @@ angular
         $scope.showAdditionalField = function(){
             if ( $scope.message.MessageObj === undefined ) {
                 $scope.additionalField.title = '';
+                $scope.additionalField.isRequired = true;
                 return false;
             }
 
             if ( $scope.message.MessageObj === null) {
                 $scope.additionalField.title = '';
+                $scope.additionalField.isRequired = true;
                 return false;
             }
 
             if ( $scope.message.MessageObj.value == 'Pets') {
                 $scope.additionalField.title = 'Please describe your pet to include breed if it is a dog and weight';
+                $scope.additionalField.isRequired = true;
                 return true;
             } else {
                 $scope.additionalField.title = '';
+                $scope.additionalField.isRequired = false;
                 return false;
             }
         };
@@ -81,21 +108,25 @@ angular
             var temp = $scope.message.MessageObj;
 
             var payload = {};
-            $scope.message.senderMessage = $scope.message.MessageObj.label;
-            payload.senderMessage = $scope.message.senderMessage;
-            payload.senderFirstName = $scope.message.senderFirstName;
-            payload.senderLastName = $scope.message.senderLastName;
-            payload.senderEmail = $scope.message.senderEmail;
-            payload.Phone = $scope.message.Phone;
 
-            if (forListing) {
-                payload.listing = $scope.message.listing;
-                payload.type = 'LISTING';
-            } else if (forBroker) {
+            if ( $scope.validation.validateInfo() ) {
+                $scope.message.senderMessage = $scope.message.MessageObj.label;
+                payload.senderMessage = $scope.message.senderMessage;
+                payload.senderFirstName = $scope.message.senderFirstName;
+                payload.senderLastName = $scope.message.senderLastName;
+                payload.senderEmail = $scope.message.senderEmail;
+                payload.Phone = $scope.message.Phone;
 
-            } else if (forCommunity) {
+                if (forListing) {
+                    payload.listing = $scope.message.listing;
+                    payload.type = 'LISTING';
+                } else if (forBroker) {
 
+                } else if (forCommunity) {
+
+                }
             }
+
             console.log(payload);
 
         };
