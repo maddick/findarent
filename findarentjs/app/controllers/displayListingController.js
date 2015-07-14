@@ -50,8 +50,8 @@ angular
             }
         };
 
-        $scope.emailToFriend = function () {
-
+        $scope.contactOwner = function () {
+            $location.url('/Contact-Owner/' + $scope.listing.ListingID);
         };
 
         $scope.status = 'ready';

@@ -1,13 +1,14 @@
 <style type="text/css">
     #display-listing-loading {
         display:none;
-        margin-top:100px;
+        margin-top:50px;
+        margin-bottom:50px;
     }
     #display-listing-success {
         display:none;
     }
     #listing-display-container {
-        margin-top:70px;
+        margin-top:10px;
     }
     #listing-display-container hr {
         border-color: #acacac;
@@ -16,6 +17,10 @@
         min-height: 250px;
         min-width: 330px;
         background-color: #494949;
+    }
+    #contact-owner-button-area{
+        margin-top:20px;
+        margin-bottom:20px;
     }
     .main-button-menu-border {
         border-top: 1px solid #acacac;
@@ -270,6 +275,14 @@
                                     </ul>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid" id="contact-owner-button-area">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-danger center-block" ng-click="contactOwner()">CLICK HERE TO CONTACT THE OWNER</button>
                         </div>
                     </div>
                 </div>
