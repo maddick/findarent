@@ -39,4 +39,8 @@ angular
                 $location.url('/search?community-id=' + communityId);
             }
         };
+
+        $scope.contactOwner = function() {
+            $location.url('/Contact-Community/' + $scope.community.CommunityID);
+        }
     }]);

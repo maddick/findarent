@@ -1,16 +1,23 @@
 <style type="text/css">
     #display-broker-loading {
         display:none;
-        margin-top:100px;
+        margin-top:50px;
+        margin-bottom:50px;
     }
     #display-broker-success {
         display:none;
     }
     #broker-display-container {
-        margin-top:70px;
+        margin-top:10px;
     }
     #broker-display-container hr {
         border-color: #acacac;
+    }
+
+
+    #contact-broker-button-area{
+        margin-top:20px;
+        margin-bottom:20px;
     }
     #display-community-carousel {
         min-height: 250px;
@@ -221,6 +228,14 @@
                     <div class="row">
                         <div class="col-md-8">
                             <div ng-bind-html="broker.MarketingMessage"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid" id="contact-broker-button-area">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-danger center-block" ng-click="contactBroker()">CLICK HERE TO CONTACT THE BROKER</button>
                         </div>
                     </div>
                 </div>

@@ -39,4 +39,8 @@ angular
                 $location.url('/search?broker-id=' + brokerId);
             }
         };
+
+        $scope.contactBroker = function() {
+            $location.url('/Contact-Broker/' + $scope.broker.BrokerID);
+        };
     }]);

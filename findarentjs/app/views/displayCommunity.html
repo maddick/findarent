@@ -1,16 +1,21 @@
 <style type="text/css">
     #display-community-loading {
         display:none;
-        margin-top:100px;
+        margin-top:50px;
+        margin-bottom:50px;
     }
     #display-community-success {
         display:none;
     }
     #community-display-container {
-        margin-top:70px;
+        margin-top:10px;
     }
     #community-display-container hr {
         border-color: #acacac;
+    }
+    #contact-owner-button-area{
+        margin-top:20px;
+        margin-bottom:20px;
     }
     #display-community-carousel {
         min-height: 250px;
@@ -221,6 +226,14 @@
                     <div class="row">
                         <div class="col-md-8">
                             <div ng-bind-html="community.MarketingMessage"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid" id="contact-owner-button-area">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-danger center-block" ng-click="contactOwner()">CLICK HERE TO CONTACT THE OWNER</button>
                         </div>
                     </div>
                 </div>
