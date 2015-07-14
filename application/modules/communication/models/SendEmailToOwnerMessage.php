@@ -231,9 +231,15 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         $recipientAddress = new Custom_EmailCriteria('mike.matovic@gmail.com');
         $this->setRecipientAddress($recipientAddress);
 
-        $this->setBCC('notifications@findarent.net');
+        $this->setBCC('mmatovic@conncoll.edu');//$this->setBCC('notifications@findarent.net');
 
         $broker = $this->_restResource->getCriteriaValue();
+
+        if ( empty( $broker['MiddleName'] ) ) {
+            $this->_ownerName = $broker['FirstName'] . ' ' . $broker['LastName'];
+        } else {
+            $this->_ownerName = $broker['FirstName'] . ' ' . $broker['MiddleName'] . ' ' . $broker['LastName'];
+        }
 
         $this->_subject = "FindARent.Net: Broker Inquiry";
 
@@ -259,9 +265,15 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         $recipientAddress = new Custom_EmailCriteria('mike.matovic@gmail.com');
         $this->setRecipientAddress($recipientAddress);
 
-        $this->setBCC('notifications@findarent.net');
+        $this->setBCC('mmatovic@conncoll.edu');//$this->setBCC('notifications@findarent.net');
 
         $community = $this->_restResource->getCriteriaValue();
+
+        if ( empty( $community['MiddleName'] ) ) {
+            $this->_ownerName = $community['FirstName'] . ' ' . $community['LastName'];
+        } else {
+            $this->_ownerName = $community['FirstName'] . ' ' . $community['MiddleName'] . ' ' . $community['LastName'];
+        }
 
         $this->_subject = 'FindARent.Net: ' . $community['Community'] . ' Inquiry';
 

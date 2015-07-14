@@ -1,8 +1,10 @@
 angular
     .module('app')
-    .controller('contactFormController',['$scope','$routeParams','$location','$http','ListingRest',function($scope,$routeParams,$location,$http,ListingRest){
+    .controller('contactFormController',['$scope','$routeParams','$location','$http','ListingRest','BrokerRest','CommunityRest',function($scope,$routeParams,$location,$http,ListingRest,BrokerRest,CommunityRest){
         var path = $location.path();
         var listingId = ($routeParams.listingId !== undefined) ? $routeParams.listingId : '';
+        var brokerId = ($routeParams.brokerId !== undefined) ? $routeParams.brokerId : '';
+        var communityId = ($routeParams.communityId !== undefined) ? $routeParams.communityId : '';
         var forListing = path.indexOf('/Contact-Owner') != -1;
         var forBroker = path.indexOf('/Contact-Broker') != -1;
         var forCommunity = path.indexOf('/Contact-Community') != -1;
@@ -49,6 +51,7 @@ angular
             ];
         }
 
+        //setup an object to hold our message variables
         $scope.message = {};
         $scope.message.subject = 'RE: ';
         $scope.message.senderFirstName = '';
@@ -56,13 +59,15 @@ angular
         $scope.message.senderEmail = '';
         $scope.message.senderPhone = '';
         $scope.message.ownerName = '';
-        $scope.message.listing = {};
+        $scope.message.resource = {};
         $scope.message.senderAdditionalMessage = '';
 
+        //create an object to handle the additional field
         $scope.additionalField = {};
         $scope.additionalField.title = '';
         $scope.additionalField.isRequired = false;
 
+        //create an object for form validation
         $scope.validation = {};
         $scope.validation.senderEmailNotValid = true;
         $scope.validation.formIsValid = false;
@@ -82,23 +87,44 @@ angular
 
         };
 
+        //get the appropriate resource (i.e., a listing, community, or broker)
+        var promise = null;
         if (forListing) {
-            //need to get the listing and send it along
-            var promise = ListingRest.getListingById(listingId);
+            promise = ListingRest.getListingById(listingId);
 
             promise.then(
                 function(response){
-                    $scope.message.listing = response.data.listing[0];
-                    $scope.message.subject += $scope.message.listing.Headline;
+                    $scope.message.resource = response.data.listing[0];
+                    $scope.message.subject += $scope.message.resource.Headline;
                 },
                 function(response){
-                    //TODO: set an error message
+                    //TODO: set an error message or redirect
                 }
             );
         } else if (forBroker) {
+            promise = BrokerRest.getBrokerById(brokerId);
 
+            promise.then(
+                function(response){
+                    $scope.message.resource = response.data.brokers[0];
+                    $scope.message.subject += $scope.message.resource.FirstName + ' ' + $scope.message.resource.LastName + ' - Broker # ' +$scope.message.resource.BrokerID;
+                },
+                function(response){
+                    //TODO: set an error message or redirect
+                }
+            );
         } else if (forCommunity) {
+            promise = CommunityRest.getCommunityById(communityId);
 
+            promise.then(
+                function(response){
+                    $scope.message.resource = response.data.communities[0];
+                    $scope.message.subject += $scope.message.resource.Community + ' - Community # ' + $scope.message.resource.CommunityID;
+                },
+                function(response){
+                    //TODO: set an error message or redirect
+                }
+            );
         }
 
         $scope.showAdditionalField = function(){
@@ -139,12 +165,14 @@ angular
                 payload.Phone = $scope.message.Phone;
 
                 if (forListing) {
-                    payload.listing = $scope.message.listing;
+                    payload.listing = $scope.message.resource;
                     payload.type = 'LISTING';
                 } else if (forBroker) {
-
+                    payload.listing = $scope.message.resource;
+                    payload.type = 'BROKER';
                 } else if (forCommunity) {
-
+                    payload.listing = $scope.message.resource;
+                    payload.type = 'COMMUNITY';
                 }
 
                 var promise  = $http(
