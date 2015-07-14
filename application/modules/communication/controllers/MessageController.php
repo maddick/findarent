@@ -132,14 +132,16 @@ class Communication_MessageController extends Zend_Controller_Action
             $body = $this->getRequest()->getRawBody();
             $data = Zend_Json::decode($body, Zend_Json::TYPE_ARRAY);
 
+            //TODO: need a value to determine if email is about a listing, to a broker, or to a community manager
+
             if ( array_key_exists( 'listing', $data ) ) {
                 $listing = new Custom_ListingCriteria($data['listing']);
                 $messageModel->setListing($listing);
             }
 
-            if ( array_key_exists( 'ownerName', $data) ) {
+            /*if ( array_key_exists( 'ownerName', $data) ) {
                 $messageModel->setOwnerName($data['ownerName']);
-            }
+            }*/
 
             if ( array_key_exists( 'senderEmail', $data ) ) {
                 $messageModel->setSenderEmail($data['senderEmail']);
