@@ -314,11 +314,11 @@ angular
         };
 
         $scope.goToCommunity = function(communityId) {
-            $location.url('/featured-communities/' +  communityId);
+            $location.url('/Communities/' +  communityId);
         };
 
         $scope.goToBroker = function(brokerId) {
-            $location.url('/featured-brokers/' +  brokerId);
+            $location.url('/Brokers/' +  brokerId);
         };
 
         $scope.status = 'ready';

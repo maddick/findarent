@@ -16,32 +16,35 @@ var newApp = angular.module('app',['ngRoute'])
             })
 
             //communities
-            .when('/featured-communities/',{
+            /*.when('/featured-communities/',{
                 templateUrl: '/app/views/featuredCommunitiesList.html'
             })
             .when('/featured-communities/search/city-state/:cityState',{
                 templateUrl: '/app/views/communitiesSearchResults.html'
-            })
-            .when('/featured-communities/:communityId',{
+            })*/
+            .when('/Communities/:communityId',{
                 templateUrl: '/app/views/displayCommunity.html'
             })
 
             //contact owner form
-            .when('/Contact-Owner',{
+            .when('/Contact-Owner/:listingId',{
                 templateUrl: '/app/views/contactForm.html'
             })
-            .when('/Contact-Owner/:listingId',{
+            .when('/Contact-Broker/:brokerId',{
+                templateUrl: '/app/views/contactForm.html'
+            })
+            .when('/Contact-Community/:communityId',{
                 templateUrl: '/app/views/contactForm.html'
             })
 
             //brokers
-            .when('/featured-brokers/',{
+            /*.when('/featured-brokers/',{
                 templateUrl: '/app/views/featuredBrokers.html'
             })
             .when('/featured-brokers/search/city-state/:cityState',{
                 templateUrl: '/app/views/brokersSearchResults.html'
-            })
-            .when('/featured-brokers/:brokerId',{
+            })*/
+            .when('/Brokers/:brokerId',{
                 templateUrl: '/app/views/displayBroker.html'
             })
 
