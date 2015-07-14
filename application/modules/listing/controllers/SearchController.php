@@ -80,12 +80,18 @@ class Listing_SearchController extends Zend_Controller_Action
         $searchResults = $search->searchListings();
 
         //process and send the response
-        if ( $searchResults['result'] === 'error' ) {
-            $this->getResponse()->setHttpResponseCode(400);
-        } elseif ( $searchResults['result'] === 'server error' ) {
-            $this->getResponse()->setHttpResponseCode(500);
+        if ( $searchResults['result'] === 'success' ) {
+            if ( empty( $searchResults['listings'] ) ) {
+                $this->getResponse()->setHttpResponseCode(404);
+            } else {
+                $this->getResponse()->setHttpResponseCode(200);
+            }
         } else {
-            $this->getResponse()->setHttpResponseCode(200);
+            if ( $searchResults['result'] === 'server error' ) {
+                $this->getResponse()->setHttpResponseCode(500);
+            } else {
+                $this->getResponse()->setHttpResponseCode(400);
+            }
         }
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
         $this->setHeader();
