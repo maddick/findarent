@@ -102,4 +102,82 @@ class Communication_MessageController extends Zend_Controller_Action
         }
         $this->_helper->json->sendJson($result, false, true);
     }
+
+    public function sendEmailToOwnerAction()
+    {
+        $result = array();
+
+        if ( $this->getRequest()->isOptions() ) {
+            return;
+        }
+
+        //only accept post requests
+        if ( !$this->getRequest()->isPost() ) {
+            $result['result'] = 'method error';
+            $result['reasons'] = 'Method not allowed';
+            $this->getResponse()->setHttpResponseCode(405);
+            $this->_helper->json->sendJson($result, false, true);
+        }
+
+        //ensure data type as json in request headers
+        if ( $this->getRequest()->getHeader('Content-Type') !== 'application/json' ) {
+            $result['result'] = 'error';
+            $result['reason'] = 'requests must be json';
+            $this->getResponse()->setHttpResponseCode(400);
+            $this->_helper->json->sendJson($result, false, true);
+        }
+
+        try {
+            $messageModel = new Communication_Model_SendEmailToOwnerMessage();
+            $body = $this->getRequest()->getRawBody();
+            $data = Zend_Json::decode($body, Zend_Json::TYPE_ARRAY);
+
+            if ( array_key_exists( 'listing', $data ) ) {
+                $listing = new Custom_ListingCriteria($data['listing']);
+                $messageModel->setListing($listing);
+            }
+
+            if ( array_key_exists( 'ownerName', $data) ) {
+                $messageModel->setOwnerName($data['ownerName']);
+            }
+
+            if ( array_key_exists( 'senderEmail', $data ) ) {
+                $messageModel->setSenderEmail($data['senderEmail']);
+            }
+
+            if ( array_key_exists( 'senderMessage', $data ) ) {
+                $messageModel->setSenderMessage($data['senderMessage']);
+            }
+
+            if ( array_key_exists( 'senderName', $data ) ) {
+                $messageModel->setSenderName($data['senderName']);
+            }
+
+            if ( array_key_exists( 'senderPhone', $data ) ) {
+                $messageModel->setSenderPhone($data['senderPhone']);
+            }
+
+            if ( array_key_exists( 'recipientAddress', $data ) ) {
+                $messageModel->setRecipientAddress($data['recipientAddress']);
+            }
+
+            $result = $messageModel->sendMessage();
+
+        } catch ( Zend_Json_Exception $json_e) {
+            $result['result'] = 'json error';
+            $result['reasons'] = $json_e->getMessage();
+        } catch ( Exception $e ) {
+            $result['result'] = 'server error';
+            $result['reasons'] = $e->getMessage();
+        }
+
+        if ( $result['result'] === 'success' ) {
+            $this->getResponse()->setHttpResponseCode(200);
+        } elseif ( $result['result'] === 'error' or $result['result'] === 'json error' ) {
+            $this->getResponse()->setHttpResponseCode(400);
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->_helper->json->sendJson($result, false, true);
+    }
 }
