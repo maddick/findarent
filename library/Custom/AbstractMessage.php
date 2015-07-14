@@ -6,6 +6,8 @@ abstract class Custom_AbstractMessage
 
     protected $_body;
 
+    protected $_BCC;
+
     protected $_subject;
 
     /**
@@ -40,6 +42,10 @@ abstract class Custom_AbstractMessage
                 ->setBodyHtml($this->_body)
                 ->setFrom($config->messaging->email, 'Mike Matovic');
 
+            if ( isset( $this->_BCC) ) {
+                $mail->addBcc($this->_BCC);
+            }
+
             try {
                 $mail->send($mailTransport);
                 $this->_results['result'] = 'success';
@@ -73,5 +79,10 @@ abstract class Custom_AbstractMessage
             throw new Exception('$recipientAddress must be an instance of Custom_EmailCriteria');
         }
         return $this;
+    }
+
+    public function setBCC($BCC)
+    {
+        $this->_BCC = $BCC;
     }
 }
