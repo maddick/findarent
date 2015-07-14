@@ -9,7 +9,7 @@ angular
                 var numberOfBathrooms   = ($scope.listingSearchParams !== undefined) ? $scope.listingSearchParams.numberOfBathrooms : undefined;
                 var minRent             = ($scope.listingSearchParams !== undefined) ? $scope.listingSearchParams.minRent : undefined;
                 var maxRent             = ($scope.listingSearchParams !== undefined) ? $scope.listingSearchParams.maxRent : undefined;
-                var cityStateZipRegEx   = /^(\d{5})$|^((?:[a-zA-Z]+\s?)+,?\s?([a-zA-Z]{2}))\s?(?:\d{5})?$/;
+                var cityStateZipRegEx   = /^(\d{5})$|^((?:\w+\s?)+)(?:,?[\s]+)(\w{2})(?:\s+(\d{5}))?$/;
                 var regEx               = new RegExp(cityStateZipRegEx);
                 var regExArray          = regEx.exec(cityStateOrZip);
                 var url                 = '/search?';
@@ -21,7 +21,11 @@ angular
                     if ( regExArray[1] !== undefined ) {
                         url = url + 'zip-code=' + regExArray[1] + '&';
                     } else {
-                        url = url + 'city-state=' + regExArray[2] + '&';
+                        if (regExArray[4] === undefined){
+                            url = url + 'city-state=' + regExArray[2] + ', ' + regExArray[3] + '&';
+                        } else {
+                            url = url + 'city-state=' + regExArray[2] + ', ' + regExArray[3] + '&zip-code=' + regExArray[4] +'&';
+                        }
                     }
 
                     if ( numberOfBedrooms !== undefined && numberOfBedrooms !== '' ) {
