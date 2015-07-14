@@ -11,15 +11,16 @@
                 <h4>Email Owner / Property Manager</h4>
                 <div class="well">
                     <form>
-                        <div class="form-group">
-                            <label for="first-name">First Name</label>
+                        <h4>{{message.subject}}</h4>
+                        <div class="form-group" ng-class="{'has-error': !validation.senderFirstNameValid}">
+                            <label for="first-name">First Name (required)</label>
                             <input ng-model="message.senderFirstName" type="text" class="form-control" id="first-name" placeholder="e.g. John">
                         </div>
                         <div class="form-group">
                             <label for="last-name">Last Name</label>
                             <input ng-model="message.senderLastName" type="text" class="form-control" id="last-name" placeholder="e.g. Doe">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" ng-class="{'has-error': validation.senderEmailNotValid}">
                             <label for="email">Email</label>
                             <input ng-model="message.senderEmail" email-validation="senderEmailNotValid" type="text" class="form-control" id="email" placeholder="john.doe@email.com">
                         </div>
@@ -37,7 +38,7 @@
                                 <option value="Questions">Other - Please call me so that I can ask questions</option>-->
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" ng-class="{'has-error': !validation.senderAdditionalMessageValid}">
                             <label for="additional">{{additionalField.title}}</label>
                             <textarea ng-show="showAdditionalField()" ng-model="message.senderAdditionalMessage" id="additional" class="form-control ng-hide" rows="4"></textarea>
                         </div>
