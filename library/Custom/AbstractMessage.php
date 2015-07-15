@@ -8,6 +8,8 @@ abstract class Custom_AbstractMessage
 
     protected $_BCC;
 
+    protected $_CC;
+
     protected $_subject;
 
     /**
@@ -41,6 +43,10 @@ abstract class Custom_AbstractMessage
                 ->setSubject($this->_subject)
                 ->setBodyHtml($this->_body)
                 ->setFrom($config->messaging->email, 'Mike Matovic');
+
+            if ( isset($this->_CC) ) {
+                $mail->addCc($this->_CC);
+            }
 
             if ( isset( $this->_BCC) ) {
                 $mail->addBcc($this->_BCC);
@@ -84,5 +90,10 @@ abstract class Custom_AbstractMessage
     public function setBCC($BCC)
     {
         $this->_BCC = $BCC;
+    }
+
+    public function setCC($CC)
+    {
+        $this->_CC = $CC;
     }
 }

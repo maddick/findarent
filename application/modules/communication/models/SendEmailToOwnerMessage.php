@@ -28,6 +28,8 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
 
     const COMMUNITY = 'COMMUNITY';
 
+    const LISTING_CUSTOMER = 'LISTING_CUSTOMER';
+
     protected $_farNotice = ""; //TODO: this is based on source being 2 denoting Craig's List
 
     protected function _createMessage()
@@ -85,14 +87,15 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         if ( $this->_type === self::COMMUNITY ) {
             $this->_generateCommunityEmail();
         }
+        if ( $this->_type === self::LISTING_CUSTOMER) {
+            $this->_generateCustomerListingEmail();
+        }
+
         return true;
     }
 
-    private function _generateListingEmail()
+    private function _generateCustomerListingEmail()
     {
-        $recipientAddress = new Custom_EmailCriteria('mike.matovic@gmail.com');
-        $this->setRecipientAddress($recipientAddress);
-
         //generate a mini-listing using with a listing:
         // - listingID
         // - headline
@@ -106,6 +109,142 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
 
         $listing = $this->_restResource->getCriteriaValue();
         $this->_ownerName = $listing['ContactName'];
+
+        //$recipientAddress = new Custom_EmailCriteria('mike.matovic@gmail.com');
+        $recipientAddress = new Custom_EmailCriteria($this->_senderEmail);
+        $this->setRecipientAddress($recipientAddress);
+
+        $listingURL = 'http://www.findarent.net/Listings/' . $listing['ListingID'];
+
+        //get a listing image
+        $listingImageSql =
+            'SELECT PhotoId,ImageURL
+            FROM far_listings_photos
+            WHERE ListingID = :id
+            AND (Active = 1)
+            AND Deleted = 0
+            ORDER BY `Order`
+            LIMIT 1';
+
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $imageStmt = $db->prepare($listingImageSql);
+        $imageStmt->execute(array( 'id' => $listing['ListingID']));
+        $imageResult = $imageStmt->fetchAll();
+
+        $listingImage = 'http://findarent.net/Images/Listings/' . $imageResult[0]['ImageURL'];
+
+        $miniListing =
+            "<div style=\"color: #5a5a5a;\">" .
+            "<table style=\"width: 100%;\" border=\"0\" cellspacing=\"0\" cellpadding=\"12\" align=\"center\">" .
+            "<tbody>" .
+            "<tr>" .
+            "<td align=\"center\" valign=\"top\">" .
+            "<table style=\"width: 850px;\" border=\"0\" cellspacing=\"0\" cellpadding=\"3\" bgcolor=\"#F2C747\">" .
+            "<tbody>" .
+            "<tr>" .
+            "<td>" .
+            "<table style=\"width: 100%;\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\" bgcolor=\"#F9F9F9\">" .
+            "<tbody>" .
+            "<tr>" .
+            "<td align=\"center\" width=\"300\">" .
+            "<a href=\"" . $listingURL . "\" rel=\"nofollow\" target=\"_blank\"><img src=\"" . $listingImage . "\" alt=\"\" width=\"250px\"></a>" .
+            "<br><strong>Listing #" . $listing['ListingID'] . "</strong>" .
+            "</td>" .
+            "<td>" .
+            "<div style=\"color: #2f6d9d;\"><strong>" . $listing['Headline'] . "</strong></div>" .
+            "<hr size=\"1\" noshade=\"\" style=\"border-top: 1px solid #BDBCAB;\">" .
+            "<table style=\"width: 98%;\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">" .
+            "<tbody>" .
+            "<tr>" .
+            "<td>" .
+            "<br />" .
+            "<div style=\"color: #f5472c;\">" .
+            "<strong>Rent: $" . $listing['Rent'] . "</strong>" .
+            "</div>Bedrooms: " . $listing['Bedrooms'] .
+            "<br>" .
+            "Bathrooms: " . $listing['Bathrooms'] .
+            "</td>" .
+            "<td>" .
+            $listing['City'] . ", " . $listing['State'] .
+            "<br>" .
+            "<a href=\"" . $listingURL . "\" rel=\"nofollow\" target=\"_blank\"><strong>Click for contact info &amp; details</strong></a>" .
+            "</td>" .
+            "</tr>" .
+            "<tr>" .
+            "<td colspan=\"2\">" .
+            "<div style=\"color: #000000;\">" .
+            $listing['MarketingMessage'] .
+            "<a href=\"" . $listingURL . "\" rel=\"nofollow\" target=\"_blank\"> <strong>MORE »</strong></a>" .
+            "<br>" .
+            "<br>" .
+            "<hr size=\"1\" noshade=\"\" style=\"border-top: 1px solid #BDBCAB;\">" .
+            "<table style=\"width: 100%;\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\">" .
+            "<tbody>" .
+            "<tr>" .
+            "<td>" .
+            "<a href=\"http://www.findarent.net\"><img src=\"http://www.findarent.net/App_Themes/Default/Images/logo_cl.png\" alt=\"FindARent.net\" border=\"0\" style=\"margin: 5px 0;\"></a>" .
+            "</td>
+                                                    </tr>
+                                                  </tbody>
+                                                </table>
+                                              </div>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>";
+
+        $this->_subject = "FindARent.Net : Listing #" . $listing['ListingID'] . " Inquiry";
+
+        $this->_body = 'Hi ' . $this->_senderFirstName .', <br />' .
+                        '<br />'.
+                        '<p>Thank you for submitting your inquiry about Listing # ' . $listing['ListingID'] . ' at FindARent.net. We have contacted the property owner/manager with your inquiry - the owner/manager will be contacting you shortly.<br /><br />As a reminder,'.
+                        'here\'s the listing you were interested in:</p>'.
+                        '<br />' .
+                        $miniListing .
+                        '<br />'.
+                        '<hr />' .
+                        '<a href="http://www.findarent.net"><img src="http://www.findarent.net/App_Themes/Default/Images/mainlogo.png" alt="FindARent.net" border="0" style="margin: 5px 0;" /></a><br />'.
+                        '<a href="http://www.findarent.net">http://www.findarent.net/</a><br />'.
+                        '<br />';
+    }
+
+    private function _generateListingEmail()
+    {
+        //generate a mini-listing using with a listing:
+        // - listingID
+        // - headline
+        // - rent
+        // - bedrooms
+        // - state
+        // - city
+        // - description (MarketingMessage)
+        // - link to the listing
+        // - photo of the listing
+
+        $listing = $this->_restResource->getCriteriaValue();
+        $this->_ownerName = $listing['ContactName'];
+
+        $recipientAddress = new Custom_EmailCriteria('mike.matovic@gmail.com');
+        $this->setRecipientAddress($recipientAddress);
+        /*$recipientAddress = new Custom_EmailCriteria($listing['Email']);
+        $this->setRecipientAddress($recipientAddress);
+
+        if ( !empty($listing['SupervisorEmail']) ) {
+            $this->setCC($listing['SupervisorEmail']);
+        }*/
 
         //attempt to get an owner name if one is not on the listing record
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -273,12 +412,13 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
 
     private function _generateCommunityEmail()
     {
+        $community = $this->_restResource->getCriteriaValue();
+
         $recipientAddress = new Custom_EmailCriteria('mike.matovic@gmail.com');
+        //$recipientAddress = new Custom_EmailCriteria($community['Email']);
         $this->setRecipientAddress($recipientAddress);
 
         $this->setBCC('mmatovic@conncoll.edu');//$this->setBCC('notifications@findarent.net');
-
-        $community = $this->_restResource->getCriteriaValue();
 
         if ( empty( $community['MiddleName'] ) ) {
             $this->_ownerName = $community['FirstName'] . ' ' . $community['LastName'];
@@ -391,7 +531,17 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
             $this->_results['reasons'] = $e->getMessage();
         }
 
+        if ($this->_type === self::LISTING) {
+            $this->_type = self::LISTING_CUSTOMER;
+            parent::sendMessage();
+        }
+
         return $this->_results;
+    }
+
+    public function sendClientMessage()
+    {
+
     }
 
     public function setRestResource($listing)
