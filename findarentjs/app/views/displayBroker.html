@@ -175,16 +175,12 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Phone Number</th>
-                                    <td>{{broker.Phone}}</td>
-                                </tr>
-                                <tr>
                                     <th>Fax Number</th>
-                                    <td>{{broker.Fax}}</td>
+                                    <td><span ng-show="Broker.Fax != null">{{broker.Fax}}</span><span ng-show="Broker.Fax == null">N/A</span></td>
                                 </tr>
                                 <tr>
-                                    <th>Email</th>
-                                    <td>{{broker.Email}}</td>
+                                    <th>Web Site</th>
+                                    <td><a ng-show="Broker.Website != null" href="http://{{community.Website}}">{{broker.Website}}</a><span ng-if="Broker.Website == null">N/A</span></td>
                                 </tr>
                             </table>
                         </div>

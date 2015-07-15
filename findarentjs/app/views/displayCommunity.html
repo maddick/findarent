@@ -173,16 +173,12 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Phone Number</th>
-                                    <td>{{community.Phone}}</td>
-                                </tr>
-                                <tr>
                                     <th>Fax Number</th>
-                                    <td>{{community.Fax}}</td>
+                                    <td><span ng-show="community.Fax != null">{{community.Fax}}</span><span ng-show="community.Fax == null">N/A</span></td>
                                 </tr>
                                 <tr>
-                                    <th>Email</th>
-                                    <td>{{community.Email}}</td>
+                                    <th>Web Site</th>
+                                    <td><span ng-show="community.Website != null"><a href="http://{{community.Website}}">{{community.Website}}</a></span><span ng-show="community.Website == null">N/A</span></td>
                                 </tr>
                             </table>
                         </div>
