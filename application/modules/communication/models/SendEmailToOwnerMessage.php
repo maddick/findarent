@@ -14,6 +14,10 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
 
     protected $_senderName;
 
+    protected $_senderFirstName;
+
+    protected $_senderLastName;
+
     protected $_senderPhone;
 
     protected $_type;
@@ -54,9 +58,9 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
             $this->_results['result'] = 'error';
             $reasons[] = 'senderMessage was not provided';
         }
-        if ( !isset( $this->_senderName ) ) {
+        if ( !isset( $this->_senderFirstName ) ) {
             $this->_results['result'] = 'error';
-            $reasons[] = 'senderName was not provided';
+            $reasons[] = 'senderFirstName was not provided';
         }
         if ( !empty( $reasons ) ) {
             $this->_results['reasons'] = $reasons;
@@ -64,15 +68,15 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         }
 
         //determine the owner name based on contact name off of the provided resource
-        if ( $this->_type === Communication_Model_SendEmailToOwnerMessage::LISTING) {
+        if ( $this->_type === self::LISTING) {
             $this->_generateListingEmail();
         }
 
-        if ( $this->_type === Communication_Model_SendEmailToOwnerMessage::BROKER ) {
+        if ( $this->_type === self::BROKER ) {
             $this->_generateBrokerEmail();
         }
 
-        if ( $this->_type === Communication_Model_SendEmailToOwnerMessage::COMMUNITY ) {
+        if ( $this->_type === self::COMMUNITY ) {
             $this->_generateCommunityEmail();
         }
         return true;
@@ -214,7 +218,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
             "<hr />" .
             "<br />" .
             "<b><u>Contact Information</u>:</b><br />" .
-            "<b>Name:</b>&nbsp;&nbsp;" . $this->_senderName . "<br />" .
+            "<b>Name:</b>&nbsp;&nbsp;" . $this->_senderFirstName . ' ' . $this->_senderLastName . "<br />" .
             "<b>Email:</b>&nbsp;&nbsp;" . $this->_senderEmail . "<br />" .
             "<b>Phone:</b>&nbsp;&nbsp;" . $this->_senderPhone . "<br />" .
             "<b>Message:</b><br />" .
@@ -224,6 +228,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
             "<a href=\"http://www.findarent.net\"><img src=\"http://www.findarent.net/App_Themes/Default/Images/mainlogo.png\" alt=\"FindARent.net\" border=\"0\" style=\"margin: 5px 0;\" /></a><br />" .
             "<a href=\"http://www.findarent.net\">http://www.findarent.net/</a><br />" .
             "<br />";
+
     }
 
     private function _generateBrokerEmail()
@@ -248,7 +253,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
                         The below email inquiry was sent using the Contact Broker form:<br />
                         <br />
                         <b>Contact Information:</b><br />
-                        <b>Name:</b>&nbsp;&nbsp;' . $this->_senderName . '<br />
+                        <b>Name:</b>&nbsp;&nbsp;' . $this->_senderFirstName . ' ' . $this->_senderLastName . '<br />
                         <b>Email:</b>&nbsp;&nbsp;' . $this->_senderEmail . '<br />
                         <b>Phone:</b>&nbsp;&nbsp;' . $this->_senderPhone . '<br />
                         <b>Message:</b><br />'
@@ -282,7 +287,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
                         The below email inquiry was sent in response to the following featured community:<br />
                         <br />
                         <b>Contact Information:</b><br />
-                        <b>Name:</b>&nbsp;&nbsp;' . $this->_senderName . '<br />
+                        <b>Name:</b>&nbsp;&nbsp;' . $this->_senderFirstName . ' ' . $this->_senderLastName . '<br />
                         <b>Email:</b>&nbsp;&nbsp;' . $this->_senderEmail . '<br />
                         <b>Phone:</b>&nbsp;&nbsp;' . $this->_senderPhone . '<br />
                         <b>Message:</b><br />'
@@ -317,6 +322,72 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         return '';
     }
 
+    public function sendMessage()
+    {
+        parent::sendMessage();
+
+        if ( $this->_results['result'] === 'error' or $this->_results['result'] === 'server error' ) {
+            return $this->_results;
+        }
+
+        try {
+
+            $db = Zend_Db_Table::getDefaultAdapter();
+            $stmt = $db->prepare('CALL FAR_Tenants_FindDuplicate(:first, :last, :phone, :email)');
+            $stmt->execute(
+                array(
+                    'first' => $this->_senderFirstName,
+                    'last' => $this->_senderLastName,
+                    'phone' => $this->_senderPhone,
+                    'email' => $this->_senderEmail
+                )
+            );
+            $tenantIdResult = $stmt->fetchAll();
+            $tenantId = ( empty($tenantIdResult) ) ? '' : $tenantIdResult['TenantID'];
+            $stmt->closeCursor();
+            $date = date('Y-m-d G:i:s');
+
+            if ( empty( $tenantId ) ) {
+                $stmt = $db->prepare('CALL FAR_Tenants_InsertTenant( :date, :addedBy, :first, :last, :phone, :email, 1, 0, 0, @_tenantId)');
+                $stmt->execute(
+                    array(
+                        'date' => $date,
+                        'addedBy' => 'nick-wylie@comcast.net', //may not be right??
+                        'first' => $this->_senderFirstName,
+                        'last' => $this->_senderLastName,
+                        'phone' => $this->_senderPhone,
+                        'email' => $this->_senderEmail
+                    )
+                );
+                $otherSql = 'SELECT  @_tenantId as TenantID';
+                $stmt = $db->prepare($otherSql);
+                $stmt->execute();
+                $tenantIdResult = $stmt->fetchAll();
+                $tenantId = ( empty($tenantIdResult) ) ? '' : $tenantIdResult['TenantID'];
+                $stmt->closeCursor();
+
+            }
+
+            if ( $this->_type === self::LISTING) {
+                $listing = $this->_restResource->getCriteriaValue();
+                $stmt = $db->prepare('CALL FAR_Tenants_InsertContactRequest( :date, :tenantId, :listingId)');
+                $stmt->execute(
+                    array(
+                        'date' => $date,
+                        'tenantId' => $tenantId,
+                        'listingId' => $listing['ListingID']
+                    )
+                );
+                $stmt->closeCursor();
+            }
+        } catch ( Exception $e ) {
+            $this->_results['result'] = 'db error';
+            $this->_results['reasons'] = $e->getMessage();
+        }
+
+        return $this->_results;
+    }
+
     public function setRestResource($listing)
     {
         if ( $listing instanceof Custom_RestResourceCriteria ) {
@@ -340,6 +411,16 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
     public function setSenderName($senderName)
     {
         $this->_senderName = $senderName;
+    }
+
+    public function setSenderFirstName($senderFirstName)
+    {
+        $this->_senderFirstName = $senderFirstName;
+    }
+
+    public function setSenderLastName($senderLastName)
+    {
+        $this->_senderLastName = $senderLastName;
     }
 
     public function setSenderPhone($senderPhone = '')

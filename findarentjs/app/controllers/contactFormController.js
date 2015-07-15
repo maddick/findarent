@@ -182,7 +182,9 @@ angular
             if ( $scope.validation.validateInfo() ) {
                 $scope.message.senderMessage = $scope.message.MessageObj.label;
                 payload.senderMessage = $scope.message.senderMessage + ' : ' + $scope.message.senderAdditionalMessage;
-                payload.senderName = $scope.message.senderFirstName + ' ' + $scope.message.senderLastName;
+                //payload.senderName = $scope.message.senderFirstName + ' ' + $scope.message.senderLastName;
+                payload.senderFirstName = $scope.message.senderFirstName;
+                payload.senderLastName = $scope.message.senderLastName;
                 payload.senderEmail = $scope.message.senderEmail;
                 payload.Phone = $scope.message.Phone;
 

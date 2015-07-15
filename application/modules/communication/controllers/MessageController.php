@@ -152,8 +152,16 @@ class Communication_MessageController extends Zend_Controller_Action
                 $messageModel->setSenderMessage($data['senderMessage']);
             }
 
-            if ( array_key_exists( 'senderName', $data ) ) {
+            /*if ( array_key_exists( 'senderName', $data ) ) {
                 $messageModel->setSenderName($data['senderName']);
+            }*/
+
+            if ( array_key_exists( 'senderFirstName', $data ) ) {
+                $messageModel->setSenderFirstName($data['senderFirstName']);
+            }
+
+            if ( array_key_exists( 'senderLastName', $data ) ) {
+                $messageModel->setSenderLastName($data['senderLastName']);
             }
 
             if ( array_key_exists( 'senderPhone', $data ) ) {
