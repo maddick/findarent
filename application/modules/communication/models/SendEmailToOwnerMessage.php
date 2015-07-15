@@ -313,10 +313,10 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         $stmt->closeCursor();
 
         if (!empty($stmtResult)) {
-            if (empty($stmtResult['MiddleName'])) {
-                return $this->_ownerName = $stmtResult['FirstName'] . ' ' . $stmtResult['LastName'];
+            if (empty($stmtResult[0]['MiddleName'])) {
+                return $this->_ownerName = $stmtResult[0]['FirstName'] . ' ' . $stmtResult[0]['LastName'];
             } else {
-                return $this->_ownerName = $stmtResult['FirstName'] . ' ' . $stmtResult['MiddleName'] . ' ' . $stmtResult['LastName'];
+                return $this->_ownerName = $stmtResult[0]['FirstName'] . ' ' . $stmtResult[0]['MiddleName'] . ' ' . $stmtResult[0]['LastName'];
             }
         }
         return '';
@@ -343,7 +343,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
                 )
             );
             $tenantIdResult = $stmt->fetchAll();
-            $tenantId = ( empty($tenantIdResult) ) ? '' : $tenantIdResult['TenantID'];
+            $tenantId = ( empty($tenantIdResult) ) ? '' : $tenantIdResult[0]['TenantID'];
             $stmt->closeCursor();
             $date = date('Y-m-d G:i:s');
 
@@ -363,7 +363,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
                 $stmt = $db->prepare($otherSql);
                 $stmt->execute();
                 $tenantIdResult = $stmt->fetchAll();
-                $tenantId = ( empty($tenantIdResult) ) ? '' : $tenantIdResult['TenantID'];
+                $tenantId = ( empty($tenantIdResult) ) ? '' : $tenantIdResult[0]['TenantID'];
                 $stmt->closeCursor();
 
             }
