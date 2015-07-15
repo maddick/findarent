@@ -76,7 +76,6 @@ angular
         $scope.validation.senderFirstNameValid = false;
         $scope.validation.senderAdditionalMessageValid = false;
         $scope.validation.validateInfo = function() {
-            console.log('called');
             $scope.validation.senderFirstNameValid = $scope.message.senderFirstName !== undefined &&
                 $scope.message.senderFirstName !== null &&
                 $scope.message.senderFirstName !== '';

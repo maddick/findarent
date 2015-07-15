@@ -2,6 +2,9 @@
     #contact-owner-section{
         margin-top: 10px;
     }
+    .required-field{
+        color:#a94442;
+    }
 </style>
 
 <div ng-controller="contactFormController">
@@ -13,7 +16,7 @@
                     <form>
                         <h4>{{message.subject}}</h4>
                         <div class="form-group" ng-class="{'has-error': !validation.senderFirstNameValid}">
-                            <label for="first-name">First Name (required)</label>
+                            <label for="first-name">First Name <span class="required-field">(required)</span></label>
                             <input ng-model="message.senderFirstName" type="text" class="form-control" id="first-name" placeholder="e.g. John">
                         </div>
                         <div class="form-group">
@@ -21,7 +24,7 @@
                             <input ng-model="message.senderLastName" type="text" class="form-control" id="last-name" placeholder="e.g. Doe">
                         </div>
                         <div class="form-group" ng-class="{'has-error': validation.senderEmailNotValid}">
-                            <label for="email">Email</label>
+                            <label for="email">Email <span class="required-field">(required)</span></label>
                             <input ng-model="message.senderEmail" email-validation="senderEmailNotValid" type="text" class="form-control" id="email" placeholder="john.doe@email.com">
                         </div>
                         <div class="form-group">
@@ -29,7 +32,7 @@
                             <input ng-model="message.senderPhone" type="text" class="form-control" id="phone" placeholder="203-555-1234">
                         </div>
                         <div class="form-group">
-                            <label for="message" >Common Questions / Requests:</label>
+                            <label for="message" >Common Questions / Requests: <span class="required-field">(required)</span></label>
                             <select class="form-control" id="message" ng-model="message.MessageObj" ng-options="question.label for question in questions">
                                 <option value="">Select One</option>
                                 <!--<option value="Visit">Please call/email me to set up a visit to your apartment(s)</option>
@@ -42,7 +45,7 @@
                             <label for="additional">{{additionalField.title}}</label>
                             <textarea ng-show="showAdditionalField()" ng-model="message.senderAdditionalMessage" id="additional" class="form-control ng-hide" rows="4"></textarea>
                         </div>
-                        <button ng-click="submit()" type="submit" class="btn btn-primary">Send Contact Request</button>
+                        <button ng-click="submit()" type="submit" class="btn btn-primary center-block" ng-disabled="!validation.validateInfo()">Send Contact Request</button>
                     </form>
                 </div>
             </div>
