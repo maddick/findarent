@@ -1,6 +1,6 @@
 angular
     .module('app')
-    .controller('contactFormController',['$scope','$routeParams','$location','$http','ListingRest','BrokerRest','CommunityRest',function($scope,$routeParams,$location,$http,ListingRest,BrokerRest,CommunityRest){
+    .controller('contactFormController',['$scope','$routeParams','$location','$http','ListingRest','BrokerRest','CommunityRest','$window',function($scope,$routeParams,$location,$http,ListingRest,BrokerRest,CommunityRest,$window){
         var path = $location.path();
         var listingId = ($routeParams.listingId !== undefined) ? $routeParams.listingId : '';
         var brokerId = ($routeParams.brokerId !== undefined) ? $routeParams.brokerId : '';
@@ -71,6 +71,8 @@ angular
         $scope.additionalField.isRequired = false;
 
         $scope.phoneInfo = {};
+
+        $scope.emailResult = {};
 
         //create an object for form validation
         $scope.validation = {};
@@ -171,6 +173,7 @@ angular
         };
 
         $scope.submit = function(){
+            $('#email-submit-button').prop('disabled',true);
             var temp = $scope.validation.validateInfo();
             console.log(temp);
 
@@ -205,13 +208,45 @@ angular
 
                 promise.then(
                     function(response){
+                        $scope.emailResult.MessageTitle = 'Success!';
+                        if (forListing) {
+                            $scope.emailResult.Message = 'Thank you for submitting your inquiry about ' +
+                            'Listing #' + $scope.message.resource.ListingID + ' at FindARent.net. We have ' +
+                            'contacted the property owner/manager with your inquiry - the owner/manager will be ' +
+                            'contacting you shortly.';
+                        } else if (forBroker) {
+                            $scope.emailResult.Message = 'Your email has been successfully sent to ' +
+                            $scope.message.resource.FirstName + ' ' + $scope.message.resource.LastName + '. ' +
+                            'Click the button \"Back To Searching\" to return to the page you were viewing.';
+                        } else if (forCommunity) {
+                            $scope.emailResult.Message = 'Your email has been successfully sent to ' +
+                            $scope.message.resource.Community + '. Click the button \"Back To Searching\" to return ' +
+                            'to the page you were viewing.';
+                        }
+
                         $('#contact-owner-section').fadeOut(400,function(){
-                            $('#contact-success-message').fadeIn();
+                            $('#contact-email-message').fadeIn();
                         });
                     },
                     function(response) {
-                        console.log('error');
-                        console.log(response);
+                        //console.log('error');
+                        //console.log(response);
+                        $scope.emailResult.MessageTitle = 'Error!';
+                        if (forListing) {
+                            $scope.emailResult.Message = 'There was an error with your request. Please return to the ' +
+                            'page for the listing you would like to send a request for and click the contact owner button ' +
+                            'to try again.';
+                        } else if (forBroker) {
+                            $scope.emailResult.Message = 'There was an error with your request.  Please return to the ' +
+                            'page for the broker you wish to contact and click the Broker email button again.';
+                        } else if (forCommunity) {
+                            $scope.emailResult.Message = 'There was an error with your request.  Please return to the ' +
+                            'page for the community you wish to contact and click the Community email button again.';
+                        }
+
+                        $('#contact-owner-section').fadeOut(400,function(){
+                            $('#contact-email-message').fadeIn();
+                        });
                     }
                 );
             }
@@ -219,5 +254,9 @@ angular
             console.log(payload);
             console.log(payload.senderEmail);
 
+        };
+
+        $scope.goBack = function(){
+            $window.history.back();
         };
     }]);
