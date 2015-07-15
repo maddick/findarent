@@ -127,7 +127,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         $imageStmt->execute(array( 'id' => $listing['ListingID']));
         $imageResult = $imageStmt->fetchAll();
 
-        $listingImage = 'http://findarent.net/Images/Listings/' . $imageResult['ImageURL'];
+        $listingImage = 'http://findarent.net/Images/Listings/' . $imageResult[0]['ImageURL'];
 
         $miniListing =
             "<div style=\"color: #5a5a5a;\">" .
