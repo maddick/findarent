@@ -1,6 +1,16 @@
 <style type="text/css">
+    #display-contact-loading {
+        display:none;
+        margin-top:50px;
+        margin-bottom:50px;
+    }
     #contact-owner-section{
         margin-top: 10px;
+        display:none;
+    }
+    #contact-success-message{
+        display:none;
+        margin-top:10px;
     }
     .required-field{
         color:#a94442;
@@ -8,6 +18,15 @@
 </style>
 
 <div ng-controller="contactFormController">
+
+    <div id="display-contact-loading" class="container-fluid">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <img class="center-block" src="/images/ajax-loader.gif">
+            </div>
+        </div>
+    </div>
+
     <div id="contact-owner-section" class="container-fluid">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
@@ -51,6 +70,19 @@
             </div>
         </div>
     </div>
+
+    <div id="contact-success-message" class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="well">
+                    <h4>Success!</h4>
+                    <p>Your message was sent successfully!</p>
+                    <button ng-click="submit()" type="submit" class="btn btn-primary center-block" >Back To Searching</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8 col-md-offset-2">

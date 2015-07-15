@@ -9,6 +9,9 @@ angular
         var forBroker = path.indexOf('/Contact-Broker') != -1;
         var forCommunity = path.indexOf('/Contact-Community') != -1;
 
+        //show loading screen
+        $('#display-contact-loading').fadeIn();
+
         if (forListing || forCommunity) {
             $scope.questions = [
                 {
@@ -98,6 +101,10 @@ angular
                     $scope.message.resource = response.data.listing[0];
                     $scope.message.subject += $scope.message.resource.Headline;
                     $scope.phoneInfo.extension = $scope.message.resource.ListingID;
+
+                    $('#display-contact-loading').fadeOut(400, function(){
+                        $('#contact-owner-section').fadeIn();
+                    });
                 },
                 function(response){
                     //TODO: set an error message or redirect
@@ -111,6 +118,10 @@ angular
                     $scope.message.resource = response.data.brokers[0];
                     $scope.message.subject += $scope.message.resource.FirstName + ' ' + $scope.message.resource.LastName + ' - Broker # ' +$scope.message.resource.BrokerID;
                     $scope.phoneInfo.extension = $scope.message.resource.BrokerID;
+
+                    $('#display-contact-loading').fadeOut(400, function(){
+                        $('#contact-owner-section').fadeIn();
+                    });
                 },
                 function(response){
                     //TODO: set an error message or redirect
@@ -124,6 +135,10 @@ angular
                     $scope.message.resource = response.data.communities[0];
                     $scope.message.subject += $scope.message.resource.Community + ' - Community # ' + $scope.message.resource.CommunityID;
                     $scope.phoneInfo.extension = $scope.message.resource.CommunityID;
+
+                    $('#display-contact-loading').fadeOut(400, function(){
+                        $('#contact-owner-section').fadeIn();
+                    });
                 },
                 function(response){
                     //TODO: set an error message or redirect
@@ -190,8 +205,9 @@ angular
 
                 promise.then(
                     function(response){
-                        console.log('success');
-                        console.log(response);
+                        $('#contact-owner-section').fadeOut(400,function(){
+                            $('#contact-success-message').fadeIn();
+                        });
                     },
                     function(response) {
                         console.log('error');
