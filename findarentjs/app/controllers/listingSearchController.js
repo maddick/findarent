@@ -26,7 +26,7 @@ angular
             searchParams['zipCode'] = zipOrCityState = zipCode;
             comSearchParams['zipCode'] = zipCode;
             brokerSearchParams['zipCode'] = zipCode;
-            listingSearchParams.cityStateOrZip = search['city-state'] + ', ' + zipCode;
+            listingSearchParams.cityStateOrZip = search['city-state'] + ' ' + zipCode;
         } else if ( isCityState ) {
             cityState = search['city-state'];
             searchParams['cityState'] = zipOrCityState = cityState;
