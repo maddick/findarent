@@ -21,6 +21,11 @@ class Communities_RestController extends Zend_Rest_Controller
         }
     }
 
+    public function preDispatch()
+    {
+        $this->setHeader();
+    }
+
     /**
      * The index action handles index/list requests; it should respond with a
      * list of the requested resources.
