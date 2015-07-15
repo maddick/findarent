@@ -30,7 +30,11 @@ angular
                 };
 
                 $(element).keyup(function(){
-                    delayValidation()
+                    delayValidation();
+                });
+
+                $(element).change(function(){
+                    delayValidation();
                 });
             }
         };
