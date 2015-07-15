@@ -501,11 +501,18 @@ class Listing_Model_Search
               IFNULL(Views,0) AS Views, IFNULL(ContactRequests,0) AS ContactRequests, IFNULL(ContactEmailsSent,0) AS ContactEmailsSent
             FROM (
               SELECT * FROM (
-                SELECT li.*, l.Premium, l.Rebates
-                FROM far_listings li
+                SELECT li.*, l.Premium, l.Rebates, p.ImageURL
+                FROM far_listings_photos p, far_listings li
                 INNER JOIN
                   far_landlords l ON li.LandlordID = l.LandlordID
                 WHERE li.BrokerID = :brokerId
+                AND p.PhotoID = (SELECT PhotoId
+					FROM far_listings_photos
+                    WHERE ListingID = li.ListingID
+                    AND (Active = 1)
+                    AND Deleted = 0
+                    ORDER BY `Order`
+                    LIMIT 1)
                 AND li.Active = 1
                 AND li.Deleted = 0
               ) AS BrokerListings
@@ -558,11 +565,18 @@ class Listing_Model_Search
               IFNULL(Views,0) AS Views, IFNULL(ContactRequests,0) AS ContactRequests, IFNULL(ContactEmailsSent,0) AS ContactEmailsSent
           FROM (
             SELECT * FROM (
-               SELECT li.*, l.Premium, l.Rebates
-               FROM far_listings li
+               SELECT li.*, l.Premium, l.Rebates, p.ImageURL
+               FROM far_listings_photos p,far_listings li
                INNER JOIN
                  far_landlords l ON li.LandlordID = l.LandlordID
                WHERE li.LandlordID = :landlordId
+               AND p.PhotoID = (SELECT PhotoId
+					FROM far_listings_photos
+                    WHERE ListingID = li.ListingID
+                    AND (Active = 1)
+                    AND Deleted = 0
+                    ORDER BY `Order`
+                    LIMIT 1)
                AND li.Active = 1
                AND li.Deleted = 0
             ) AS LandlordListings
@@ -615,11 +629,18 @@ class Listing_Model_Search
               IFNULL(Views,0) AS Views, IFNULL(ContactRequests,0) AS ContactRequests, IFNULL(ContactEmailsSent,0) AS ContactEmailsSent
             FROM (
               SELECT * FROM (
-                  SELECT li.*, l.Premium, l.Rebates
-                  FROM far_listings li
+                  SELECT li.*, l.Premium, l.Rebates, p.ImageURL
+                  FROM far_listings_photos p,far_listings li
                   INNER JOIN
                     far_landlords l ON li.LandlordID = l.LandlordID
                   WHERE li.CommunityID = :communityId
+                  AND p.PhotoID = (SELECT PhotoId
+					FROM far_listings_photos
+                    WHERE ListingID = li.ListingID
+                    AND (Active = 1)
+                    AND Deleted = 0
+                    ORDER BY `Order`
+                    LIMIT 1)
                   AND li.Active = 1
                   AND li.Deleted = 0
                 ) AS CommunityListings
