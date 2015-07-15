@@ -9,12 +9,14 @@ class Communication_MessageController extends Zend_Controller_Action
     private function setHeader()
     {
         $config = new Zend_config_Ini(APPLICATION_PATH . '/configs/application.ini', 'production');
-        if ( $this->getRequest()->getHeader('Origin') ) {
+        if ( $this->getRequest()->getHeader('Origin') and !$config->headers->allowOriginOverride ) {
             foreach( $config->headers->allowOrigin as $header ) {
                 if ( $header === $this->getRequest()->getHeader('Origin') ) {
                     $this->getResponse()->setHeader('Access-Control-Allow-Origin', $header);
                 }
             }
+        } else if ( $config->headers->allowOriginOverride ) {
+            $this->getResponse()->setHeader('Access-Control-Allow-Origin', '*');
         }
 
         $this->getResponse()->setHeader('Access-Control-Allow-Headers', 'Content-Type');

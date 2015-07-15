@@ -10,13 +10,21 @@ class Brokers_FeaturedBrokersController extends Zend_Controller_Action
     private function setHeader()
     {
         $config = new Zend_config_Ini(APPLICATION_PATH . '/configs/application.ini', 'production');
-        if ( $this->getRequest()->getHeader('Origin') ) {
+        if ( $this->getRequest()->getHeader('Origin') and !$config->headers->allowOriginOverride ) {
             foreach( $config->headers->allowOrigin as $header ) {
                 if ( $header === $this->getRequest()->getHeader('Origin') ) {
                     $this->getResponse()->setHeader('Access-Control-Allow-Origin', $header);
                 }
             }
+        } else if ( $config->headers->allowOriginOverride ) {
+            $this->getResponse()->setHeader('Access-Control-Allow-Origin', '*');
         }
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
+    }
+
+    public function preDispatch()
+    {
+        $this->setHeader();
     }
 
     /**
@@ -48,8 +56,6 @@ class Brokers_FeaturedBrokersController extends Zend_Controller_Action
             }
         }
 
-        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        $this->setHeader();
         $this->_helper->json->sendJson( $citiesByState, false, true );
     }
 
@@ -94,8 +100,6 @@ class Brokers_FeaturedBrokersController extends Zend_Controller_Action
                 $this->getResponse()->setHttpResponseCode(400);
             }
         }
-        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        $this->setHeader();
         $this->_helper->json->sendJson( $searchResults, false, true );
     }
 }

@@ -10,12 +10,14 @@ class Communities_RestController extends Zend_Rest_Controller
     private function setHeader()
     {
         $config = new Zend_config_Ini(APPLICATION_PATH . '/configs/application.ini', 'production');
-        if ( $this->getRequest()->getHeader('Origin') ) {
+        if ( $this->getRequest()->getHeader('Origin') and !$config->headers->allowOriginOverride ) {
             foreach( $config->headers->allowOrigin as $header ) {
                 if ( $header === $this->getRequest()->getHeader('Origin') ) {
                     $this->getResponse()->setHeader('Access-Control-Allow-Origin', $header);
                 }
             }
+        } else if ( $config->headers->allowOriginOverride ) {
+            $this->getResponse()->setHeader('Access-Control-Allow-Origin', '*');
         }
     }
 
@@ -55,8 +57,6 @@ class Communities_RestController extends Zend_Rest_Controller
             }
         }
 
-        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
-        $this->setHeader();
         return $this->_helper->json->sendJson( $community, false, true );
     }
 
