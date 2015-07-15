@@ -62,6 +62,12 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
             $this->_results['result'] = 'error';
             $reasons[] = 'senderFirstName was not provided';
         }
+        if (!isset( $this->_senderLastName ) ) {
+            $this->_senderLastName = '';
+        }
+        if (!isset( $this->_senderPhone ) ) {
+            $this->_senderPhone = '';
+        }
         if ( !empty( $reasons ) ) {
             $this->_results['reasons'] = $reasons;
             return false;
@@ -236,7 +242,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         $recipientAddress = new Custom_EmailCriteria('mike.matovic@gmail.com');
         $this->setRecipientAddress($recipientAddress);
 
-        $this->setBCC('mmatovic@conncoll.edu');//$this->setBCC('notifications@findarent.net');
+        //$this->setBCC('notifications@findarent.net');
 
         $broker = $this->_restResource->getCriteriaValue();
 
@@ -352,7 +358,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
                 $stmt->execute(
                     array(
                         'date' => $date,
-                        'addedBy' => 'nick-wylie@comcast.net', //may not be right??
+                        'addedBy' => '', //may not be right??
                         'first' => $this->_senderFirstName,
                         'last' => $this->_senderLastName,
                         'phone' => $this->_senderPhone,
@@ -418,7 +424,7 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         $this->_senderFirstName = $senderFirstName;
     }
 
-    public function setSenderLastName($senderLastName)
+    public function setSenderLastName($senderLastName = '')
     {
         $this->_senderLastName = $senderLastName;
     }

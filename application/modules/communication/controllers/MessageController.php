@@ -135,9 +135,9 @@ class Communication_MessageController extends Zend_Controller_Action
             $data = Zend_Json::decode($body, Zend_Json::TYPE_ARRAY);
 
 
-            if ( array_key_exists( 'listing', $data ) ) {
-                $listing = new Custom_RestResourceCriteria($data['listing']);
-                $messageModel->setRestResource($listing);
+            if ( array_key_exists( 'resource', $data ) ) {
+                $resource = new Custom_RestResourceCriteria($data['resource']);
+                $messageModel->setRestResource($resource);
             }
 
             if ( array_key_exists('type', $data)) {
@@ -168,9 +168,9 @@ class Communication_MessageController extends Zend_Controller_Action
                 $messageModel->setSenderPhone($data['senderPhone']);
             }
 
-            if ( array_key_exists( 'recipientAddress', $data ) ) {
+            /*if ( array_key_exists( 'recipientAddress', $data ) ) {
                 $messageModel->setRecipientAddress($data['recipientAddress']);
-            }
+            }*/
 
             $result = $messageModel->sendMessage();
 

@@ -175,7 +175,6 @@ angular
         $scope.submit = function(){
             $('#email-submit-button').prop('disabled',true);
             var temp = $scope.validation.validateInfo();
-            console.log(temp);
 
             var payload = {};
 
@@ -186,16 +185,16 @@ angular
                 payload.senderFirstName = $scope.message.senderFirstName;
                 payload.senderLastName = $scope.message.senderLastName;
                 payload.senderEmail = $scope.message.senderEmail;
-                payload.Phone = $scope.message.Phone;
+                payload.senderPhone = $scope.message.senderPhone;
 
                 if (forListing) {
-                    payload.listing = $scope.message.resource;
+                    payload.resource = $scope.message.resource;
                     payload.type = 'LISTING';
                 } else if (forBroker) {
-                    payload.listing = $scope.message.resource;
+                    payload.resource = $scope.message.resource;
                     payload.type = 'BROKER';
                 } else if (forCommunity) {
-                    payload.listing = $scope.message.resource;
+                    payload.resource = $scope.message.resource;
                     payload.type = 'COMMUNITY';
                 }
 
