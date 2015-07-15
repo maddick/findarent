@@ -16,12 +16,12 @@ angular
                 $('#display-broker-loading').fadeOut(400, function(){
                     $('#display-broker-success').fadeIn();
                 });
-                console.log($scope.broker);
+                //console.log($scope.broker);
             },
             function(response){
                 $('#display-broker-loading').fadeOut();
                 $scope.broker = response.data.brokers[0];
-                console.log(response);
+                //console.log(response);
             }
         );
 

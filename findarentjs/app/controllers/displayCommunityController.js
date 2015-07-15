@@ -16,12 +16,12 @@ angular
                 $('#display-community-loading').fadeOut(400, function(){
                     $('#display-community-success').fadeIn();
                 });
-                console.log($scope.community);
+                //console.log($scope.community);
             },
             function(response){
                 $('#display-community-loading').fadeOut();
                 $scope.community = response.data.communities[0];
-                console.log(response);
+                //console.log(response);
             }
         );
 

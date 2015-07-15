@@ -215,7 +215,7 @@ angular
 
                     },
                     function(response){
-                        console.log(response);
+                        //console.log(response);
                         $('#search-results-loading').fadeOut();
                         $scope.listings = response.data;//TODO: add error handler
                     }
@@ -275,7 +275,7 @@ angular
                     $scope.totalActiveListings = response.data.TotalActiveListings;
                 },
                 function(response){
-                    console.log('error: ' + response.data.reasons);//TODO: add error handler
+                    //console.log('error: ' + response.data.reasons);//TODO: add error handler
             });
         }
 

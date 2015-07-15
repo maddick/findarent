@@ -26,7 +26,7 @@ angular
                 }
             },
             function(response){
-                console.log(response.data);
+                //console.log(response.data);
             }
         );
     }]);

@@ -24,7 +24,7 @@ angular
                         $scope.listing.photos = response.data.photos;
                     },
                     function(response){
-                        console.log(response);
+                        //console.log(response);
                     }
                 );
             },

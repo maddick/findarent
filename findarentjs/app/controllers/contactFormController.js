@@ -252,8 +252,8 @@ angular
                 );
             }
 
-            console.log(payload);
-            console.log(payload.senderEmail);
+            //console.log(payload);
+            //console.log(payload.senderEmail);
 
         };
 
