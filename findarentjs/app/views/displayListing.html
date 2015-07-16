@@ -63,10 +63,10 @@
     #display-listing-carousel img {
         height:320px;
     }
-    @media only screen and (max-width:600px) {
+    @media only screen and (max-width:1220px) {
 
         .main-button-menu li{
-            padding: 6px;
+            padding: 5px;
             width: 100px;
             height: 85px;
         }
@@ -75,6 +75,20 @@
         }
         .main-button-menu span {
             font-size: 10px;
+        }
+    }
+    @media only screen and (max-width:485px) {
+
+        .main-button-menu li{
+            padding: 6px;
+            width: 90px;
+            height: 75px;
+        }
+        .main-button-menu .glyphicon {
+            font-size:18px;
+        }
+        .main-button-menu span {
+            font-size: 9px;
         }
     }
 </style>
@@ -264,13 +278,17 @@
                                             <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
                                             <span>View this listing on Map</span>
                                         </li>
+                                        <li role="button" data-toggle="modal" data-target="#email-friend-modal">
+                                            <span class="glyphicon glyphicon-envelope"></span>
+                                            <span>Email this listing to a friend</span>
+                                        </li>
                                         <li role="button" ng-click="gotToListingSearch()">
                                             <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
                                             <span>See other properties from this landlord</span>
                                         </li>
-                                        <li role="button" data-toggle="modal" data-target="#email-friend-modal">
-                                            <span class="glyphicon glyphicon-envelope"></span>
-                                            <span>Email this listing to a friend</span>
+                                        <li role="button" ng-click="contactOwner()">
+                                            <span class="glyphicon glyphicon-phone-alt"></span>
+                                            <span>Contact the owner/landlord</span>
                                         </li>
                                     </ul>
                                 </div>
