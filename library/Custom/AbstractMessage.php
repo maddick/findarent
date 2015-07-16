@@ -30,7 +30,7 @@ abstract class Custom_AbstractMessage
                 'auth' => 'login',
                 'username' => $config->messaging->email,
                 'password' => $config->messaging->password,
-                'ssl' => $config->messaging->ssl,
+                //'ssl' => $config->messaging->ssl,
                 'port' => $config->messaging->port
             );
 
