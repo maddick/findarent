@@ -42,7 +42,7 @@ abstract class Custom_AbstractMessage
                 ->addTo($this->_recipientAddress->getCriteriaValue())
                 ->setSubject($this->_subject)
                 ->setBodyHtml($this->_body)
-                ->setFrom($config->messaging->email, 'Mike Matovic');
+                ->setFrom($config->messaging->email, 'notifications');
 
             if ( isset($this->_CC) ) {
                 $mail->addCc($this->_CC);
