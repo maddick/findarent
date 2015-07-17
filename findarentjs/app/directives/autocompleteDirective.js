@@ -11,13 +11,30 @@ angular
                             scope.suggestedValues = value.data['cities-and-zip-codes'];
                             var values = $.map( scope.suggestedValues, function(item){
                                 return {
-                                    label : item.city_name + ', ' + item.state_abbr + ' ' + item.zip_code,
-                                    value : item.city_name + ', ' + item.state_abbr + ' ' + item.zip_code
+                                    label : item.city_name + ', ' + item.state_abbr,
+                                    value : item.city_name + ', ' + item.state_abbr
                                 }
                             });
+
+                            var prev = null;
+                            var unique = [];
+                            angular.forEach(values, function(curr){
+                                prev = curr;
+                                var isUnique = true;
+                                angular.forEach(unique, function(find){
+                                    if (find.value === curr.value) {
+                                        isUnique = false;
+                                    }
+                                });
+                                if (isUnique) {
+                                    unique.push(curr);
+                                }
+                            });
+
+                            console.log(unique);
                             $(element).autocomplete({
                                 source : function(request, response){
-                                    var results = $.ui.autocomplete.filter(values, request.term);
+                                    var results = $.ui.autocomplete.filter(unique, request.term);
                                     response(results.slice(0,10));
                                 },
                                 select : function(event, ui){
