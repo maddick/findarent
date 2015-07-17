@@ -9,6 +9,8 @@ angular
         var forBroker = path.indexOf('/Contact-Broker') != -1;
         var forCommunity = path.indexOf('/Contact-Community') != -1;
 
+        $scope.forListing = forListing;
+
         //show loading screen
         $('#display-contact-loading').fadeIn();
 
