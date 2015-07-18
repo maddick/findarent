@@ -31,7 +31,6 @@ angular
                                 }
                             });
 
-                            console.log(unique);
                             $(element).autocomplete({
                                 source : function(request, response){
                                     var results = $.ui.autocomplete.filter(unique, request.term);
