@@ -1,8 +1,8 @@
 angular
     .module('app')
     .controller('listingSearchController',
-        ['$scope', 'ListingSearch', 'CommunitySearch', 'BrokersSearch', 'SearchURL', '$location', '$q','$route',
-            function($scope,ListingSearch,CommunitySearch,BrokersSearch,SearchURL,$location,$q){
+        ['$scope', 'ListingSearch', 'CommunitySearch', 'BrokersSearch', 'SearchURL', '$location', '$q','$route','$http',
+            function($scope,ListingSearch,CommunitySearch,BrokersSearch,SearchURL,$location,$q,$route,$http){
 
         var search = $location.search();
         var searchParams = {};
@@ -18,6 +18,10 @@ angular
         var isCommunitySearch = search['community-id'] !== undefined;
         var isBrokerSearch = search['broker-id'] !== undefined;
         var noSearch = false;
+        var hasTenantId = false;
+        var hasJobId = false;
+        var tenantId = null;
+        var jobId = null;
 
 
         //go through variable validations
@@ -71,6 +75,18 @@ angular
         if ( search['rental-type'] !== undefined ) {
             searchParams['type'] = search['rental-type'];
             listingSearchParams.rentalType = search['rental-type'];
+        }
+
+        if ( search['tenant-id'] !== undefined) {
+            hasTenantId = true;
+            tenantId = search['tenant-id'];
+            $location.search('tenant-id', null);
+        }
+
+        if ( search['job-id'] !== undefined ) {
+            hasJobId = true;
+            jobId = search['job-id'];
+            $location.search('job-id', null);
         }
 
         if ( isLandlordSearch ) {
@@ -270,6 +286,33 @@ angular
                     function(response){
                         $('#search-results-loading').fadeOut();
                         $scope.listings = response.data;//TODO: add error handler
+                    }
+                );
+            }
+
+            //update database if tenant-id and job-id are provided
+            if ( hasJobId && hasTenantId ) {
+
+                console.log('update fired');
+
+                var payload = {};
+                payload['tenant-id'] = tenantId;
+                payload['job-id'] = jobId;
+                var historyPromise = $http(
+                    {
+                        method: 'POST',
+                        url: 'http://192.168.0.101:8080/communication/message/update-email-history/',
+                        headers : { 'Content-Type' : 'application/json' },
+                        data: payload
+                    }
+                );
+
+                historyPromise.then(
+                    function(response){
+                        //console.log(response);
+                    },
+                    function(response){
+                        //console.log(response);
                     }
                 );
             }
