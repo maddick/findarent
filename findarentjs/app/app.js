@@ -48,6 +48,12 @@ var newApp = angular.module('app',['ngRoute'])
                 templateUrl: '/app/views/displayBroker.html'
             })
 
+            .when('/About',{
+                templateUrl: '/app/views/about.html'
+            })
+            .when('/Equal',{
+                templateUrl: '/app/views/equal.html'
+            })
             .when('/Privacy',{
                 templateUrl: '/app/views/privacy.html'
             })

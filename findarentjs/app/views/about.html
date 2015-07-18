@@ -1,0 +1,13 @@
+<style type="text/css">
+    #about-title{
+        margin-top:0;
+    }
+</style>
+<div class="container-fluid" ng-controller="aboutController">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3 id="about-title">About</h3>
+            <div ng-bind-html="about.body"></div>
+        </div>
+    </div>
+</div>
