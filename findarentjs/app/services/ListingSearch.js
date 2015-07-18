@@ -12,35 +12,57 @@ angular
                 var maxRent = '';
                 var cityState = '';
                 var radius = '';
+                var type = '';
+                var payload = {};
 
                 if ( 'cityState' in params ) {
-                    cityState = '/city-state/' + params['cityState'];
+                    //cityState = '/city-state/' + params['cityState'];
+                    payload['city-state'] = params['cityState'];
                 }
 
                 if ( 'zipCode' in params ) {
-                    zipCode = '/zip-code/' + params['zipCode'];
+                    //zipCode = '/zip-code/' + params['zipCode'];
+                    payload['zip-code'] = params['zipCode'];
                 }
 
                 if ( 'numberOfBedrooms' in params ) {
-                    numberOfBedrooms = '/number-of-bedrooms/' + params['numberOfBedrooms'];
+                    //numberOfBedrooms = '/number-of-bedrooms/' + params['numberOfBedrooms'];
+                    payload['number-of-bedrooms'] = params['numberOfBedrooms'];
                 }
 
                 if ( 'numberOfBathrooms' in params ) {
-                    numberOfBathrooms = '/number-of-bathrooms/' + params['numberOfBathrooms'];
+                    //numberOfBathrooms = '/number-of-bathrooms/' + params['numberOfBathrooms'];
+                    payload['number-of-bathrooms'] = params['numberOfBathrooms'];
                 }
 
                 if ( 'minRent' in params ) {
-                    minRent = '/min-rent/' + params['minRent'];
+                    //minRent = '/min-rent/' + params['minRent'];
+                    payload['min-rent'] = params['minRent'];
                 }
 
                 if ( 'maxRent' in params ) {
-                    maxRent = '/max-rent/' + params['maxRent'];
+                    //maxRent = '/max-rent/' + params['maxRent'];
+                    payload['max-rent'] = params['maxRent'];
                 }
 
                 if ( 'radius' in params ) {
-                    radius = '/radius/' + params['radius'];
+                    //radius = '/radius/' + params['radius'];
+                    payload['radius'] = params['radius'];
                 }
-                return $http.get( listingSearchBaseURL + '/get-listings' + cityState + zipCode + numberOfBedrooms + numberOfBathrooms + minRent + maxRent + radius );
+
+                if ( 'type' in params ) {
+                    //type = '/type/' + params['type'];
+                    payload['type'] = params['type'];
+                }
+                //return $http.get( listingSearchBaseURL + '/get-listings' + cityState + zipCode + numberOfBedrooms + numberOfBathrooms + minRent + maxRent + radius + type );
+                return $http(
+                    {
+                        method: 'POST',
+                        url: listingSearchBaseURL + '/get-listings',
+                        headers : { 'Content-Type' : 'application/json' },
+                        data: payload
+                    }
+                );
             },
 
             getListingsByLandlordId: function(landlordId){

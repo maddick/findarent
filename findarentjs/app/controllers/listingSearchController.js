@@ -68,6 +68,11 @@ angular
             listingSearchParams.radius = search['radius'];
         }
 
+        if ( search['rental-type'] !== undefined ) {
+            searchParams['type'] = search['rental-type'];
+            listingSearchParams.rentalType = search['rental-type'];
+        }
+
         if ( isLandlordSearch ) {
             searchParams['landlordId'] = search['landlord-id'];
             noSearch = false;
