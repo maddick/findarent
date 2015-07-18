@@ -191,4 +191,66 @@ class Communication_MessageController extends Zend_Controller_Action
         }
         $this->_helper->json->sendJson($result, false, true);
     }
+
+    public function updateEmailHistoryAction()
+    {
+        $result = array();
+
+        if ( $this->getRequest()->isOptions() ) {
+            return;
+        }
+
+        //only accept post requests
+        if ( !$this->getRequest()->isPost() ) {
+            $result['result'] = 'method error';
+            $result['reasons'] = 'Method not allowed';
+            $this->getResponse()->setHttpResponseCode(405);
+            $this->_helper->json->sendJson($result, false, true);
+        }
+
+        //ensure data type as json in request headers
+        if ( $this->getRequest()->getHeader('Content-Type') !== 'application/json' ) {
+            $result['result'] = 'error';
+            $result['reason'] = 'requests must be json';
+            $this->getResponse()->setHttpResponseCode(400);
+            $this->_helper->json->sendJson($result, false, true);
+        }
+
+        try {
+            $updateHistoryModel = new Communication_Model_UpdateEmailHistory();
+            $body = $this->getRequest()->getRawBody();
+            $data = Zend_Json::decode($body, Zend_Json::TYPE_ARRAY);
+
+            if ( !is_null( $data ) ) {
+
+                if ( array_key_exists( 'job-id', $data ) ) {
+                    $jobIdCriteria = new Custom_IdCriteria( intval($data['job-id']) );
+                    $updateHistoryModel->setJobIdCriteria($jobIdCriteria);
+                }
+
+                if ( array_key_exists( 'tenant-id', $data ) ) {
+                    $tenantIdCriteria = new Custom_IdCriteria( intval($data['tenant-id']) );
+                    $updateHistoryModel->setTenantIdCriteria($tenantIdCriteria);
+                }
+
+            }
+            $result = $updateHistoryModel->updateEmailHistory();
+
+        } catch ( Zend_Json_Exception $json_e) {
+            $result['result'] = 'json error';
+            $result['reasons'] = $json_e->getMessage();
+        } catch ( Exception $e ) {
+            $result['result'] = 'server error';
+            $result['reasons'] = $e->getMessage();
+        }
+
+        if ( $result['result'] === 'success' ) {
+            $this->getResponse()->setHttpResponseCode(200);
+        } elseif ( $result['result'] === 'error' or $result['result'] === 'json error' ) {
+            $this->getResponse()->setHttpResponseCode(400);
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->_helper->json->sendJson($result, false, true);
+    }
 }
