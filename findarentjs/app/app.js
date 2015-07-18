@@ -48,6 +48,10 @@ var newApp = angular.module('app',['ngRoute'])
                 templateUrl: '/app/views/displayBroker.html'
             })
 
+            .when('/Privacy',{
+                templateUrl: '/app/views/privacy.html'
+            })
+
             //catch all rules
             .when('/',{
                 templateUrl: '/app/views/listingSearch.html',
