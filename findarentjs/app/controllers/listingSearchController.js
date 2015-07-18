@@ -1,8 +1,8 @@
 angular
     .module('app')
     .controller('listingSearchController',
-        ['$scope', 'ListingSearch', 'CommunitySearch', 'BrokersSearch', 'SearchURL', '$location', '$q','$route','$http',
-            function($scope,ListingSearch,CommunitySearch,BrokersSearch,SearchURL,$location,$q,$route,$http){
+        ['$scope', 'ListingSearch', 'CommunitySearch', 'BrokersSearch', 'SearchURL', '$location', '$q','$route','$http','GoogleAnalytics',
+            function($scope,ListingSearch,CommunitySearch,BrokersSearch,SearchURL,$location,$q,$route,$http,GoogleAnalytics){
 
         var search = $location.search();
         var searchParams = {};
@@ -22,6 +22,8 @@ angular
         var hasJobId = false;
         var tenantId = null;
         var jobId = null;
+
+        GoogleAnalytics.track();
 
 
         //go through variable validations
@@ -118,7 +120,9 @@ angular
             //show a loading screen
             $('#search-results-loading').fadeIn();
 
-            //if this isn't a community or landlord search
+            //if this isn't a community or landlord or a broker search then we are
+            //performing a full search which requires listings, communities, and
+            //brokers to be searched together
             if ( !isLandlordSearch && !isCommunitySearch && !isBrokerSearch ) {
 
                 $q.all([
@@ -243,6 +247,8 @@ angular
                 );
 
             } else {
+                //determine if we are searching based on landlord, community, or broker and
+                //preform the appropriate search.
                 if ( isLandlordSearch) {
                     promise = ListingSearch.getListingsByLandlordId(searchParams['landlordId']);
                 } else if ( isCommunitySearch ) {
@@ -290,10 +296,10 @@ angular
                 );
             }
 
-            //update database if tenant-id and job-id are provided
+            //update database if tenant-id and job-id are provided. Having both of
+            //these id's on the search signifies that the search came from a URL
+            //generated from the email service.
             if ( hasJobId && hasTenantId ) {
-
-                console.log('update fired');
 
                 var payload = {};
                 payload['tenant-id'] = tenantId;
@@ -328,6 +334,9 @@ angular
         }
 
 
+        //defined down here are the functions necessary for the page to
+        //operate correctly such as navigating to a listing or switching
+        //between different pages of results
         $scope.performSearch = function() {
             SearchURL.goToSearchURL($scope);
             //$route.reload();
@@ -339,26 +348,31 @@ angular
 
         $scope.goToPage = function(page) {
             $scope.pagination.currentPage = page;
+            document.body.scrollTop = 0;
         };
 
         $scope.nextPage = function() {
             if ( $scope.pagination.currentPage !== $scope.pagination.numPages ) {
                 $scope.pagination.currentPage = $scope.pagination.currentPage + 1;
+                document.body.scrollTop = 0;
             }
         };
 
         $scope.previousPage = function() {
             if ( $scope.pagination.currentPage !== 1 ) {
                 $scope.pagination.currentPage = $scope.pagination.currentPage - 1;
+                document.body.scrollTop = 0;
             }
         };
 
         $scope.firstPage = function() {
             $scope.pagination.currentPage = 1;
+            document.body.scrollTop = 0;
         };
 
         $scope.lastPage = function() {
             $scope.pagination.currentPage = $scope.pagination.numPages;
+            document.body.scrollTop = 0;
         };
 
         $scope.goToCommunity = function(communityId) {

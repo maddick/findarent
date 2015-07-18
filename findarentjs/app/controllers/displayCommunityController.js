@@ -1,10 +1,12 @@
 angular
     .module('app')
-    .controller('displayCommunityController',['$scope','$routeParams','CommunityRest','$location','$sce',function($scope,$routeParams,CommunityRest,$location,$sce){
+    .controller('displayCommunityController',['$scope','$routeParams','CommunityRest','$location','$sce','GoogleAnalytics',function($scope,$routeParams,CommunityRest,$location,$sce,GoogleAnalytics){
         var communityId = ($routeParams.communityId === undefined ) ? '' : $routeParams.communityId;
 
         //show a loading screen
         $('#display-community-loading').fadeIn();
+
+        GoogleAnalytics.track();
 
         var promise = CommunityRest.getCommunityById( communityId );
         promise.then(

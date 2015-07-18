@@ -1,10 +1,12 @@
 angular
     .module('app')
-    .controller('displayListingController',['$scope','$routeParams','ListingRest','$location','ListingSearch',function($scope,$routeParams,ListingRest,$location,ListingSearch){
+    .controller('displayListingController',['$scope','$routeParams','ListingRest','$location','ListingSearch','GoogleAnalytics',function($scope,$routeParams,ListingRest,$location,ListingSearch,GoogleAnalytics){
         var listingId = ($routeParams.listingId === undefined ) ? '' : $routeParams.listingId;
         $scope.listing = {};
         //show a loading screen
         $('#display-listing-loading').fadeIn();
+
+        GoogleAnalytics.track();
 
         var promise = ListingRest.getListingById( listingId );
         promise.then(
