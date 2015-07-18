@@ -75,6 +75,11 @@ class Listing_Model_Search
     protected $_autocompleteCriteria;
 
     /**
+     * @var Custom_RentalTypeCriteria
+     */
+    protected $_rentalTypeCriteria;
+
+    /**
      * @var array
      */
     public $results = array();
@@ -107,6 +112,8 @@ class Listing_Model_Search
     protected $_useMinRent = true;
 
     protected $_useMaxRent = true;
+
+    protected $_useRentalType = true;
 
     public function searchListings()
     {
@@ -195,6 +202,14 @@ class Listing_Model_Search
             }
         } else {
             $this->_useMaxRent = false;
+        }
+
+        if ( isset( $this->_rentalTypeCriteria )) {
+            if ( !$this->_rentalTypeCriteria->isValid() ) {
+                $this->_validationErrors = array_merge( $this->_validationErrors, $this->_rentalTypeCriteria->getValidationErrors());
+            }
+        } else {
+            $this->_useRentalType = false;
         }
     }
 
@@ -357,6 +372,13 @@ class Listing_Model_Search
                     $variableArray[] = $this->_maxRentCriteria->getCriteriaValue();
                     $listingsSql .= $maxRentInjector;
                 }
+            }
+
+            if ( $this->_useRentalType ) {
+
+                $rentalTypeInjector = ' AND li.PropertyTypes LIKE ?';
+                $variableArray[] = '%' . $this->_rentalTypeCriteria->getCriteriaValue() . '%';
+                $listingsSql .= $rentalTypeInjector;
             }
 
             //prepare the statement and execute the search query
@@ -887,6 +909,17 @@ class Listing_Model_Search
             $this->_autocompleteCriteria = $autocompleteCriteria;
         } else {
             throw new Exception('$autocompleteCriteria must be an instance of Custom_AutocompleteCriteria');
+        }
+
+        return $this;
+    }
+
+    public function setRentalTypeCriteria( $rentalTypeCriteria )
+    {
+        if ( $rentalTypeCriteria instanceof Custom_RentalTypeCriteria ) {
+            $this->_rentalTypeCriteria = $rentalTypeCriteria;
+        } else {
+            throw new Exception('$rentalTypeCriteria must be an instance of Custom_RentalTypeCriteria');
         }
 
         return $this;
