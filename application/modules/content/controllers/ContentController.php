@@ -19,21 +19,22 @@ class Content_ContentController extends Zend_Controller_Action
         } else if ( $config->headers->allowOriginOverride ) {
             $this->getResponse()->setHeader('Access-Control-Allow-Origin', '*');
         }
+        $this->getResponse()->setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
     }
 
     public function preDispatch()
     {
         $this->setHeader();
-
-        //handle pre-flight requests
-        if ( $this->getRequest()->isOptions() ) {
-            return;
-        }
     }
 
     public function getContentAction()
     {
         $result = array();
+        //handle pre-flight requests
+        if ( $this->getRequest()->isOptions() ) {
+            return;
+        }
 
         try {
             $body = $this->getRequest()->getRawBody();
