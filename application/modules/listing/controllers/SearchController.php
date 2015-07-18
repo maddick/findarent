@@ -19,6 +19,7 @@ class Listing_SearchController extends Zend_Controller_Action
         } else if ( $config->headers->allowOriginOverride ) {
             $this->getResponse()->setHeader('Access-Control-Allow-Origin', '*');
         }
+        $this->getResponse()->setHeader('Access-Control-Allow-Headers', 'Content-Type');
         $this->getResponse()->setHeader( 'Content-Type', 'application/json' );
     }
 
@@ -42,55 +43,84 @@ class Listing_SearchController extends Zend_Controller_Action
      */
     public function getListingsAction()
     {
-        //create a new listing search model
-        $search = new Listing_Model_Search();
+        $searchResults = array();
 
-        //get the search criteria
-        $searchCriteria = $this->getRequest()->getParams();
-
-        //set each existing criteria in the params
-        if( array_key_exists('zip-code', $searchCriteria) ) {
-            $zipCodeCriteria = new Custom_ZipCodeCriteria( $searchCriteria['zip-code'] );
-            $search->setZipCriteria($zipCodeCriteria);
+        //handle pre-flight requests
+        if ( $this->getRequest()->isOptions() ) {
+            return;
         }
 
-        if ( array_key_exists('city-state', $searchCriteria ) ) {
-            $cityStateCriteria = new Custom_CityStateCriteria( $searchCriteria['city-state'] );
-            $search->setCityStateCriteria($cityStateCriteria);
+        //ensure data type as json in request headers
+        if ( $this->getRequest()->getHeader('Content-Type') !== 'application/json' ) {
+            $searchResults['result'] = 'error';
+            $searchResults['reason'] = 'requests must be json';
+            $this->getResponse()->setHttpResponseCode(400);
+            $this->_helper->json->sendJson($searchResults, false, true);
         }
 
-        if( array_key_exists('radius', $searchCriteria)) {
-            $radiusCriteria = new Custom_RadiusCriteria( intval( $searchCriteria['radius'] ) );
-            $search->setRadiusCriteria($radiusCriteria);
-        }
+        try {
 
-        if( array_key_exists('number-of-bedrooms', $searchCriteria)) {
-            $numberOfBedroomsCriteria = new Custom_NumberOfBedroomsCriteria( intval($searchCriteria['number-of-bedrooms']));
-            $search->setNumberOfBedroomsCriteria($numberOfBedroomsCriteria);
-        }
+            //create a new listing search model
+            $search = new Listing_Model_Search();
 
-        if( array_key_exists('number-of-bathrooms', $searchCriteria)) {
-            $numberOfBathroomsCriteria = new Custom_NumberOfBathroomsCriteria( floatval($searchCriteria['number-of-bathrooms']));
-            $search->setNumberOfBathroomsCriteria($numberOfBathroomsCriteria);
-        }
+            //get the search criteria
+            //$searchCriteria = $this->getRequest()->getParams();
+            $body = $this->getRequest()->getRawBody();
+            $searchCriteria = Zend_Json::decode($body, Zend_Json::TYPE_ARRAY);
 
-        if ( array_key_exists('min-rent', $searchCriteria) ) {
-            $minRentCriteria = new Custom_RentCriteria(doubleval($searchCriteria['min-rent']));
-            $search->setMinRentCriteria($minRentCriteria);
-        }
+            if ( !is_null($searchCriteria) ) {
 
-        if ( array_key_exists('max-rent', $searchCriteria) ) {
-            $maxRentCriteria = new Custom_RentCriteria(doubleval($searchCriteria['max-rent']));
-            $search->setMaxRentCriteria($maxRentCriteria);
-        }
+                //set each existing criteria in the params
+                if( array_key_exists('zip-code', $searchCriteria) ) {
+                    $zipCodeCriteria = new Custom_ZipCodeCriteria( $searchCriteria['zip-code'] );
+                    $search->setZipCriteria($zipCodeCriteria);
+                }
 
-        if ( array_key_exists('type', $searchCriteria ) ) {
-            $rentalTypeCriteria = new Custom_RentalTypeCriteria($searchCriteria['type']);
-            $search->setRentalTypeCriteria($rentalTypeCriteria);
-        }
+                if ( array_key_exists('city-state', $searchCriteria ) ) {
+                    $cityStateCriteria = new Custom_CityStateCriteria( $searchCriteria['city-state'] );
+                    $search->setCityStateCriteria($cityStateCriteria);
+                }
 
-        //search listings
-        $searchResults = $search->searchListings();
+                if( array_key_exists('radius', $searchCriteria)) {
+                    $radiusCriteria = new Custom_RadiusCriteria( intval( $searchCriteria['radius'] ) );
+                    $search->setRadiusCriteria($radiusCriteria);
+                }
+
+                if( array_key_exists('number-of-bedrooms', $searchCriteria)) {
+                    $numberOfBedroomsCriteria = new Custom_NumberOfBedroomsCriteria( intval($searchCriteria['number-of-bedrooms']));
+                    $search->setNumberOfBedroomsCriteria($numberOfBedroomsCriteria);
+                }
+
+                if( array_key_exists('number-of-bathrooms', $searchCriteria)) {
+                    $numberOfBathroomsCriteria = new Custom_NumberOfBathroomsCriteria( floatval($searchCriteria['number-of-bathrooms']));
+                    $search->setNumberOfBathroomsCriteria($numberOfBathroomsCriteria);
+                }
+
+                if ( array_key_exists('min-rent', $searchCriteria) ) {
+                    $minRentCriteria = new Custom_RentCriteria(doubleval($searchCriteria['min-rent']));
+                    $search->setMinRentCriteria($minRentCriteria);
+                }
+
+                if ( array_key_exists('max-rent', $searchCriteria) ) {
+                    $maxRentCriteria = new Custom_RentCriteria(doubleval($searchCriteria['max-rent']));
+                    $search->setMaxRentCriteria($maxRentCriteria);
+                }
+
+                if ( array_key_exists('type', $searchCriteria ) ) {
+                    $rentalTypeCriteria = new Custom_RentalTypeCriteria($searchCriteria['type']);
+                    $search->setRentalTypeCriteria($rentalTypeCriteria);
+                }
+            }
+
+            //search listings
+            $searchResults = $search->searchListings();
+        } catch ( Zend_Json_Exception $json_e) {
+            $searchResults['result'] = 'json error';
+            $searchResults['reasons'] = $json_e->getMessage();
+        } catch ( Exception $e ) {
+            $searchResults['result'] = 'server error';
+            $searchResults['reasons'] = $e->getMessage();
+        }
 
         //process and send the response
         if ( $searchResults['result'] === 'success' ) {
