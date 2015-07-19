@@ -285,24 +285,24 @@ class Communication_MessageController extends Zend_Controller_Action
 
             if ( !is_null( $data ) ) {
 
-                if ( array_key_exists( 'sender-name', $data ) ) {
-                    $emailFARModel->setSenderName($data['sender-name']);
+                if ( array_key_exists( 'senderName', $data ) ) {
+                    $emailFARModel->setSenderName($data['senderName']);
                 }
 
-                if ( array_key_exists( 'sender-message', $data ) ) {
-                    $emailFARModel->setSenderMessage($data['sender-message']);
+                if ( array_key_exists( 'senderMessage', $data ) ) {
+                    $emailFARModel->setSenderMessage($data['senderMessage']);
                 }
 
-                if ( array_key_exists( 'sender-email', $data ) ) {
-                    $emailFARModel->setSenderEmail($data['sender-email']);
+                if ( array_key_exists( 'senderEmail', $data ) ) {
+                    $emailFARModel->setSenderEmail($data['senderEmail']);
                 }
 
-                if ( array_key_exists( 'sender-company', $data ) ) {
-                    $emailFARModel->setSenderCompany($data['sender-company']);
+                if ( array_key_exists( 'senderCompany', $data ) ) {
+                    $emailFARModel->setSenderCompany($data['senderCompany']);
                 }
 
-                if ( array_key_exists( 'sender-phone', $data ) ) {
-                    $emailFARModel->setSenderPhone($data['sender-phone']);
+                if ( array_key_exists( 'senderPhone', $data ) ) {
+                    $emailFARModel->setSenderPhone($data['senderPhone']);
                 }
             }
             $result = $emailFARModel->sendMessage();
@@ -322,5 +322,6 @@ class Communication_MessageController extends Zend_Controller_Action
         } else {
             $this->getResponse()->setHttpResponseCode(500);
         }
+        $this->_helper->json->sendJson($result, false, true);
     }
 }
