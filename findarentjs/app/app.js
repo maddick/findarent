@@ -51,6 +51,9 @@ var newApp = angular.module('app',['ngRoute'])
             .when('/About',{
                 templateUrl: '/app/views/about.html'
             })
+            .when('/Contact',{
+                templateUrl: '/app/views/contact.html'
+            })
             .when('/Equal',{
                 templateUrl: '/app/views/equal.html'
             })

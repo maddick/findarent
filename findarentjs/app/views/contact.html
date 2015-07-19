@@ -1,0 +1,64 @@
+<style type="text/css">
+    #contact-email-message {
+        display:none;
+        margin-top:10px;
+    }
+</style>
+
+<div class="container-fluid" ng-controller="contactController">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <!-- content from db -->
+            <div ng-bind-html="contact.body"></div>
+
+            <!-- contact form -->
+            <div id="contact-far-section" class="container-fluid">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h4>Email Owner / Property Manager</h4>
+                        <div class="well">
+                            <form>
+                                <h4>{{message.subject}}</h4>
+                                <div class="form-group" ng-class="{'has-error': !validation.senderNameValid, 'has-success': validation.senderNameValid}">
+                                    <label class="control-label" for="name">Name (required)</label>
+                                    <input ng-model="message.senderName" type="text" class="form-control" id="name" placeholder="e.g. John">
+                                </div>
+                                <div class="form-group" ng-class="{'has-error': validation.senderEmailNotValid, 'has-success': !validation.senderEmailNotValid}">
+                                    <label class="control-label" for="email">Email (required)</label>
+                                    <input ng-model="message.senderEmail" email-validation="senderEmailNotValid" type="text" class="form-control" id="email" placeholder="john.doe@email.com">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="phone">Phone (optional)</label>
+                                    <input ng-model="message.senderPhone" type="text" class="form-control" id="phone" placeholder="203-555-1234" maxlength="10">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="company" >Company (optional)</label>
+                                    <input ng-model="message.senderCompany" type="text" class="form-control" id="company" >
+                                </div>
+                                <div class="form-group" ng-class="{'has-error': !validation.senderMessageValid, 'has-success': validation.senderMessageValid}">
+                                    <label class="control-label" for="message">Description (required)</label>
+                                    <textarea ng-model="message.senderMessage" id="message" class="form-control" rows="4"></textarea>
+                                </div>
+                                <button ng-click="submit()" type="submit" id="email-submit-button" class="btn btn-primary center-block" ng-disabled="!validation.validateInfo()">Send Contact Request</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- success / error message -->
+            <div id="contact-email-message" class="container-fluid">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="well">
+                            <h4>{{emailResult.MessageTitle}}</h4>
+                            <p>{{emailResult.Message}}</p>
+                            <button ng-click="goBack()" type="submit" class="btn btn-primary center-block" >Back To Searching</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
