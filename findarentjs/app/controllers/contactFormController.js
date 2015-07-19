@@ -150,6 +150,7 @@ angular
             );
         }
 
+        //this is a function to determine if an additional field is require
         $scope.showAdditionalField = function(){
             if ( $scope.message.MessageObj === undefined ) {
                 $scope.additionalField.title = '';
