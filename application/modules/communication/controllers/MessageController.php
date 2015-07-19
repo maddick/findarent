@@ -253,4 +253,74 @@ class Communication_MessageController extends Zend_Controller_Action
         }
         $this->_helper->json->sendJson($result, false, true);
     }
+
+    public function sendEmailToFarAction()
+    {
+        $result = array();
+
+        if ( $this->getRequest()->isOptions() ) {
+            return;
+        }
+
+        //only accept post requests
+        if ( !$this->getRequest()->isPost() ) {
+            $result['result'] = 'method error';
+            $result['reasons'] = 'Method not allowed';
+            $this->getResponse()->setHttpResponseCode(405);
+            $this->_helper->json->sendJson($result, false, true);
+        }
+
+        //ensure data type as json in request headers
+        if ( $this->getRequest()->getHeader('Content-Type') !== 'application/json' ) {
+            $result['result'] = 'error';
+            $result['reason'] = 'requests must be json';
+            $this->getResponse()->setHttpResponseCode(400);
+            $this->_helper->json->sendJson($result, false, true);
+        }
+
+        try {
+            $emailFARModel = new Communication_Model_SendEmailToFAR();
+            $body = $this->getRequest()->getRawBody();
+            $data = Zend_Json::decode($body, Zend_Json::TYPE_ARRAY);
+
+            if ( !is_null( $data ) ) {
+
+                if ( array_key_exists( 'sender-name', $data ) ) {
+                    $emailFARModel->setSenderName($data['sender-name']);
+                }
+
+                if ( array_key_exists( 'sender-message', $data ) ) {
+                    $emailFARModel->setSenderMessage($data['sender-message']);
+                }
+
+                if ( array_key_exists( 'sender-email', $data ) ) {
+                    $emailFARModel->setSenderEmail($data['sender-email']);
+                }
+
+                if ( array_key_exists( 'sender-company', $data ) ) {
+                    $emailFARModel->setSenderCompany($data['sender-company']);
+                }
+
+                if ( array_key_exists( 'sender-phone', $data ) ) {
+                    $emailFARModel->setSenderPhone($data['sender-phone']);
+                }
+            }
+            $result = $emailFARModel->sendMessage();
+
+        } catch ( Zend_Json_Exception $json_e) {
+            $result['result'] = 'json error';
+            $result['reasons'] = $json_e->getMessage();
+        } catch ( Exception $e ) {
+            $result['result'] = 'server error';
+            $result['reasons'] = $e->getMessage();
+        }
+
+        if ( $result['result'] === 'success' ) {
+            $this->getResponse()->setHttpResponseCode(200);
+        } elseif ( $result['result'] === 'error' or $result['result'] === 'json error' ) {
+            $this->getResponse()->setHttpResponseCode(400);
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+    }
 }
