@@ -60,7 +60,7 @@ angular
                         method: 'POST',
                         url: listingSearchBaseURL + '/get-listings',
                         headers : { 'Content-Type' : 'application/json' },
-                        data: payload
+                        data: new Blob([JSON.stringify(payload)])
                     }
                 );
             },

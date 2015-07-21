@@ -206,7 +206,7 @@ angular
                         method: 'POST',
                         url: 'http://192.168.0.101:8080/communication/message/send-email-to-owner/',
                         headers : { 'Content-Type' : 'application/json' },
-                        data: payload
+                        data: new Blob([JSON.stringify(payload)])
                     }
                 );
 

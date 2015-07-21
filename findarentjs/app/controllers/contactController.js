@@ -48,7 +48,7 @@ angular
                     method: 'POST',
                     url: 'http://192.168.0.101:8080/communication/message/send-email-to-far/',
                     headers: {'Content-Type':'application/json'},
-                    data: $scope.message
+                    data: new Blob([JSON.stringify($scope.message)])
                 });
 
                 promise.then(
