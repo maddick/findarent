@@ -16,12 +16,6 @@ var newApp = angular.module('app',['ngRoute'])
             })
 
             //communities
-            /*.when('/featured-communities/',{
-                templateUrl: '/app/views/featuredCommunitiesList.html'
-            })
-            .when('/featured-communities/search/city-state/:cityState',{
-                templateUrl: '/app/views/communitiesSearchResults.html'
-            })*/
             .when('/Communities/:communityId',{
                 templateUrl: '/app/views/displayCommunity.html'
             })
@@ -38,12 +32,6 @@ var newApp = angular.module('app',['ngRoute'])
             })
 
             //brokers
-            /*.when('/featured-brokers/',{
-                templateUrl: '/app/views/featuredBrokers.html'
-            })
-            .when('/featured-brokers/search/city-state/:cityState',{
-                templateUrl: '/app/views/brokersSearchResults.html'
-            })*/
             .when('/Brokers/:brokerId',{
                 templateUrl: '/app/views/displayBroker.html'
             })
@@ -65,6 +53,6 @@ var newApp = angular.module('app',['ngRoute'])
             .when('/',{
                 templateUrl: '/app/views/listingSearch.html',
                 controller: 'appController'
-            })
-            .otherwise({redirectTo: '/'});
+            });
+            //.otherwise({redirectTo: '/'});
     }]);

@@ -1,6 +1,6 @@
 angular
     .module('app')
-    .controller('popularSearchesController',['$scope','ListingSearch',function($scope, ListingSearch){
+    .controller('popularSearchesController',['$scope','ListingSearch','$rootScope',function($scope, ListingSearch,$rootScope){
         var promise = ListingSearch.getPopularSearches();
 
         promise.then(
@@ -24,6 +24,7 @@ angular
                         index++;
                     }
                 }
+                $rootScope.status = 'ready';
             },
             function(response){
                 //console.log(response.data);

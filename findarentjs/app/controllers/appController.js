@@ -1,6 +1,6 @@
 angular
     .module('app')
-    .controller('appController',['$scope', '$location', 'SearchURL','GoogleAnalytics',function($scope,$location,SearchURL,GoogleAnalytics){
+    .controller('appController',['$scope', '$location', 'SearchURL','GoogleAnalytics','$rootScope',function($scope,$location,SearchURL,GoogleAnalytics,$rootScope){
         GoogleAnalytics.track();
         $scope.performSearch = function(){
 
@@ -10,5 +10,4 @@ angular
                 $('#city-state-or-zip-error').fadeIn().delay(3000).fadeOut();
             }
         };
-        $scope.status = 'ready';
     }]);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html  ng-app="app" >
 <head>
     <script src="/app/components/jquery-1.11.3.js"></script>
     <link href="/app/components/css/bootstrap.css" rel="stylesheet">
@@ -30,7 +30,7 @@
     <script src="/app/services/CommunityRest.js"></script>
     <script src="/app/services/CommunitySearch.js"></script>
     <script src="/app/services/ContentService.js"></script>
-    <script src="/app/services/GoogleAnalytics.js"></script>
+    <script src="/app/services/GooAna.js"></script>
     <script src="/app/services/ListingRest.js"></script>
     <script src="/app/services/ListingSearch.js"></script>
     <script src="/app/services/SearchURL.js"></script>
@@ -62,7 +62,7 @@
         ga('create','UA-65299743-1',{'cookieDomain':'none'});
     </script>
 </head>
-<body ng-app="app" >
+<body data-status="{{status}}">
 
     <div class="container-fluid maximized" >
         <div class="row">
