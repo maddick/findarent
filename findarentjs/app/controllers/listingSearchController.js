@@ -178,8 +178,10 @@ angular
                                 /*strInputCode = strInputCode.replace(/&(lt|gt);/g, function (strMatch, p1){
                                  return (p1 == "lt")? "<" : ">";
                                  });*/
-                                strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
-                                strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
+                                if (strInputCode != null) {
+                                    strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
+                                    strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
+                                }
                                 communities.communities[i]['MarketingMessage'] = strTagStrippedText;
                             }
 
