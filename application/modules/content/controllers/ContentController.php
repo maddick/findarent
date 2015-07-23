@@ -69,4 +69,33 @@ class Content_ContentController extends Zend_Controller_Action
         }
         $this->_helper->json->sendJson($result, false, true);
     }
+
+    public function getBlogPostsAction()
+    {
+        $result = array();
+
+        if ( $this->getRequest()->isOptions() ) {
+            return;
+        }
+
+        try {
+            $blogModel = new Content_Model_Blog();
+            $result = $blogModel->getPublishedBlogs();
+        } catch ( Zend_Json_Exception $json_e ) {
+            $result['result'] = 'json error';
+            $result['reasons'] = $json_e->getMessage();
+        } catch ( Exception $e ) {
+            $result['result'] = 'server error';
+            $result['reasons'] = $e->getMessage();
+        }
+
+        if ( $result['result'] === 'success' ) {
+            $this->getResponse()->setHttpResponseCode(200);
+        } elseif ( $result['result'] === 'error' or $result['result'] === 'json error' ) {
+            $this->getResponse()->setHttpResponseCode(400);
+        } else {
+            $this->getResponse()->setHttpResponseCode(500);
+        }
+        $this->_helper->json->sendJson($result, false, true);
+    }
 }
