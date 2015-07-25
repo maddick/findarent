@@ -20,7 +20,8 @@ class Content_Model_Blog
             $this->_results['result'] = 'success';
             $this->_results['blogs'] = $stmt->fetchAll();
             foreach( $this->_results['blogs'] as $key => $value ) {
-                $this->_results['blogs'][$key]['post_content'] = json_encode(utf8_encode($this->_results['blogs'][$key]['post_content']));
+                $this->_results['blogs'][$key]['post_content'] = utf8_encode($this->_results['blogs'][$key]['post_content']);
+                $this->_results['blogs'][$key]['post_title'] = utf8_encode($this->_results['blogs'][$key]['post_title']);
             }
         } catch ( Exception $e ) {
             $this->_results['result'] = 'server error';
