@@ -31,11 +31,11 @@ angular
             }
         };
 
-        randomBlogPosts(randomIndexes, 10);
-
         promise.then(
             function(response){
                 $scope.allBlogs = response.data['blogs'];
+
+                randomBlogPosts(randomIndexes, $scope.allBlogs.length);
 
                 for ( var i = 0; i < randomIndexes.length; i++ ) {
                     $scope.blogs.push($scope.allBlogs[randomIndexes[i]]);
@@ -44,7 +44,8 @@ angular
 
                     var strInputCode = $scope.blogs[i]['post_content'];
                     if (strInputCode !== null) {
-                        var strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
+                        //var strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s_]+(?:\s\/>|>|$)/g, "");
+                        var strTagStrippedText = strInputCode.replace(/<\/?.+(?:\s\/>|>|$)/g, "");
                         strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
                         $scope.blogs[i]['post_content'] = strTagStrippedText;
                         console.log(strTagStrippedText);
