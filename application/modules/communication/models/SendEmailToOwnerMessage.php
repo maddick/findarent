@@ -64,10 +64,10 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
             $this->_results['result'] = 'error';
             $reasons[] = 'senderFirstName was not provided';
         }
-        if (!isset( $this->_senderLastName ) ) {
+        if ( !isset( $this->_senderLastName ) ) {
             $this->_senderLastName = '';
         }
-        if (!isset( $this->_senderPhone ) ) {
+        if ( !isset( $this->_senderPhone ) ) {
             $this->_senderPhone = '';
         }
         if ( !empty( $reasons ) ) {
@@ -184,26 +184,26 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
             "<td>" .
             "<a href=\"http://www.findarent.net\"><img src=\"http://www.findarent.net/App_Themes/Default/Images/logo_cl.png\" alt=\"FindARent.net\" border=\"0\" style=\"margin: 5px 0;\"></a>" .
             "</td>
-                                                    </tr>
-                                                  </tbody>
-                                                </table>
-                                              </div>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </td>
+            </tr>
+            </tbody>
+            </table>
             </div>";
 
         $this->_subject = "FindARent.Net : Listing #" . $listing['ListingID'] . " Inquiry";
@@ -237,8 +237,11 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         $listing = $this->_restResource->getCriteriaValue();
         $this->_ownerName = $listing['ContactName'];
 
-        $recipientAddress = new Custom_EmailCriteria('mike.matovic@gmail.com');
+        $recipientAddress = new Custom_EmailCriteria('mmatovic@conncoll.edu');
         $this->setRecipientAddress($recipientAddress);
+
+        $replyToAddress = new Custom_EmailCriteria($this->_senderEmail);
+        $this->setReplyToAddress($replyToAddress);
         /*$recipientAddress = new Custom_EmailCriteria($listing['Email']);
         $this->setRecipientAddress($recipientAddress);
 
@@ -329,26 +332,26 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
             "<td>" .
             "<a href=\"http://www.findarent.net\"><img src=\"http://www.findarent.net/App_Themes/Default/Images/logo_cl.png\" alt=\"FindARent.net\" border=\"0\" style=\"margin: 5px 0;\"></a>" .
             "</td>
-                                                    </tr>
-                                                  </tbody>
-                                                </table>
-                                              </div>
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </td>
+            </tr>
+            </tbody>
+            </table>
             </div>";
 
         $this->_subject = "FindARent.Net : Listing #" . $listing['ListingID'] . " Inquiry";
@@ -378,12 +381,11 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
 
     private function _generateBrokerEmail()
     {
-        $recipientAddress = new Custom_EmailCriteria('mike.matovic@gmail.com');
-        $this->setRecipientAddress($recipientAddress);
-
         //$this->setBCC('notifications@findarent.net');
 
         $broker = $this->_restResource->getCriteriaValue();
+        $recipientAddress = new Custom_EmailCriteria('mike.matovic@gmail.com');
+        $this->setRecipientAddress($recipientAddress);
 
         if ( empty( $broker['MiddleName'] ) ) {
             $this->_ownerName = $broker['FirstName'] . ' ' . $broker['LastName'];
@@ -529,19 +531,20 @@ class Communication_Model_SendEmailToOwnerMessage extends Custom_AbstractMessage
         } catch ( Exception $e ) {
             $this->_results['result'] = 'db error';
             $this->_results['reasons'] = $e->getMessage();
+            //return $this->_results;
         }
 
         if ($this->_type === self::LISTING) {
             $this->_type = self::LISTING_CUSTOMER;
+
+            if ( isset($this->_replyToAddress ) ) {
+                unset($this->_replyToAddress);
+            }
+
             parent::sendMessage();
         }
 
         return $this->_results;
-    }
-
-    public function sendClientMessage()
-    {
-
     }
 
     public function setRestResource($listing)
