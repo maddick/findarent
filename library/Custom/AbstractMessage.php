@@ -17,6 +17,11 @@ abstract class Custom_AbstractMessage
      */
     protected $_recipientAddress;
 
+    /**
+     * @var Custom_EmailCriteria
+     */
+    protected $_replyToAddress;
+
     protected abstract function _createMessage();
 
     public function sendMessage()
@@ -50,6 +55,10 @@ abstract class Custom_AbstractMessage
 
             if ( isset( $this->_BCC) ) {
                 $mail->addBcc($this->_BCC);
+            }
+
+            if ( isset( $this->_replyToAddress ) ) {
+                $mail->setReplyTo($this->_replyToAddress->getCriteriaValue());
             }
 
             try {
@@ -95,5 +104,15 @@ abstract class Custom_AbstractMessage
     public function setCC($CC)
     {
         $this->_CC = $CC;
+    }
+
+    public function setReplyToAddress($replyToAddress)
+    {
+        if ( $replyToAddress instanceof Custom_EmailCriteria ) {
+            $this->_replyToAddress = $replyToAddress;
+        } else {
+            throw new Exception('$replyToAddress must be an instance of Custom_EmailCriteria');
+        }
+        return $this;
     }
 }
