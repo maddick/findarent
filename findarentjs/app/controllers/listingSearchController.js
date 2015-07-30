@@ -157,7 +157,7 @@ angular
                         if ($scope.allResults['Listings'].status == 200) {
                             var listings = $scope.allResults['Listings'].data;
                             $scope.listingResultCount = $scope.allResults['Listings'].data.listings.length;
-                            $scope.successMessage = { zipOrCityState : zipOrCityState };
+                            $scope.successMessage = { message : zipOrCityState };
                             $scope.listingSearchParams = listingSearchParams;
 
                             //convert rent to a number and give a type value for sorting and add to results
@@ -241,14 +241,20 @@ angular
                 );
 
             } else {
+
+                var successMessage = '';
+
                 //determine if we are searching based on landlord, community, or broker and
                 //preform the appropriate search.
                 if ( isLandlordSearch) {
                     promise = ListingSearch.getListingsByLandlordId(searchParams['landlordId']);
+                    successMessage = 'landlord-id ' + searchParams['landlordId'];
                 } else if ( isCommunitySearch ) {
                     promise = ListingSearch.getListingsByCommunityId(searchParams['communityId']);
+                    successMessage = 'community-id ' + searchParams['communityId'];
                 } else if ( isBrokerSearch ) {
                     promise = ListingSearch.getListingsByBrokerId(searchParams['brokerId']);
+                    successMessage = 'broker-id ' + searchParams['brokerId'];
                 }
 
                 promise.then(
@@ -258,7 +264,7 @@ angular
 
                         var listings = response.data;
                         $scope.listingResultCount = response.data.listings.length;
-                        $scope.successMessage = { zipOrCityState : zipOrCityState };
+                        $scope.successMessage = { message : successMessage };
                         $scope.listingSearchParams = listingSearchParams;
 
                         //convert rent to a number and give a type value for sorting and add to results
