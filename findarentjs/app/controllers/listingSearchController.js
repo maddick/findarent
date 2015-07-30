@@ -119,6 +119,7 @@ angular
 
             //show a loading screen
             $('#search-results-loading').fadeIn();
+            $('#search-results-section').hide();
 
             //if this isn't a community or landlord or a broker search then we are
             //performing a full search which requires listings, communities, and
@@ -302,7 +303,6 @@ angular
             //these id's on the search signifies that the search came from a URL
             //generated from the email service.
             if ( hasJobId && hasTenantId ) {
-
                 var payload = {};
                 payload['tenant-id'] = tenantId;
                 payload['job-id'] = jobId;
@@ -311,7 +311,7 @@ angular
                         method: 'POST',
                         url: 'http://192.168.0.101:8080/communication/message/update-email-history/',
                         headers : { 'Content-Type' : 'application/json' },
-                        data: payload
+                        data: new Blob([JSON.stringify(payload)])
                     }
                 );
 
