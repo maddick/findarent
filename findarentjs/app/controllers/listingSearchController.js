@@ -119,7 +119,7 @@ angular
 
             //show a loading screen
             $('#search-results-loading').fadeIn();
-            $('#search-results-section').hide();
+            $('#search-results-section').fadeOut();
 
             //if this isn't a community or landlord or a broker search then we are
             //performing a full search which requires listings, communities, and
@@ -176,9 +176,6 @@ angular
                             var strInputCode;
                             for ( var i = 0; i < communities.communities.length; i++ ) {
                                 strInputCode = communities.communities[i]['MarketingMessage'];
-                                /*strInputCode = strInputCode.replace(/&(lt|gt);/g, function (strMatch, p1){
-                                 return (p1 == "lt")? "<" : ">";
-                                 });*/
                                 if (strInputCode != null) {
                                     strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
                                     strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
@@ -200,9 +197,6 @@ angular
                             //strip the stupid html crap from the messages
                             for ( var i = 0; i < brokers.brokers.length; i++ ) {
                                 strInputCode = brokers.brokers[i]['MarketingMessage'];
-                                /*strInputCode = strInputCode.replace(/&(lt|gt);/g, function (strMatch, p1){
-                                 return (p1 == "lt")? "<" : ">";
-                                 });*/
                                 if (strInputCode !== null) {
                                     strTagStrippedText = strInputCode.replace(/<\/?[a-zA-Z0-9=:;,."'#!\/\-\s]+(?:\s\/>|>|$)/g, "");
                                     strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
@@ -220,9 +214,6 @@ angular
 
                         if ( $scope.results.length == 0 ) {
                             $scope.searchResult = 'none';
-                            $('#search-results-loading').fadeOut(400,function(){
-                                $('#search-results-section').fadeIn();
-                            });
                         } else {
                             $scope.searchResult = 'success';
                             //paginate the results
@@ -294,7 +285,8 @@ angular
                     },
                     function(response){
                         $('#search-results-loading').fadeOut();
-                        $scope.listings = response.data;//TODO: add error handler
+                        $scope.searchResult = 'error';
+                        $scope.listings = response.data;
                     }
                 );
             }
