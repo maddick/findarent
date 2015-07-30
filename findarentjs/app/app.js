@@ -9,6 +9,9 @@ var newApp = angular.module('app',['ngRoute'])
             .when('/search',{
                 templateUrl: '/app/views/listingSearchResults.html'
             })
+            .when('/Search',{
+                templateUrl: '/app/views/listingSearchResults.html'
+            })
 
             //go to specific listing
             .when('/Listings/:listingId',{
