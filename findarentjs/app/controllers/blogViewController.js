@@ -40,7 +40,7 @@ angular
                 for ( var i = 0; i < randomIndexes.length; i++ ) {
                     $scope.blogs.push($scope.allBlogs[randomIndexes[i]]);
 
-                    console.log($scope.blogs);
+                    //console.log($scope.blogs);
 
                     var strInputCode = $scope.blogs[i]['post_content'];
                     if (strInputCode !== null) {
@@ -48,7 +48,7 @@ angular
                         var strTagStrippedText = strInputCode.replace(/<\/?.+(?:\s\/>|>|$)/g, "");
                         strTagStrippedText = strTagStrippedText.replace(/&[#]?(?:[a-zA-Z]+|[0-9]+);/g,"");
                         $scope.blogs[i]['post_content'] = strTagStrippedText;
-                        console.log(strTagStrippedText);
+                        //console.log(strTagStrippedText);
                     }
                 }
             },
