@@ -154,11 +154,11 @@ angular
                         //console.log(all);
                         $scope.results = [];
 
+                        $scope.listingSearchParams = listingSearchParams;
                         if ($scope.allResults['Listings'].status == 200) {
                             var listings = $scope.allResults['Listings'].data;
                             $scope.listingResultCount = $scope.allResults['Listings'].data.listings.length;
                             $scope.successMessage = { message : zipOrCityState };
-                            $scope.listingSearchParams = listingSearchParams;
 
                             //convert rent to a number and give a type value for sorting and add to results
                             angular.forEach(listings.listings, function(listing){
